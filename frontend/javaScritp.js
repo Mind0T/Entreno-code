@@ -1,1 +1,1 @@
-alert("Hola mundo desde javaScript");
+console.log("Hola mundo desde javaScript");
