@@ -1,0 +1,145 @@
+/* Importación de las fuentes desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Estilos globales que eliminan el margen y el padding por defecto */
+/*Quita los márgenes y el padding por defecto del navegador*/
+*
+    {
+        padding: 0;
+        margin: 0;
+    }
+
+/* Estilos del cuerpo principal de la página */
+body
+    {
+        background-color: #000000; /* Color de fondo negro */
+        color: #f6f6f6; /* Color del texto en blanco grisáceo */
+        /*ocupa el alto total de la pantalla del navegador*/
+        /*height: 100vh;*/ /* Altura del body igual a la altura de la ventana del navegador */
+        box-sizing: border-box; /* Incluye padding y borde dentro del ancho/alto total del elemento */
+        /*hace que el padding y el borde no aumenten el tamaño total del elemento*/
+    }
+
+.header
+    {
+        padding:2% 0% 0% 15%;
+    }
+
+.header_menu
+    {
+        display:flex;
+        gap:80px;
+    }
+
+.header_menu_link
+    {
+        font-size:24px;
+        color:#22D4FD;
+        text-decoration:none;    
+        font-family:'Montserrat', sans-serif;
+        font-size:24px;
+        font-weight:600;
+    }
+.header_menu_ link:hover 
+    {
+        color:#007bff;
+    }
+
+/* Clase para resaltar títulos con un color específico */
+
+
+/* Contenedor principal de la sección de presentación */
+.presentacion
+    {
+        display: flex; /* Activa Flexbox para alinear elementos internos */
+        padding: 4% 15%; /* Márgenes arriba/abajo del 10% y laterales del 15% */
+        align-items: center; /* Centra verticalmente los elementos dentro del contenedor */
+        justify-content: space-between; /* Espacia los elementos hijos con separación máxima */
+        /*justify-c ontent y align-items
+        son fundamentales en flexbox para controlar el espaciado
+        y la alineacion de los elementos hijos dentro del contenedor
+        flex*/
+    }
+
+/* Contenedor del contenido textual dentro de .presentacion */
+.presentacion_contenido
+    {
+        width: 615px; /* Ancho fijo del contenido */
+        display: flex; /* Flexbox para alinear los elementos en columna */
+        flex-direction: column; /* Alineación vertical de los elementos */
+        gap: 40px; /* Espacio entre los elementos hijos */
+        /*La propiedad gap también es muy útil para crear
+        espacios consistentes entre los elementos*/
+    }
+
+/* Estilo del título principal dentro del contenido */
+.presentacion_contenido_titulo
+    {
+        font-size: 36px; /* Tamaño del texto del título */
+        font-family: "Krona One", sans-serif; /* Fuente decorativa para títulos */
+    }
+
+.titulo-destaque
+    {  
+        color: #22D4FD; /* Azul brillante para destacar textos */
+    }
+
+/* Estilo del texto descriptivo o párrafo dentro del contenido */
+.presentacion_contenido_texto
+    {
+        font-size: 24px; /* Tamaño del texto del párrafo */
+        font-family: "Montserrat", sans-serif; /* Fuente legible para lectura */
+    }
+
+/* Contenedor de los enlaces (botones) de la presentación */
+.presentacion_enlaces
+    {
+        display: flex; /* Flexbox para alinear los enlaces horizontalmente */
+        justify-content: space-between; /* Espacia los enlaces uniformemente */
+        flex-direction: column;
+        align-items : center;
+        gap:32px;
+    }
+
+/* Estilo individual de cada enlace como botón */
+.presentacion_enlaces_link
+    {
+        width: 378px; /* Ancho del botón */
+        padding: 21.5px 0; /* Espaciado interno arriba/abajo, sin margen lateral */
+        border-radius: 8px; /* Bordes redondeados */
+        text-align: center; /* Centra el texto dentro del botón */
+        font-family: "Montserrat", sans-serif; /* Fuente moderna */
+        font-size: 24px; /* Tamaño del texto */
+        font-weight: 600; /* Negrita media */
+        text-decoration: none; /* Elimina el subrayado de los enlaces */
+        color: #f6f6f6; /* Texto gris claro */
+        border:2px solid #22D4FD;
+        display:flex;
+        justify-content: center; /*por que esta en el ejee horizontal*/
+        gap:16px;
+    }
+.presentacion_enlaces_link:hover
+    {
+        /*padding:3%;*/ /*No se si dejarlo pero es un ejemplo de animacion esto no lo quites */
+        background-color: #272727;
+        border:2px solid #FFA500;
+    }
+.presentacion_enlaces_subtitulo
+    {
+        font-size: 24px; /* Tamaño del texto del título */
+        font-family: "Krona One", sans-serif; /* Fuente decorativa para títulos */
+        font-weight: 400;
+    }
+
+footer
+    {
+        background-color: #22D4FD;
+        padding:24px;
+        color:#000000;
+        text-align:center;
+        font-family:'Montserrat', sans-serif;
+        font-size:24px;
+        font-weight:400;
+
+    }
+
