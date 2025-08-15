@@ -9,7 +9,7 @@ int main()
         scanf("%[^'\n']s",cad);
         if(esPalindromo(cad))
             {
-                printf("La palabra o frase %s\nBIEN ES UN PALINDROMO\n",cad);
+                printf("Bien la palabra o frase %s\nES UN PALINDROMO\n",cad);
             }
         else
             {
