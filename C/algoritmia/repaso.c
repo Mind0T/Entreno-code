@@ -5,24 +5,38 @@ int esPalindromo(char *ptr);
 
 int main()
     {
+<<<<<<< HEAD
         //1 Declaramacion una cadena para 300 caracteres
         char cad[300];
         // 2 Pedimos al usario ingrese una palabra o frase 
         puts("Ke hongo ingresa una palabra o frase y te tire si es un palindromo");
         // 3 Permitimos que el usuario pueda ingresar su palabra o frase
+=======
+        char cad[200];
+        printf("Que tal ingresa una palabra o frase y te dire si es un palindromo\n");
+>>>>>>> ac16e7ebd53fc6cbd76fc5c348d30a8bc1e92b7f
         scanf("%[^'\n']s",cad);
         // 4 Generamos la condicional para que apartir del resultado de una funcion genere cierto mensaje
         if(esPalindromo(cad))
             {
+<<<<<<< HEAD
                 printf("Vientos la palabra o frase:%s\nES UN PALINDROMO\n",cad); // mensaje en caso de que la funcion nos indique que si es un palindromo = 1
+=======
+                printf("Bien la palabra o frase %s\nES UN PALINDROMO\n",cad);
+>>>>>>> ac16e7ebd53fc6cbd76fc5c348d30a8bc1e92b7f
             }
         else    
             {
+<<<<<<< HEAD
                 printf("Pfffff la palabra o frase:%s\nNO ES UN PALINDROMO\n",cad); // mensaje en case de que la funcion nos indique que no es un palindromo =2
+=======
+                printf("Oye la palabra o frase %s\nNO ES UN PALINDROMO\n",cad);
+>>>>>>> ac16e7ebd53fc6cbd76fc5c348d30a8bc1e92b7f
             }
         return 0;
     }
 
+<<<<<<< HEAD
     // 6 Desarrollamos la funcion para evaluar que la palabra o frase si es un palindromo
 int esPalindromo(char *ptr)
     {
@@ -64,3 +78,42 @@ int esPalindromo(char *ptr)
             }
         return 1;
     }
+=======
+    int esPalindromo(char *ptr)
+        {
+            char *end=ptr;
+            char *start=ptr;
+            while(*end!='\0')
+                {
+                    end++;
+                }
+            end--;
+            while(start<end)
+                {
+                    if(*start>=65 && *start<=90)
+                        *start+=32;
+                    
+                    if(*end>=65 && *end<=90)
+                        *end+=32;
+
+                    if((*start<48 || *start>57) && (*start<97 || *start>122))
+                        {
+                            start++;
+                            continue;
+                        }
+                        
+                    if((*end<48 || *end>57) && (*end<97 || *end>122))
+                        {
+                            end--;
+                            continue;
+                        }
+                    if(*start!=*end)
+                        {
+                            return 0;
+                        }
+                    end--;
+                    start++;
+                }
+            return 1;
+        }
+>>>>>>> ac16e7ebd53fc6cbd76fc5c348d30a8bc1e92b7f
