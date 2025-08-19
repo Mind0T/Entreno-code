@@ -9,7 +9,7 @@ persona={"nombre":"Irving",
          "apellido":"Soriano"}
 
 print(persona)
-
+#Se puede cambiar un valor de alguna llave
 persona["nombre"]="Dilan"
 
 print(persona["apellido"])
