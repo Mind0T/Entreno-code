@@ -2,19 +2,31 @@
 
 int main()
     {
-        int matriz[3][3]=
-            {
-                {1,2,3},
-                {4,5,6}
-            };
+        
+        printf("Vamos a practicar la matriz iterada\n");
+        int col, ren;
+        printf("Ingresa la cantidad de renglones que quieres en la matriz\n");
+        scanf("%d",&ren);
+        printf("Ingresa la cantidad de columnas que quiers en la matriz\n");
+        scanf("%d",&col);
+        int matriz[ren][col];
 
-        for(int i=0;i<2;i++)
+        for(int i=0;i<ren;i++)
             {
-                for(int j=0;j<3;j++)
+                printf("Estamos en el renglon --> %d\n",i);
+                for(int j=0;j<col;j++)
                     {
-                        printf("%d\n",matriz[i][j]);
+                        printf("Ingresa el valor para matriz[%d][%d]\n",i,j);
+                        scanf("%d",&matriz[i][j]);
                     }
             }
-        
-        return 0;
+        printf("Estos son los valores que introdujiste");
+        for(int i=0;i<ren;i++)
+            {
+                printf("\nRenglon %d --->  ",i);
+                for(int j=0;j<col;j++)
+                    {
+                        printf("Matriz [%d] [%d] : %d , ",i,j,matriz[i][j]);
+                    }                
+            }
     }
