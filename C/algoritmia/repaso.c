@@ -1,29 +1,26 @@
-//Vamos a practicar el plalindromo
 #include <stdio.h>
-
 
 int esPalindromo(char *frase);
 
 int main()
     {
-        printf("Bienvedido este 20 de Ago al palindromo\nYa te la sabes escribre algo y te dire si es un palindromo\n");
-        char cad [300];
-        scanf(" %[^'\n']s",cad);
-        if(esPalindromo(cad))
+        char cadena[200];
+        printf("Hola 22 Ago Ingresa una palabra o frase y te dire si es un palindromo\n");
+        scanf("%[^'\n']s",cadena);
+        if (esPalindromo(cadena))
             {
-                printf("La palabra o frase %s\nES UN PALINDROMO\n",cad);
+                printf("La palabra o frase %s\nES UN PALINDROMO\n",cadena);
             }
         else
             {
-                printf("La palabra o frase %s\nNO ES UN PALINDROMO\n",cad);
+                printf("La palabra o frase %s\nNO ES UN PALINDROMO\n",cadena);
             }
         return 0;
     }
 
 int esPalindromo(char *frase)
     {
-        char *end=frase;
-        char *start=frase;
+        char *end=frase, *start=frase;
         while(*end!='\0')
             {
                 end++;
@@ -33,11 +30,10 @@ int esPalindromo(char *frase)
             {
                 if(*start>=65 && *start<=90)
                     *start+=32;
-
                 if(*end>=65 && *end<=90)
                     *end+=32;
 
-                if((*start<48 || *start>57) && (*start<97 || *start>122 ))
+                if((*start<48 || *start>57) && (*start<97 || *start>122))
                     {
                         start++;
                         continue;
@@ -47,10 +43,9 @@ int esPalindromo(char *frase)
                         end--;
                         continue;
                     }
-                    
-                if(*start!=*end)
+                if(*end!=*start)
                     return 0;
-
+                
                 end--;
                 start++;
             }
