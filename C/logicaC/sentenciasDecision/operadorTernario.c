@@ -2,16 +2,9 @@
 
 int main()
     {
-         //if (condicion boleana)
-        //Verificamos si sel numero proporcionado es positvo
-        printf("Proporciona un numero:\n");
-        int miNumero;
-        scanf("%d",&miNumero);
-
-        (miNumero>0) ? printf("Positivo") : printf("Cero o Negativo");
-
-
-        
-
+        printf("Ingresa un valor y te dire si es positivo o negativo\n");
+        int numero;
+        scanf("%d",&numero);
+        (numero<=0) ? printf("El numero es negativo")  : printf("El numero es positivo");
         return 0;
     }
