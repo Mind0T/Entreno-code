@@ -4,17 +4,18 @@ int esPalindromo(char *frase);
 
 int main()
     {
-        printf("Hola 28 Ago\nIngresa una palabra o frase y te dire si es un Palindromo\n");
-        char cad[300];
+        char cad[400];
+        printf("Hola 1 Sep, Ingrese una palabra o frase y le dire si es un palindromo o no\n");
         scanf("%[^'\n']s",cad);
         if(esPalindromo(cad))
             {
-                printf("La palabra o frase %s\nES UN PALINDROMO\n",cad);
+                printf("Super la palabra o frase %s\nES UN PALINDROMO\n",cad);
             }
         else    
             {
-                printf("La palabra o frase %s\nNO ES UN PALINDROMO\n",cad);
+                printf("Pfff la palabra o frase %s\nNO ES UN PALINDROMO\n",cad);
             }
+
         return 0;
     }
 
@@ -22,12 +23,12 @@ int esPalindromo(char *frase)
     {
         char *end=frase;
         char *start=frase;
-
         while(*end!='\0')
             {
                 end++;
             }
         end--;
+
         while(start<end)
             {
                 if(*start>=65 && *start<=90)
@@ -39,14 +40,14 @@ int esPalindromo(char *frase)
                         start++;
                         continue;
                     }
-                if((*end <48 || *end>57) && (*end<97 || *end>122))
+                if((*end<48 || *end>57) && (*end<97 || *end>122))
                     {
                         end--;
                         continue;
-                    } 
+                    }
                 if(*start!=*end)
                     return 0;
-
+                
                 end--;
                 start++;
             }
