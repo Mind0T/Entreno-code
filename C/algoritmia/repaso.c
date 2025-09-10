@@ -1,28 +1,31 @@
 #include <stdio.h>
 
+//? Vamos a practicar un poquillo con el viejo y clasico ejemplo de palindromo
+
 int esPalindromo(char *frase);
 
 int main()
     {
-        char cad[400];
-        printf("Hola 1 Sep, Ingrese una palabra o frase y le dire si es un palindromo o no\n");
+        printf("Hola que tal ingresa un palabra o frase y te dire si es un palindromo o no\n");
+        char cad[300]; // Recuerda que siempre debes espicificar el tamanion en C
         scanf("%[^'\n']s",cad);
-        if(esPalindromo(cad))
+        printf("%s\n",cad);
+        if (esPalindromo(cad))
             {
-                printf("Super la palabra o frase %s\nES UN PALINDROMO\n",cad);
+                printf("Genial la palabra o frase: %s\nES UN PALINDROMO\n",cad);
             }
         else    
             {
-                printf("Pfff la palabra o frase %s\nNO ES UN PALINDROMO\n",cad);
+                printf("Uuuuf que crees que la palabra o frase: %s\nNO ES UN PALINDROMO\n",cad);
             }
 
-        return 0;
     }
 
 int esPalindromo(char *frase)
     {
         char *end=frase;
         char *start=frase;
+
         while(*end!='\0')
             {
                 end++;
@@ -35,7 +38,7 @@ int esPalindromo(char *frase)
                     *start+=32;
                 if(*end>=65 && *end<=90)
                     *end+=32;
-                if((*start<48 || *start>57) && (*start<97 || *start>122))
+                if((*start <48 || *start>57) && (*start<97 || *start>122))
                     {
                         start++;
                         continue;
@@ -47,7 +50,7 @@ int esPalindromo(char *frase)
                     }
                 if(*start!=*end)
                     return 0;
-                
+
                 end--;
                 start++;
             }
