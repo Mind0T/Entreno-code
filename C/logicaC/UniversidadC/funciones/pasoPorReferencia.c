@@ -8,7 +8,7 @@ void pasoRefetrncia(int *parametro)
 int main()
  {
     int argumento=20;
-    printf("Antes de llamar la funcion de paso de referencia\n",argumento);
+    printf("Antes de llamar la funcion de paso de referencia %d\n",argumento);
     pasoRefetrncia(&argumento);
     printf("Modificando el valor de la funcion %d",argumento);
     return 0;
