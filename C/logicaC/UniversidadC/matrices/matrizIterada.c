@@ -28,7 +28,7 @@ int main()
                     }
             }
         
-        printf("\n\nImprimiendo solo los valor de pares\n");
+        printf("\n\nImprimiendo solo los valores de pares\n");
         for(int i=0;i<ren;i++)
             {
                 printf("\nRen %d --->",i);

@@ -4,8 +4,9 @@
 int main()
     {
         //Convertir de numero a texto
-        int edad=28;
-
+        printf("Hola ingrese un numero y lo convertiremos a String\n");
+        int edad;
+        scanf("%d",&edad);
         char edadTexto[10]; //Suficientes caracteres para 
         //itoa --> int to ascii
         //ftoa --> float to ascii
