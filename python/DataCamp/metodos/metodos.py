@@ -5,12 +5,15 @@
 algunos ejemplos 
 
 EN LISTAS
-.append
-.reverse para invertir el orden de los elementos
+.append(valor)
+.reverse() para invertir el orden de los elementos
+.index(valor)
+.count(valor)
+.remove(valor) -->si hay varios elementos iguales elimina el primero solamente
 
 EN STRING
-.replace
-capitalize("z","sa")
+.replace("z","sa")
+capitalize()
 '''
 
 

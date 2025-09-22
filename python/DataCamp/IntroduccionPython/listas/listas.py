@@ -27,6 +27,13 @@ areas_copy3=list(areas)
 print(f"Lista antes de la ultima modificaciones en el  indice  3 de 10.75 por 100 con lista3=list(areas)\n")
 areas[3]=100
 print(f"Lista original: {areas}\nLista copiada3: {areas_copy3}\n")
-print("Tambien solo se modifica la lista original")
+print("Tambien solo se modifica la lista original\n")
+
+# pasar la lista del modo =list.copy()
+areas_copy4=areas.copy()
+print(f"Lista antes de la ultima modificaciones en el  indice  4 de 9.5 por 233 con lista4=areas.copy()\n")
+areas[4]=233
+print(f"Lista original: {areas}\nLista copiada3: {areas_copy4}\n")
+print("Tambien solo se modifica la lista original\n")
 
 
