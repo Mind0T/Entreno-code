@@ -1,0 +1,24 @@
+//Puente de conectar mi javascript a mi document object model
+/*let titulo=document.querySelector('h1');     document.querySelector  acceder a cualquier elemento
+
+titulo.innerHTML='Juego del nmero secreto';
+let parrafo=document.querySelector('p');
+
+parrafo.innerHTML='Indica un numero del 1 al 10';
+
+arrays
+let numerosSorteados=[];
+console.log(numerosSorteados);
+numerosSorteados.push(elemento a agregar); para agregar elementos
+console.log(numerosSorteados.length); para que me de el tamanio de la cadena
+
+console.log(numerosSorteados[0])  consultar el valor de un elemento en cierta posicion
+console.log(numeroSorteados[numerosSorteados-1]); para consultar el ultimo valor de la lista esta se obtiene sacando el numero de elementos menos 1
+
+
+Ecopo global fuera de una funcion
+
+let no anade la variable en el objeto global,
+var estamos agregando la variable en el objeto global solo utilizar en ultimo caso si queremos anadir alguna propiedad
+const no se puede declarar una variable sin inicializarla las constantes no pueden tener varios valores.
+*/
