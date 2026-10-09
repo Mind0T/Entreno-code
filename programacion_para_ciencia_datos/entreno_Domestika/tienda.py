@@ -4,10 +4,14 @@ print("\n\n*************************************************")
 print("******Bienvenida a la tienda de mascotas*********")
 print("*************************************************")
 
-num_perro=10
-num_gatos=8
-num_pajaros=25
-total_animales=num_perro+num_gatos+num_pajaros
+
+
+inventario={"perro":10,"gato":8,"pajaros":25,"iguana":2}
+total_animales=0
+
+for val in inventario.values():
+    total_animales+=val
+
 nombre=input("Porfavor ingresa tu nombre: ")
 apellido=input("Ahora ingresa tu apellido: ")
 
@@ -22,8 +26,16 @@ def mostrar_menu():
     print("3- Mostrar Compras")
     print("4- Salir del programa")
 def mostrar_stock():
-    print("\nActualmente contamos con:\n")
-    print(f"Perros: {num_perro}\nGatos: {num_gatos}\nPajaro: {num_pajaros}\nEn total son: {total_animales} animalitos")
+    print("\n==INVENTARIO==\n")
+    total_animales=0
+    for animal, cant in inventario.items():
+        print(f"    {animal} -> {cant}")
+    
+    for val in inventario.values():
+            total_animales+=val
+    print(f"En total contamos con {total_animales} animalitos")
+
+    
 
 def comprar_animal():
     carrito=[]
@@ -36,8 +48,12 @@ def comprar_animal():
         elif animal_comprado=="v":
             print(f"\nEste es tu carrito: {carrito}")
             continue
+        elif animal_comprado not in inventario:
+            print(f"\nLo siento no vendemos con {animal_comprado} ")
+        elif inventario[animal_comprado]==0:
+            print(f"\nLo siento si vendemos {animal_comprado} pero ya no tenemos disponibles")
         elif animal_comprado not in carrito:
-            print(f"Se agrego {animal_comprado} a tu carrito")
+            print(f"\nSe agrego {animal_comprado} a tu carrito")
             carrito.append(animal_comprado)
         else:
             print("\nEse animal ya esta en tu carrito")
@@ -46,7 +62,12 @@ def comprar_animal():
 
     print(f"\nEste es su carrito:\n")
     for animal in carrito:
-        print(animal)
+        print(" ",animal)
+        inventario[animal]-=1
+    
+   
+   
+
 
 def mostrar_compras():
         print("")
@@ -58,7 +79,6 @@ while True:
     
     mostrar_menu()
     respuesta=int(input("\n"))
-
     if respuesta==1:
         mostrar_stock()        
     elif respuesta==2:
