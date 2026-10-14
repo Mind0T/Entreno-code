@@ -54,7 +54,7 @@ void imprimirPila(struct Pila *p) {
     }
     printf("Elementos en la pila: ");
     for (int i = p->tope; i >= 0; i--) {
-        printf("%c ", p->datos[i]);
+        printf("%d ", p->datos[i]);
     }
     printf("\n");
 }
