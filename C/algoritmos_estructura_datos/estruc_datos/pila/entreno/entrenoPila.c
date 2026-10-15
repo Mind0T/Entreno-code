@@ -1,36 +1,41 @@
 #include <stdio.h>
 #include "entrenoPilaDeclaracion.h"
 
-int main (){
+int main(){
 
 	struct Pila pila;
+
 	init(&pila);
-	printf("Aqui hay un pop con la pila vacia\n");
+	
+	printf("\n==ENTRENO PILA==\n");
+	printf("\nINTENTAR IMPRIMIR LA PILA VACIA\n");
+	printStack(&pila);
+	printf("\nINTENTAR HACER POP Y PEEK EN LA PILA VACIA\n");
+	pop(&pila);
+	peek(&pila);
 
-	printf("%d",pop(&pila));
+	printf("\nHACER 7 PUSH EN LA PILA 10,20,30,40,50,60,70\n");
+	
+	push(&pila,10);
 	push(&pila,20);
+	push(&pila,30);
 	push(&pila,40);
-	push(&pila, 60);
-	imprimirPila(&pila);
-
-	printf("Aqui hay un pop con la pila ya con elementos\n");
-
-	printf("Elemento extraido: %d\n",pop(&pila));
-
-	imprimirPila(&pila);	
-
-	printf("\nAqui hay un peek con la pila ya con elementos\n");
-	printf("Elemento extraido con peek: %d\n",peek(&pila));
-	imprimirPila(&pila);
-	printf("\nAgregando otros 5 elementos a la pila");
+	push(&pila,50);
 	push(&pila,60);
-	push(&pila,80);
-	push(&pila, 100);
-	push(&pila,120);
-	push(&pila, 140);
-	imprimirPila(&pila);
-	printf("Mi pila es de 7 elementos esto es lo que sucede si agrego otro:\n");
-	push(&pila,160);
+	push(&pila,70);
 
+	printStack(&pila);
+	printf("\nINTENTAR HACER POP Y PEEK EN LA PILA YA CON CONTENIDO\n");
+	printf("POP: %d\n",pop(&pila));
+	printStack(&pila);
+	printf("PEEL: %d",peek(&pila));
+	printStack(&pila);
+
+	printf("\nMI PILA TIENE UN TAMANIO DE 7 LOS CUALES YA ESTAN OCUPADOS SI INTENTO METER UN ELEMENTO MAS:\n");
+	push(&pila,70);
+	printf("\nY OTRO MAS\n");
+	push(&pila,80);
+	
 	return 0;
+
 }

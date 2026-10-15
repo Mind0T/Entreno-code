@@ -17,15 +17,14 @@ int isFull(struct Pila *p){
 
 void push(struct Pila *p, int valor){
 	if(isFull(p)){
-		printf("Lo siento la pila esta llena \n");
+		printf("\nLo siento no puedo seguir apilando overflow\n");
 	}
 	p->datos[++(p->tope)]=valor;
 }
 
-
 int pop(struct Pila *p){
 	if(isEmpty(p)){
-		printf("No es posible hacer POP la pila esta vacia\n");
+		printf("\nLo siento no es posible hacer pop la pila esta vacia\n");
 		return 0;
 	}
 	return p->datos[(p->tope)--];
@@ -33,19 +32,24 @@ int pop(struct Pila *p){
 
 int peek(struct Pila *p){
 	if(isEmpty(p)){
-		printf("No es posible hacer PEEK la pila esta vacia \n");
+		printf("\nLo siento no es posible hacer peek la pila esta vacia\n");
 		return 0;
 	}
 	return p->datos[p->tope];
 }
 
-void imprimirPila(struct Pila *p){
+
+void printStack(struct Pila *p){
 	if(isEmpty(p)){
-		printf("No es posible imprimir la pila ya que esta vacia\n");
+		printf("\nLo siento no hay nada que imprimir underflow\n");
 	}
-	printf("\nElementos de la pila\n");
-	for(int i=p->tope;i>=0;i--){
-		printf("%d  ",p->datos[i]);
+	else{
+		printf("\nContenido de la pila\n");
+		for(int i=p->tope;i>=0;i--){
+			printf("%d  ",p->datos[i]);
+		}
 	}
-	printf("\n");
+	
+	printf("\n\n");
 }
+

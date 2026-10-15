@@ -1,5 +1,6 @@
 #define MAX 7
 
+
 struct Pila{
 	int datos[MAX];
 	int tope;
@@ -17,4 +18,5 @@ int pop(struct Pila *p);
 
 int peek(struct Pila *p);
 
-void imprimirPila(struct Pila *p);
+void printStack(struct Pila *p);
+
