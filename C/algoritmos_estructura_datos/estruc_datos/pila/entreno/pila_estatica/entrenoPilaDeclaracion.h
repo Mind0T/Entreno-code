@@ -1,11 +1,12 @@
 //vamos a definir nuestras funciones
 #define MAX 7
+#define LONG 50
 
 
 //Definimos tal cual la estructura
 
 struct Pila{
-	int dato[MAX];
+	char dato[MAX][LONG];
 	int tope;
 };
 
@@ -22,13 +23,13 @@ int isEmpty(struct Pila *p);
 int isFull(struct Pila *p);
 
 //Se aniaden elemento a la pila
-void push(struct Pila *p,int valor);
+void push(struct Pila *p, const char *valor);
 
 //Se extrae el ultimo dato de la pila y se quita de la pila
-int pop(struct Pila *p);
+int pop(struct Pila *p,char *destino);
 
 //Se extrar el ultimo dato de la pila pero no se quita de la pila
-int peek(struct Pila *p);
+int peek(struct Pila *p,char *destino);
 
 //Se hace una funcion para imprimir la pila
 
