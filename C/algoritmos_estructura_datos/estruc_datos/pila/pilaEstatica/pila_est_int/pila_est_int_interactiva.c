@@ -14,7 +14,7 @@ int main(){
 		printf("\n2- Meter valor a la pila\n");
 		printf("\n3- Extraer el ultimo elemento y quitarlo de la pila\n");
 		printf("\n4- Enseniarte el ultimo elemento de la pila\n");
-		printf("\n5- Limpiar pila\n");
+		printf("\n5- Limpiar Pila\n\n\n\n");
 		printf("\n6- Salir\n\n\n\n");
 		if(scanf("%d",&entrada)!=1){
 			printf("\nEntrada no valida\n");
