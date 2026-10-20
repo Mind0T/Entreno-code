@@ -2,11 +2,10 @@
 //Primero importamos nuestras librerias stdio y nuestra libreria
 
 #include <stdio.h>
-#include "entrenoPilaDeclaracion.h"
-
+#include "pila_cade_estatica_dec.h"
 
 int main(){
-	struct Pila pila;		//Declaramos una variable pila de tipo struct Pila
+	struct Pila pila;
 	char nombre[LONG];
 	init(&pila);
 
@@ -16,7 +15,7 @@ int main(){
 	printf("\nVamos a hacer un POP y un PEEK a la pila vacia\n");
 	pop(&pila,nombre);
 	peek(&pila,nombre);
-	printf("\nAhora ingrese los valores 10,20,30,40,50 y la imprimo\n");
+	printf("\nAhora ingrese los valores\n'Irvin Soriano'\n'Brenda Martinez'\n'Dilan Soriano'\n'Diana Martinez'\n'Jaime Soriano'\n");
 	push(&pila,"Irvin Soriano");
 	push(&pila,"Brenda Martinez");
 	push(&pila,"Dilan Soriano");
@@ -32,7 +31,14 @@ int main(){
 		printf("\nTe muestro: %s\n",nombre);
 	printStack(&pila);
 
-	
+	printf("\nMeto otros tres elementos para quedar full\n");
+	push(&pila,"Maru Reyes");
+	push(&pila,"Isabel Rosales");
+	push(&pila,"Jaime Soriano");
+	printStack(&pila);
+
+	printf("\nAhora intento meter un octavo elemento\n");
+	push(&pila,"Lalo Martinez");
 	
 	return 0;	
 }
