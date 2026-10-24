@@ -79,7 +79,36 @@ def top_3_categorias(conteo):
 # ======================================================================
 
 def estadisticas(datos, columna):
-    pass  # TODO companero A
+    """Min, max, promedio y mediana de una columna numerica.
+    Usa filter() para descartar vacios/no convertibles y luego map() a float."""
+    crudos = [fila.get(columna, "").strip() for fila in datos]
+
+    def es_convertible(valor):
+        if valor == "":
+            return False
+        try:
+            float(valor)
+            return True
+        except ValueError:
+            return False
+
+    validos = list(map(float, filter(es_convertible, crudos)))
+    validos.sort()
+    n = len(validos)
+
+    if n % 2 == 1:
+        mediana = validos[n // 2]
+    else:
+        mediana = (validos[n // 2 - 1] + validos[n // 2]) / 2
+
+    return {
+        "columna": columna,
+        "n_valores_validos": n,
+        "minimo": validos[0],
+        "maximo": validos[-1],
+        "promedio": round(sum(validos) / n, 2),
+        "mediana": round(mediana, 2),
+    }
 
 
 def promedio_por_categoria(datos, categorica, numerica):
