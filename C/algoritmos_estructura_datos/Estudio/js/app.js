@@ -101,12 +101,10 @@
         )
       );
     });
-    const oscuro = temaEfectivo() === "oscuro";
     lateral.append(
       h(
         "div",
         { class: "lateral-pie" },
-        h("button", { type: "button", class: "btn-tema", onclick: alternarTema }, oscuro ? "☀ Tema claro" : "☾ Tema oscuro"),
         h("span", {}, "Todo el código es C. Las animaciones siguen tus archivos línea por línea."),
         h("span", {}, "Tip: en cada animación usa ←  →  y la barra espaciadora.")
       )
