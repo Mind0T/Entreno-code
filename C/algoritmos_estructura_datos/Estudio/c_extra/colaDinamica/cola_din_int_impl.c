@@ -21,11 +21,12 @@ void enqueue(struct Cola *c, int valor){
 	nuevo->siguiente=NULL;
 	if(isEmpty(c)){
 		c->frente=nuevo;
+		c->final=nuevo;
 	}
 	else{
 		c->final->siguiente=nuevo;
+		c->final=nuevo;
 	}
-	c->final=nuevo;
 }
 
 int dequeue(struct Cola *c){
@@ -34,13 +35,13 @@ int dequeue(struct Cola *c){
 		return -1;
 	}
 	struct Nodo *temp=c->frente;
-	int valor=temp->dato;
+	int dato=temp->dato;
 	c->frente=temp->siguiente;
 	if(c->frente==NULL){
 		c->final=NULL;
 	}
 	free(temp);
-	return valor;
+	return dato;
 }
 
 int front(struct Cola *c){

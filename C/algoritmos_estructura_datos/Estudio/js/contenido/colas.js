@@ -210,8 +210,9 @@
     { f: "impl", ln: "nuevo->siguiente=NULL;", t: "El nuevo siempre es el último|Detrás de él no hay nadie, así que su <code>siguiente</code> es <code>NULL</code>. (En la pila apuntaba al tope anterior; aquí no.)" },
     { f: "impl", ln: "if(isEmpty(c)){", nth: 1, t: "Dos casos|<b>Cola vacía:</b> el nuevo es a la vez el primero y el último. <b>Cola con elementos:</b> hay que engancharlo detrás del último actual." },
     { f: "impl", ln: "c->frente=nuevo;", t: "Caso vacía: es el frente|Solo en este caso se toca <code>frente</code>." },
+    { f: "impl", ln: "c->final=nuevo;", nth: 1, t: "Caso vacía: también es el final|Con un solo nodo, <code>frente</code> y <code>final</code> apuntan al mismo." },
     { f: "impl", ln: "c->final->siguiente=nuevo;", t: "Caso con elementos: enganchar|El último nodo actual deja de apuntar a <code>NULL</code> y apunta al nuevo. Si hicieras esto con la cola vacía, <code>c-&gt;final</code> sería <code>NULL</code> y el programa se caería (dereferenciar NULL)." },
-    { f: "impl", ln: "c->final=nuevo;", t: "El nuevo es el último|Se ejecuta en <b>ambos</b> casos: después de agregar, <code>final</code> siempre apunta al recién llegado." },
+    { f: "impl", ln: "c->final=nuevo;", nth: 2, t: "Caso con elementos: mueve el final|Después de enganchar, <code>final</code> apunta al recién llegado. <code>frente</code> no se mueve (sale primero el más viejo)." },
     { f: "impl", ln: "struct Nodo *temp=c->frente;", t: "<code>dequeue</code>: recordar al que sale|Como en el <code>pop</code> de la pila: guardar el nodo para poder liberarlo." },
     { f: "impl", ln: "c->frente=temp->siguiente;", t: "Avanzar el frente|El segundo de la fila ahora es el primero." },
     { f: "impl", ln: "if(c->frente==NULL){", t: "¿Se atendió al último?|Si el frente quedó en <code>NULL</code>, la cola se vació." },
@@ -249,7 +250,7 @@
     <div data-demo="enq"></div>
     <h2><code>dequeue</code>: sacar por el frente</h2>
     <div class="bloque"><code>struct Nodo *temp = c->frente;  // 1. recordar al que sale
-int valor = temp->dato;         // 2. rescatar su dato
+int dato = temp->dato;          // 2. rescatar su dato
 c->frente = temp->siguiente;    // 3. el siguiente pasa al frente
 if (c->frente == NULL)          // 4. ¿se vació?
     c->final = NULL;            //    → final también a NULL

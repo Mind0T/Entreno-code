@@ -287,20 +287,21 @@
       sigNull: Li("nuevo->siguiente=NULL;"),
       enqIf: Li("if(isEmpty(c)){", 1),
       frNuevo: Li("c->frente=nuevo;"),
+      finNuevoA: Li("c->final=nuevo;", 1),
       finSig: Li("c->final->siguiente=nuevo;"),
-      finNuevo: Li("c->final=nuevo;"),
+      finNuevoB: Li("c->final=nuevo;", 2),
       enqFin: Li.fin("void enqueue(struct Cola *c, int valor){"),
       deqSig: Li("int dequeue(struct Cola *c){"),
       deqIf: Li("if(isEmpty(c)){", 2),
       deqErr: Li("Error: la cola esta vacia", 1),
       deqRetErr: Li("return -1;", 1),
       deqTemp: Li("struct Nodo *temp=c->frente;"),
-      deqValor: Li("int valor=temp->dato;"),
+      deqValor: Li("int dato=temp->dato;"),
       deqFrente: Li("c->frente=temp->siguiente;"),
       deqIfNull: Li("if(c->frente==NULL){"),
       deqFinNull: Li("c->final=NULL;", 2),
       deqFree: Li("free(temp);", 1),
-      deqRet: Li("return valor;"),
+      deqRet: Li("return dato;"),
       deqFin: Li.fin("int dequeue(struct Cola *c){"),
       frSig: Li("int front(struct Cola *c){"),
       frIf: Li("if(isEmpty(c)){", 3),
@@ -398,14 +399,16 @@
         emit("impl", L.enqIf, "<code>isEmpty</code> devolvió 1: <b>es el primer nodo</b>. Hay que acomodar <code>frente</code> Y <code>final</code>.", { foco: ["main.cola.frente"] });
         FR.val = V.ptr(a);
         emit("impl", L.frNuevo, "<code>c-&gt;frente = nuevo</code> → el único nodo es también el frente.", { foco: ["main.cola.frente", a], etiqueta: "ok" });
+        FI.val = V.ptr(a);
+        emit("impl", L.finNuevoA, "<code>c-&gt;final = nuevo</code> → y también es el final: con un solo nodo, <code>frente</code> y <code>final</code> apuntan al mismo.", { foco: ["main.cola.final", a], etiqueta: "ok" });
       } else {
         emit("impl", L.enqIf, "<code>isEmpty</code> devolvió 0: ya hay nodos. El nuevo se <b>engancha detrás del último</b>.", { lv: 1, foco: ["main.cola.final"] });
         const ult = FI.val.to;
         mem.nodo(ult).sig = V.ptr(a);
         emit("impl", L.finSig, "<code>c-&gt;final-&gt;siguiente = nuevo</code> → <code>c-&gt;final</code> es el último nodo (" + ult + "); su <code>siguiente</code> pasa de NULL a <b>" + a + "</b>. Así queda enlazado.", { foco: [ult, a, "main.cola.final"], etiqueta: "swap" });
+        FI.val = V.ptr(a);
+        emit("impl", L.finNuevoB, "<code>c-&gt;final = nuevo</code> → <code>final</code> apunta al nodo recién agregado. <code>frente</code> no se mueve (sale primero el más viejo).", { foco: ["main.cola.final", a], etiqueta: "ok" });
       }
-      FI.val = V.ptr(a);
-      emit("impl", L.finNuevo, "<code>c-&gt;final = nuevo</code> → <code>final</code> apunta al nodo recién agregado. <code>frente</code> no se mueve (sale primero el más viejo).", { foco: ["main.cola.final", a], etiqueta: "ok" });
       cerrar();
       emit("impl", L.enqFin, "Termina <b>enqueue</b>. El nodo sigue en el heap.", { lv: 1, foco: [a] });
     }
@@ -415,7 +418,7 @@
       const f = abrir("dequeue(c)", [
         { n: "c", t: "struct Cola *", val: ptrCola() },
         { n: "temp", t: "struct Nodo *", val: V.unk() },
-        { n: "valor", t: "int", val: V.unk() },
+        { n: "dato", t: "int", val: V.unk() },
       ]);
       emit("impl", L.deqSig, "Entra <b>dequeue</b>: atiende al nodo del <b>frente</b>.", { foco: ["dequeue.c", "main.cola"] });
       emit("impl", L.deqIf, "Pregunta <code>isEmpty(c)</code>.", { lv: 1 });
@@ -433,8 +436,8 @@
       getV(f, "temp").val = V.ptr(a);
       emit("impl", L.deqTemp, "<code>temp = c-&gt;frente</code> → <code>temp</code> apunta al primer nodo (" + a + ") para poder liberarlo después.", { foco: ["dequeue.temp", a, "main.cola.frente"] });
       const nd = mem.nodo(a);
-      getV(f, "valor").val = copia(nd.dato);
-      emit("impl", L.deqValor, "<code>valor = temp-&gt;dato</code> → <b>" + nd.dato.v + "</b>.", { foco: ["dequeue.valor", a] });
+      getV(f, "dato").val = copia(nd.dato);
+      emit("impl", L.deqValor, "<code>dato = temp-&gt;dato</code> → <b>" + nd.dato.v + "</b>.", { foco: ["dequeue.dato", a] });
       FR.val = copia(nd.sig);
       emit("impl", L.deqFrente, "<code>c-&gt;frente = temp-&gt;siguiente</code> → el frente avanza al siguiente nodo (" + valTxt(nd.sig) + ").", { foco: ["main.cola.frente"], etiqueta: "swap" });
       const quedoVacia = FR.val.k === "null";
@@ -447,7 +450,7 @@
       emit("impl", L.deqFree, "<code>free(temp)</code> libera el nodo " + a + ".", { foco: [a, "dequeue.temp"], etiqueta: "free" });
       mem.limpiar();
       const x = nd.dato.v;
-      emit("impl", L.deqRet, "<code>return valor</code> → <b>" + x + "</b>.", { foco: ["dequeue.valor"], etiqueta: "ok" });
+      emit("impl", L.deqRet, "<code>return dato</code> → <b>" + x + "</b>.", { foco: ["dequeue.dato"], etiqueta: "ok" });
       cerrar();
       emit("impl", L.deqFin, "Termina <b>dequeue</b>.", { lv: 1 });
       return x;
