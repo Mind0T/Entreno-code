@@ -1,4 +1,4 @@
-/* Cola dinamica (nodos enlazados: frente y final) · declaracion */
+
 struct Nodo{
 	int dato;
 	struct Nodo* siguiente;
