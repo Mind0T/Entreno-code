@@ -13,8 +13,26 @@
     { id: "busqueda", titulo: "Algoritmos de búsqueda" },
   ];
   const raiz = document.getElementById("app-raiz");
-  let lateral, principal, tituloMovil;
+  let lateral, principal, tituloMovil, menuBtn, backdropEl;
   let temaActual = null;
+
+  /* ---------- menú móvil (cajón lateral) ---------- */
+  function abrirMenu() {
+    lateral.classList.add("abierto");
+    if (backdropEl) backdropEl.hidden = false;
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "true");
+    document.body.classList.add("menu-abierto");
+  }
+  function cerrarMenu() {
+    lateral.classList.remove("abierto");
+    if (backdropEl) backdropEl.hidden = true;
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("menu-abierto");
+  }
+  function alternarMenu() {
+    if (lateral.classList.contains("abierto")) cerrarMenu();
+    else abrirMenu();
+  }
 
   /* ---------- progreso ---------- */
   const visto = () => E.almacen.leer("visto", {});
@@ -242,6 +260,15 @@
         botones[x].setAttribute("aria-selected", on ? "true" : "false");
         botones[x].tabIndex = on ? 0 : -1;
       });
+      /* en la barra de pestañas deslizable (móvil), centra la activa SIN mover la página */
+      if (barra && barra.scrollWidth > barra.clientWidth + 1) {
+        try {
+          const br = barra.getBoundingClientRect();
+          const er = botones[k].getBoundingClientRect();
+          const delta = er.left + er.width / 2 - (br.left + br.width / 2);
+          barra.scrollBy({ left: delta, behavior: "smooth" });
+        } catch (e) {}
+      }
       if (!armados[k]) {
         armados[k] = true;
         try {
@@ -277,13 +304,13 @@
     const partes = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     E.vaciar(principal);
     window.scrollTo({ top: 0 });
-    lateral.classList.remove("abierto");
+    cerrarMenu();
     const id = partes[0] || "inicio";
-    if (id === "inicio") pintarInicio();
+    if (id === "inicio") { pintarInicio(); if (tituloMovil) tituloMovil.textContent = "Estudio de C"; }
     else {
       const m = E.moduloPorId(id);
-      if (m) pintarTema(m, partes[1]);
-      else pintarInicio();
+      if (m) { pintarTema(m, partes[1]); if (tituloMovil) tituloMovil.textContent = m.titulo; }
+      else { pintarInicio(); if (tituloMovil) tituloMovil.textContent = "Estudio de C"; }
     }
     pintarLateral();
     principal.focus({ preventScroll: true });
@@ -295,13 +322,14 @@
     if (guardado) aplicarTema(guardado);
     lateral = h("aside", { class: "lateral", id: "lateral", "aria-label": "Temas" });
     tituloMovil = h("b", {}, "Estudio de C");
-    const menu = h("button", { type: "button", class: "btn btn-chico", "aria-controls": "lateral", "aria-label": "Abrir o cerrar el menú", onclick: () => lateral.classList.toggle("abierto") }, "☰ Temas");
-    const barraMovil = h("div", { class: "barra-movil" }, menu, tituloMovil);
+    backdropEl = h("div", { class: "lateral-backdrop", hidden: true, "aria-hidden": "true", onclick: cerrarMenu });
+    menuBtn = h("button", { type: "button", class: "btn btn-chico btn-menu", "aria-controls": "lateral", "aria-expanded": "false", "aria-label": "Abrir o cerrar el menú de temas", onclick: alternarMenu }, "☰ Temas");
+    const barraMovil = h("div", { class: "barra-movil" }, menuBtn, tituloMovil);
     principal = h("main", { class: "principal", id: "contenido", tabindex: "-1" });
-    raiz.append(lateral, h("div", {}, barraMovil, principal));
+    raiz.append(lateral, backdropEl, h("div", {}, barraMovil, principal));
     window.addEventListener("hashchange", ruta);
     document.addEventListener("keydown", (ev) => {
-      if (ev.key === "Escape") lateral.classList.remove("abierto");
+      if (ev.key === "Escape") cerrarMenu();
     });
     ruta();
   }
