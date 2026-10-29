@@ -266,14 +266,19 @@
       ui.montar(d, typeof html === "function" ? html(ctx) : html, demos, ctx);
     },
   });
-  ui.pestanaCodigo = (modulo, anotaciones, orden, intro) => ({
-    titulo: "Código explicado",
-    render(cont) {
-      const A = E.codigoDe(modulo);
-      if (intro) cont.append(h("div", { class: "prosa ancha", html: intro }));
-      cont.append(E.CodigoAnotado(A, anotaciones, orden).el);
-    },
-  });
+  ui.pestanaCodigo = (modulo, anotaciones, orden, intro) => {
+    /* registra los comentarios incrustados de este módulo (se derivan de las
+       notas) para que también aparezcan en el código de la prueba de escritorio */
+    E.registrarComentarios(modulo, anotaciones);
+    return {
+      titulo: "Código explicado",
+      render(cont) {
+        const A = E.codigoDe(modulo);
+        if (intro) cont.append(h("div", { class: "prosa ancha", html: intro }));
+        cont.append(E.CodigoAnotado(A, anotaciones, orden).el);
+      },
+    };
+  };
   ui.pestanaQuiz = (id, preguntas) => ({
     titulo: "Quiz",
     render(cont) {

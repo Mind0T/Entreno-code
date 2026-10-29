@@ -12,49 +12,101 @@
   const fmtArr = (a) => (a.length > 10 ? "{" + a.slice(0, 8).join(", ") + ", … (" + a.length + ")}" : "{" + a.join(", ") + "}");
   const code = (s) => "<code>" + s + "</code>";
 
+  /* ---------- recorre imprimirArreglo línea por línea (su for e printf) ----------
+     Para arreglos grandes (> 16) lo resume en un paso para no alargar de más. */
+  function imprimirArreglo(T, Li, Lm, a, marks, pilaMain, callNth, cont) {
+    const n = a.length;
+    const vz = (vi) => ({ a: a.slice(), marks: marks || {}, ptr: vi >= 0 ? { i: vi } : {}, cont: cont || { cmp: 0, inter: 0 } });
+    const salida = a.join(" ") + " \n";
+    T.paso({
+      f: "main",
+      l: Lm("imprimirArreglo(numeros, TAM_ARREGLO);", callNth),
+      lv: 1,
+      nota: "<b>main</b> llama a <code>imprimirArreglo(numeros, TAM_ARREGLO)</code>: se entra a esa función para mostrar el arreglo en pantalla.",
+      viz: vz(-1),
+      v: { numeros: fmtArr(a) },
+      pila: pilaMain,
+    });
+    const fr = ["imprimirArreglo(numeros, tam = " + n + ")"].concat(pilaMain);
+    T.paso({ f: "impl", l: Li("void imprimirArreglo(int numeros[], int tam) {"), lv: 1, nota: "Entra <b>imprimirArreglo</b>. Recibe la <b>dirección</b> del arreglo (no una copia) y <code>tam = " + n + "</code>.", viz: vz(-1), v: { i: "?" }, pila: fr });
+    T.paso({ f: "impl", l: Li("int i;"), lv: 1, nota: "Declara <code>i</code>, el índice con el que recorrerá el arreglo. Todavía es basura.", viz: vz(-1), v: { i: "?" }, pila: fr });
+    const forK = Li("for (i = 0; i < tam; i++) {");
+    const prf = Li('printf("%d ", numeros[i]);');
+    if (n > 16) {
+      T.paso({ f: "impl", l: forK, lv: 1, nota: "El <code>for</code> va de <code>i = 0</code> hasta <code>tam - 1</code> e imprime cada número con <code>printf(\"%d \", numeros[i])</code> (" + n + " elementos).", viz: vz(0), v: { i: 0 }, pila: fr, sal: salida });
+    } else {
+      for (let k = 0; k < n; k++) {
+        T.paso({
+          f: "impl", l: forK, lv: 1,
+          nota: (k === 0 ? "<code>i = 0</code>. " : "<code>i++</code> → <code>i = " + k + "</code>. ") + "Condición <code>i &lt; tam</code> → " + k + " &lt; " + n + " es <b>verdadera</b>.",
+          viz: vz(k), v: { i: k }, pila: fr,
+        });
+        T.paso({
+          f: "impl", l: prf, lv: 1,
+          nota: "<code>printf(\"%d \", numeros[" + k + "])</code> → escribe <b>" + a[k] + "</b> seguido de un espacio.",
+          viz: vz(k), v: { i: k }, pila: fr, sal: a[k] + " ",
+        });
+      }
+      T.paso({ f: "impl", l: forK, lv: 1, nota: "<code>i++</code> → <code>i = " + n + "</code>. Condición <code>i &lt; tam</code> → " + n + " &lt; " + n + " es <b>falsa</b>: termina el <code>for</code>.", viz: vz(-1), v: { i: n }, pila: fr });
+    }
+    T.paso({ f: "impl", l: Li('printf("\\n");'), lv: 1, nota: "<code>printf(\"\\n\")</code> → imprime el salto de línea final. <code>imprimirArreglo</code> termina y regresa a <code>main</code>.", viz: vz(-1), v: { i: n }, pila: fr, sal: "\n" });
+  }
+
   /* ---------- parte comun: lo que hace main antes y despues ---------- */
-  function mainInicio(T, Lm, a, titulo, pilaMain) {
+  function mainInicio(T, Li, Lm, a, titulo, pilaMain) {
+    const vz = () => ({ a: a.slice(), marks: {}, ptr: {}, cont: { cmp: 0, inter: 0 } });
     T.paso({
       f: "main",
       l: Lm("int numeros[TAM_ARREGLO]"),
       nota: "<b>main</b> declara el arreglo <code>numeros</code>. En tu archivo trae 40 números; aquí usamos el que escribiste arriba (" + a.length + " números). Ojo: el arreglo vive en la memoria de <code>main</code>.",
-      viz: { a: a.slice(), marks: {}, ptr: {}, cont: { cmp: 0, inter: 0 } },
+      viz: vz(),
       v: { numeros: fmtArr(a) },
       pila: pilaMain,
     });
     T.paso({
       f: "main",
-      l: Lm("imprimirArreglo(numeros, TAM_ARREGLO);", 1),
+      l: Lm('printf("==='),
       lv: 1,
-      nota: "Se imprime el arreglo <b>original</b> con <code>imprimirArreglo</code> (un <code>for</code> que hace <code>printf(\"%d \", numeros[i])</code>).",
-      viz: { a: a.slice(), marks: {}, ptr: {}, cont: { cmp: 0, inter: 0 } },
+      nota: "<code>printf</code> imprime el título del programa en la consola.",
+      viz: vz(),
       v: { numeros: fmtArr(a) },
       pila: pilaMain,
-      sal: titulo + "\n\nArreglo original:\n" + a.join(" ") + " \n",
+      sal: titulo + "\n\n",
     });
+    T.paso({
+      f: "main",
+      l: Lm('printf("Arreglo original:'),
+      lv: 1,
+      nota: "Imprime el encabezado <code>\"Arreglo original:\"</code> antes de mostrar los números.",
+      viz: vz(),
+      v: { numeros: fmtArr(a) },
+      pila: pilaMain,
+      sal: "Arreglo original:\n",
+    });
+    imprimirArreglo(T, Li, Lm, a, {}, pilaMain, 1, { cmp: 0, inter: 0 });
   }
-  function mainFin(T, Lm, a, cont, pilaMain, etqFinal) {
+  function mainFin(T, Li, Lm, a, cont, pilaMain, etqFinal) {
     const marks = {};
     a.forEach((_, i) => (marks[i] = "sorted"));
     T.paso({
       f: "main",
-      l: Lm("printf(\"\\nArreglo ordenado:\\n\");"),
+      l: Lm('printf("\\nArreglo ordenado:'),
       lv: 1,
-      nota: "La función regresó. Como <code>numeros</code> se pasó por dirección, <code>main</code> ya ve el arreglo <b>ordenado</b> (no hubo copia).",
+      nota: "La función regresó. Como <code>numeros</code> se pasó por <b>dirección</b>, <code>main</code> ya ve el arreglo <b>ordenado</b> (no hubo copia). Imprime el encabezado <code>\"Arreglo ordenado:\"</code>.",
       viz: { a: a.slice(), marks, ptr: {}, cont },
       v: { numeros: fmtArr(a) },
       pila: pilaMain,
       sal: "\nArreglo ordenado:\n",
       etiqueta: "ok",
     });
+    imprimirArreglo(T, Li, Lm, a, marks, pilaMain, 2, cont);
     T.paso({
       f: "main",
-      l: Lm("imprimirArreglo(numeros, TAM_ARREGLO);", 2),
-      nota: "Se imprime el arreglo ordenado. " + (etqFinal || "") + " <b>Fin del programa.</b>",
+      l: Lm("return 0;"),
+      nota: "<code>return 0;</code> → <code>main</code> le avisa al sistema que todo salió bien. " + (etqFinal || "") + " <b>Fin del programa.</b>",
       viz: { a: a.slice(), marks, ptr: {}, cont },
       v: { numeros: fmtArr(a) },
       pila: pilaMain,
-      sal: a.join(" ") + " \n",
       etiqueta: "ok",
     });
   }
@@ -91,7 +143,7 @@
     };
     const resumen = () => a.join(" ");
 
-    mainInicio(T, Lm, a, "=== ORDENAMIENTO BURBUJA (Bubble Sort) ===", PM);
+    mainInicio(T, Li, Lm, a, "=== ORDENAMIENTO BURBUJA (Bubble Sort) ===", PM);
     T.paso({
       f: "main",
       l: Lm("burbuja(numeros, TAM_ARREGLO);"),
@@ -239,7 +291,7 @@
       v: null,
       pila: PF,
     });
-    mainFin(T, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Hubo " + c.cmp + " comparaciones y " + c.inter + " intercambios.");
+    mainFin(T, Li, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Hubo " + c.cmp + " comparaciones y " + c.inter + " intercambios.");
     T.resultado = a;
     T.cont = c;
     return T;
@@ -288,7 +340,7 @@
     };
     const resumen = () => a.join(" ");
 
-    mainInicio(T, Lm, a, "=== ORDENAMIENTO POR SELECCION (Selection Sort) ===", PM);
+    mainInicio(T, Li, Lm, a, "=== ORDENAMIENTO POR SELECCION (Selection Sort) ===", PM);
     T.paso({
       f: "main",
       l: Lm("seleccion(numeros, TAM_ARREGLO);"),
@@ -436,7 +488,7 @@
       etiqueta: "ok",
     });
     T.paso({ f: "impl", l: L.fin, nota: "Termina <b>seleccion</b>. Siempre hace exactamente <b>n − 1 intercambios</b> (aquí " + c.inter + "), aunque el arreglo ya estuviera ordenado.", viz: viz(ordenadosHasta(n)), v: null, pila: PF });
-    mainFin(T, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Comparaciones: " + c.cmp + ", intercambios: " + c.inter + ".");
+    mainFin(T, Li, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Comparaciones: " + c.cmp + ", intercambios: " + c.inter + ".");
     T.resultado = a;
     T.cont = c;
     return T;
@@ -484,7 +536,7 @@
     };
     const resumen = () => a.join(" ");
 
-    mainInicio(T, Lm, a, "=== ORDENAMIENTO POR INSERCION (Insertion Sort) ===", PM);
+    mainInicio(T, Li, Lm, a, "=== ORDENAMIENTO POR INSERCION (Insertion Sort) ===", PM);
     T.paso({
       f: "main",
       l: Lm("insercion(numeros, TAM_ARREGLO);"),
@@ -614,7 +666,7 @@
       etiqueta: "ok",
     });
     T.paso({ f: "impl", l: L.fin, nota: "Termina <b>insercion</b>.", viz: viz(prefijo(n - 1)), v: null, pila: PF });
-    mainFin(T, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Comparaciones: " + c.cmp + ", desplazamientos: " + c.inter + ".");
+    mainFin(T, Li, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Comparaciones: " + c.cmp + ", desplazamientos: " + c.inter + ".");
     T.resultado = a;
     T.cont = c;
     return T;
@@ -700,7 +752,7 @@
     };
     const viz = (marks, rango, ptr, extra) => ({ a: a.slice(), marks: marks || {}, rango: rango || null, ptr: ptr || {}, cont: { cmp: c.cmp, inter: c.inter }, extra: extra || null });
 
-    mainInicio(T, Lm, a, "=== ORDENAMIENTO POR MEZCLA (Merge Sort) ===", PM);
+    mainInicio(T, Li, Lm, a, "=== ORDENAMIENTO POR MEZCLA (Merge Sort) ===", PM);
     T.paso({
       f: "main",
       l: Lm("mezcla(numeros, 0, TAM_ARREGLO - 1);"),
@@ -1000,7 +1052,7 @@
     }
 
     mezcla(0, n - 1);
-    mainFin(T, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Comparaciones: " + c.cmp + ", escrituras en numeros: " + c.inter + ".");
+    mainFin(T, Li, Lm, a, { cmp: c.cmp, inter: c.inter }, PM, "Comparaciones: " + c.cmp + ", escrituras en numeros: " + c.inter + ".");
     T.resultado = a;
     T.cont = c;
     return T;

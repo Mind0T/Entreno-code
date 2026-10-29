@@ -25,16 +25,34 @@
     const btnTab = {};
     let actual = null;
 
+    /* comentarios incrustados: comPorRol[rol][nLinea] = "texto" */
+    const comentarios = opts.comentarios || (archivos._mod && E.COMENT[archivos._mod]) || [];
+    const comPorRol = {};
+    if (comentarios.length) {
+      comentarios.forEach((cm) => {
+        const arch = archivos[cm.f];
+        if (!arch) return;
+        let n = cm.n;
+        if (!n) {
+          try { n = E.anclas(arch, "comentarios")(cm.ln, cm.nth || 1); } catch (e) { return; }
+        }
+        if (!n) return;
+        comPorRol[cm.f] = comPorRol[cm.f] || {};
+        if (!comPorRol[cm.f][n]) comPorRol[cm.f][n] = cm.c; // primera gana
+      });
+    }
+
     orden.forEach((rol) => {
       const a = archivos[rol];
       const vista = h("div", { class: "codigo-archivo", role: "tabpanel", hidden: true });
+      const comR = comPorRol[rol] || {};
       lineas[rol] = a.lines.map((txt, i) => {
-        const ln = h(
-          "div",
-          { class: "ln", "data-n": i + 1 },
+        const hijos = [
           h("span", { class: "ln-n" }, i + 1),
-          h("span", { class: "ln-src", html: txt.length ? E.resaltarC(txt) : "&nbsp;" })
-        );
+          h("span", { class: "ln-src", html: txt.length ? E.resaltarC(txt) : "&nbsp;" }),
+        ];
+        if (comR[i + 1]) hijos.push(h("span", { class: "ln-com" }, "// " + comR[i + 1]));
+        const ln = h("div", { class: "ln" + (comR[i + 1] ? " con-com" : ""), "data-n": i + 1 }, ...hijos);
         if (opts.alClickLinea) ln.addEventListener("click", () => opts.alClickLinea(rol, i + 1, ln));
         vista.append(ln);
         return ln;
@@ -165,6 +183,7 @@
       );
     }
     panel = E.PanelCodigo(archivos, orden, {
+      comentarios: E.comentDeAnot(anotaciones),
       alClickLinea: (rol, n) => {
         const i = marcas.findIndex((m) => m.f === rol && m.l === n);
         if (i >= 0) elegir(i);

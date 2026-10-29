@@ -128,7 +128,29 @@
       const lines = f[rol].code.replace(/\n$/, "").split("\n");
       r[rol] = { rol, name: f[rol].name, path: f[rol].path, code: f[rol].code, lines };
     }
+    r._mod = modulo; // para buscar comentarios incrustados (E.COMENT[modulo])
     return r;
+  };
+
+  /* comentarios incrustados en el codigo: E.COMENT[modulo] = [{f, ln, nth, c}] */
+  E.COMENT = E.COMENT || {};
+  /* Construye comentarios cortos a partir de las notas (anotaciones) ya escritas.
+     Usa a.com si existe; si no, el titulo de la nota (antes del "|"), sin HTML. */
+  E.comentDeAnot = function (anotaciones) {
+    const limpiar = (s) => (s || "").replace(/<[^>]+>/g, "").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+    const corta = (s, n) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
+    return (anotaciones || []).map((a) => ({
+      f: a.f,
+      ln: a.ln,
+      nth: a.nth || 1,
+      c: a.com ? limpiar(a.com) : corta(limpiar((a.t || "").split("|")[0]), 46),
+    })).filter((x) => x.c);
+  };
+  /* Registra (y devuelve) los comentarios de un modulo a partir de sus anotaciones. */
+  E.registrarComentarios = function (modulo, anotaciones) {
+    const cs = E.comentDeAnot(anotaciones);
+    E.COMENT[modulo] = cs;
+    return cs;
   };
 
   /* anclas(archivo): devuelve ln('texto', nth) -> numero de linea (1..n) */
