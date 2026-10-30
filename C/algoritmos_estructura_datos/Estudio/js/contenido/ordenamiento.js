@@ -364,6 +364,43 @@
     <p>Así se reparten las llamadas con 8 elementos. Cada recuadro es una llamada a <code>mezcla(inicio, fin)</code>. Los números <b>juntar #n</b> te dicen en qué <i>orden</i> se ejecutan las fusiones: de abajo hacia arriba, de izquierda a derecha.</p>
     <div data-demo="arbol"></div>
     <p>Una idea clave: <code>mezcla(numeros, inicio, mitad)</code> <b>no pasa a la siguiente línea</b> hasta que esa llamada (y todas las que ella hace) terminen. Por eso la primera fusión que ocurre es la de los dos elementos más a la izquierda. En la animación, el panel <b>Llamadas activas</b> te muestra la pila de llamadas.</p>
+
+    <h2>¿En qué momento se pasa a <code>juntar</code>? (lo que más confunde)</h2>
+    <p>El error típico es pensar: «cuando <code>if (inicio &lt; fin)</code> es <b>falso</b>, entonces se va a <code>juntar</code>». <b>No es así.</b> Fíjate dónde vive <code>juntar</code> en tu código:</p>
+    <div class="bloque"><code>if (inicio &lt; fin) {
+    mitad = (inicio + fin) / 2;
+    mezcla(numeros, inicio, mitad);      // mitad izquierda
+    mezcla(numeros, mitad + 1, fin);     // mitad derecha
+    juntar(numeros, inicio, mitad, fin); // &lt;-- ESTÁ DENTRO del if, al final
+}</code></div>
+    <p><code>juntar</code> está <b>dentro</b> del <code>if</code> y es la <b>última</b> línea. Entonces:</p>
+    <ul>
+      <li>Si <code>inicio &lt; fin</code> es <b>falso</b> → <b>no</b> entra al <code>if</code>, <b>no hace nada</b> y la función regresa. Ese es el <b>caso base</b>. <b>No</b> llama a <code>juntar</code>.</li>
+      <li>Se llega a <code>juntar</code> <b>cuando <code>inicio &lt; fin</code> fue cierto Y además ya terminaron las dos llamadas recursivas</b> de arriba.</li>
+    </ul>
+    <p>Es decir: <mark>no pasas a <code>juntar</code> porque dejaste de dividir; pasas a <code>juntar</code> porque las dos mitades de esa llamada ya regresaron ordenadas.</mark></p>
+    ${n("idea", "Las 3 fases de cada llamada (y por qué se parece a Fibonacci)", "<p>Cada vez que <code>mezcla</code> entra con <code>inicio &lt; fin</code>, hace tres cosas <b>en orden</b>: <b>1) dividir</b> (<code>mitad = (inicio+fin)/2</code>), <b>2) conquistar</b> (<code>mezcla</code> izquierda y luego <code>mezcla</code> derecha), <b>3) combinar</b> (<code>juntar</code>). La fase 3 <b>siempre</b> ocurre <b>después</b> de la 2. Es la misma forma que Fibonacci: <code>return fib(n-1) + fib(n-2)</code> = llamo a la izquierda, llamo a la derecha y <i>combino</i> (sumo). La única diferencia: Fibonacci combina con un valor que <code>return</code>; mezcla combina con <code>juntar</code>, que no devuelve nada, sino que reordena el arreglo en su lugar. Por eso cuesta más «verlo».</p>")}
+    <h3>La clave: la función se «congela»</h3>
+    <p>Cuando <code>mezcla</code> ejecuta la línea <code>mezcla(numeros, inicio, mitad)</code>, se queda <b>congelada</b> ahí: no avanza a la siguiente línea hasta que esa llamada termine por completo. Es como platos apilados: no puedes quitar el de abajo hasta quitar los de arriba. Eso es la <b>pila de llamadas</b>. Cada <code>mezcla</code> pausada espera en su línea de <code>mezcla(...)</code>, y solo cuando sus dos llamadas regresaron, ejecuta su <code>juntar</code> y por fin regresa.</p>
+    <h3>La ejecución completa, paso a paso, con <code>[38, 27, 43, 3]</code></h3>
+    <p>Léelo de arriba hacia abajo: ese es el orden <b>real</b> en que corre. &nbsp;⏸ = se congela esperando. &nbsp;↩ = regresa (caso base: no hace nada). &nbsp;★ = aquí se ejecuta <code>juntar</code>.</p>
+    <div class="bloque"><code>mezcla(0,3)   0 &lt; 3 ✓   mitad = 1
+ ├─ ⏸ llama mezcla(0,1)
+ │    mezcla(0,1)   0 &lt; 1 ✓   mitad = 0
+ │     ├─ ⏸ llama mezcla(0,0)   0 &lt; 0 ✗  → caso base ↩ (nada)   pedazo {38}
+ │     ├─ ⏸ llama mezcla(1,1)   1 &lt; 1 ✗  → caso base ↩ (nada)   pedazo {27}
+ │     └─ ★ juntar(0,0,1)   une {38} y {27}  →  numeros[0..1] = {27, 38}
+ │    mezcla(0,1) regresa ↩
+ ├─ ⏸ llama mezcla(2,3)   2 &lt; 3 ✓   mitad = 2
+ │     ├─ ⏸ llama mezcla(2,2)   2 &lt; 2 ✗  → caso base ↩   pedazo {43}
+ │     ├─ ⏸ llama mezcla(3,3)   3 &lt; 3 ✗  → caso base ↩   pedazo {3}
+ │     └─ ★ juntar(2,2,3)   une {43} y {3}  →  numeros[2..3] = {3, 43}
+ │    mezcla(2,3) regresa ↩
+ └─ ★ juntar(0,1,3)   une {27,38} y {3,43}  →  numeros[0..3] = {3, 27, 38, 43}
+mezcla(0,3) regresa ↩   ← arreglo ordenado</code></div>
+    <p>Fíjate en tres cosas: <b>(1)</b> la recursión baja <b>primero todo por la izquierda</b> hasta tocar fondo (<code>mezcla(0,0)</code>) antes de tocar la derecha; <b>(2)</b> el <b>primer <code>juntar</code></b> que corre es el más chico (unir dos pedazos de un elemento); <b>(3)</b> cada <code>juntar</code> aparece <b>justo después de sus dos llamadas</b>, nunca cuando el <code>if</code> da falso.</p>
+    <p>Entonces, respondiendo directo: <mark>se pasa a <code>juntar</code> en el instante en que una llamada <code>mezcla(inicio, fin)</code> termina su <b>segunda</b> llamada recursiva</mark>. En ese momento sus dos mitades ya están ordenadas en <code>numeros</code>, y la siguiente línea es <code>juntar</code>.</p>
+
     <h2>Fase 2 · fusionar (<code>juntar</code>)</h2>
     <p>Mira cómo se fusionan dos mitades ya ordenadas. Las filas de abajo son las <b>copias temporales</b> <code>izquierda[]</code> y <code>derecha[]</code>; el marcador indica qué elemento de cada una se está considerando.</p>
     <div data-demo="pasada"></div>

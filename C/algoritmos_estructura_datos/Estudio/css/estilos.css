@@ -202,7 +202,7 @@ code { font-size: 0.88em; background: var(--azul-bg); color: var(--azul-claro); 
   font-family: var(--f-mono); font-size: 13.5px; line-height: 1.55; background: var(--codigo-bg); border: 1px solid var(--linea); border-radius: var(--radio);
   padding: 12px 16px; overflow-x: auto; margin: 12px 0 18px; white-space: pre; max-width: 100%;
 }
-.bloque code { background: none; padding: 0; font-size: inherit; border: 0; color: var(--tinta); }
+.codigo-inline code, .bloque code { background: none; padding: 0; font-size: inherit; border: 0; color: var(--tinta); white-space: inherit; }
 .dos-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin: 14px 0 20px; align-items: start; }
 .dos-col > * { min-width: 0; }
 .tarjeta { background: var(--papel); border: 1px solid var(--linea); border-radius: var(--radio); padding: 16px 18px; box-shadow: var(--sombra); }
