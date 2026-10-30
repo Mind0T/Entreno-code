@@ -8,5 +8,3 @@ irm https://claude.ai/install.ps1 | iex
 windows CMD
 curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
 
-password github
-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O
