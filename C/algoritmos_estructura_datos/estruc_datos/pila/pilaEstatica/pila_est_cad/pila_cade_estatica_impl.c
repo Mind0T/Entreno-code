@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdio.h>
 #include <string.h>
 #include "pila_cade_estatica_dec.h"
 
@@ -52,28 +51,9 @@ void printStack(struct Pila *p){
 		printf("\nLo siento no puedo imprimir algun elemento\nLA PILA ESTA VACIA\n");
 		return;
 	}
-	printf("\nElementos de la fila\n");
+	printf("\nElementos de la pila\n");
 	for(int i=p->tope;i>=0;i--){
 		printf("%s\n",p->dato[i]);
 	}
 	printf("\n\n");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

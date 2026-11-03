@@ -6,6 +6,7 @@
 int main(){
 	struct Pila pila;
 	int entrada;
+	int c;
 	char valor[LONG];
 	char extraido[LONG];
 
@@ -20,23 +21,31 @@ int main(){
 		printf("\n4- Enseniarte el ultimo elemento de la pila\n");
 		printf("\n5- Limpiar Pila\n");
 		printf("\n6- Salir\n\n\n\n");
-		if(scanf("%d",&entrada)!=1){
+		int r=scanf("%d",&entrada);
+		if(r==EOF) break;
+		if(r!=1){
 			printf("\nEntrada no valida\n");
-			while(getchar()!='\n');
+			while((c=getchar())!='\n' && c!=EOF);
 			entrada=0;
 			continue;
 		}
-		while(getchar()!='\n');
+		while((c=getchar())!='\n' && c!=EOF);
 
 		switch(entrada){
-			case 1:
+			case 1:	
 				printStack(&pila);
 				break;
 			case 2:
 				printf("\nIngrese la cadena a apilar\n");
 				if(fgets(valor,LONG,stdin)!=NULL){
+					if(strchr(valor,'\n')==NULL){
+						while((c=getchar())!='\n' && c!=EOF);
+					}
 					valor[strcspn(valor,"\n")]='\0';
-					push(&pila,valor);
+					if(valor[0]=='\0')
+						printf("\nCadena vacia, no se apilo\n");
+					else
+						push(&pila,valor);
 				}
 				break;
 			case 3:
@@ -54,7 +63,6 @@ int main(){
 				init(&pila);
 				break;
 			case 6:
-				printf("\nFIN DEL PROGRAMA\n");
 				break;
 			default:
 				printf("\nEntrada no valida\n");
