@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "dec.h"
+#include <stdlib.h>
 
 
 int main(){
@@ -19,14 +20,13 @@ int main(){
 		printf("\n3- Extraer el ultimo elemento y quitarlo de la pila\n");
 		printf("\n4- Enseniarte el ultimo elemento de la pila\n");
 		printf("\n5- Limpiar Pila\n");
-		printf("\n6- Salir\n\n\n\n");
+		printf("\n6- Limpiar Consola\n");
+		printf("\n7- Salir\n\n\n\n\n");
 		if(scanf("%d",&entrada)!=1){
-			printf("\nEntrada no valida\n");
-			while(getchar()!='\n');
 			entrada=0;
-			continue;
 		}
-		while(getchar()!='\n');
+		int c;
+		while((c=getchar())!='\n' && c!=EOF);
 
 		switch(entrada){
 			case 1:
@@ -34,10 +34,9 @@ int main(){
 				break;
 			case 2:
 				printf("\nIngrese la cadena a apilar\n");
-				if(fgets(valor,LONG,stdin)!=NULL){
-					valor[strcspn(valor,"\n")]='\0';
+				fgets(valor,LONG,stdin);
+				valor[strcspn(valor,"\n")]='\0';
 					push(&pila,valor);
-				}
 				break;
 			case 3:
 				if(pop(&pila,extraido)){
@@ -54,12 +53,16 @@ int main(){
 				init(&pila);
 				break;
 			case 6:
+				system("clear");
+				break;
+			case 7:
 				printf("\nFIN DEL PROGRAMA\n");
 				break;
 			default:
 				printf("\nEntrada no valida\n");
+
 		}
-	} while(entrada!=6);
+	} while(entrada!=7);
 	init(&pila);
 	printf("\nFin del programa\nVACIADO DE LA PILA\n");
 
