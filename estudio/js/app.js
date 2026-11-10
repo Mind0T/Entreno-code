@@ -81,8 +81,8 @@
       h(
         "a",
         { class: "marca", href: "#/inicio" },
-        h("div", { class: "marca-logo", "aria-hidden": "true" }, "C"),
-        h("div", {}, h("b", {}, "Estudio de C"), h("span", {}, "algoritmos y estructuras de datos"))
+        h("div", { class: "marca-logo", "aria-hidden": "true" }, "E"),
+        h("div", {}, h("b", {}, "Estudio"), h("span", {}, "aprende viendo cómo funciona"))
       )
     );
     const navInicio = h("ul", { class: "nav-lista" }, h("li", {}, h("a", { class: "nav-item", href: "#/inicio", "aria-current": actual === "inicio" ? "page" : null }, h("span", { class: "pt", "aria-hidden": "true" }), "Mapa de estudio")));
@@ -132,15 +132,15 @@
   /* ---------- inicio ---------- */
   function pintarInicio() {
     temaActual = null;
-    document.title = "Estudio de C · algoritmos y estructuras de datos";
+    document.title = "Estudio · Irvin Soriano";
     tituloMovil.textContent = "Mapa de estudio";
     const c = h("div", { class: "contenedor" });
     c.append(
       h(
         "section",
         { class: "hero" },
-        h("h1", { html: "Aprende C viendo <em>cómo se ejecuta</em>, línea por línea." }),
-        h("p", {}, "Tu propio código de ordenamiento, pilas y colas, convertido en pruebas de escritorio animadas: la memoria, los apuntadores y los dobles apuntadores a la vista."),
+        h("h1", { html: "Aprende viendo <em>cómo funciona</em>, paso a paso." }),
+        h("p", {}, "Código real y temas explicados paso a paso: con pruebas de escritorio que siguen el código línea por línea — la memoria, los apuntadores y la lógica, a la vista."),
         h("p", { class: "suave" }, "Elige un tema del mapa. Cada uno trae explicación, código comentado línea por línea, prueba de escritorio animada, laboratorio y un mini quiz.")
       )
     );
@@ -193,7 +193,7 @@
   /* ---------- tema ---------- */
   function pintarTema(m, tabPedida) {
     temaActual = m;
-    document.title = m.titulo + " · Estudio de C";
+    document.title = m.titulo + " · Estudio";
     tituloMovil.textContent = m.titulo;
     const claves = Object.keys(m.pestanas);
     const tabIni = claves.includes(tabPedida) ? tabPedida : claves[0];
@@ -306,11 +306,11 @@
     window.scrollTo({ top: 0 });
     cerrarMenu();
     const id = partes[0] || "inicio";
-    if (id === "inicio") { pintarInicio(); if (tituloMovil) tituloMovil.textContent = "Estudio de C"; }
+    if (id === "inicio") { pintarInicio(); if (tituloMovil) tituloMovil.textContent = "Estudio"; }
     else {
       const m = E.moduloPorId(id);
       if (m) { pintarTema(m, partes[1]); if (tituloMovil) tituloMovil.textContent = m.titulo; }
-      else { pintarInicio(); if (tituloMovil) tituloMovil.textContent = "Estudio de C"; }
+      else { pintarInicio(); if (tituloMovil) tituloMovil.textContent = "Estudio"; }
     }
     pintarLateral();
     principal.focus({ preventScroll: true });
@@ -321,7 +321,7 @@
     const guardado = E.almacen.leer("tema", null);
     if (guardado) aplicarTema(guardado);
     lateral = h("aside", { class: "lateral", id: "lateral", "aria-label": "Temas" });
-    tituloMovil = h("b", {}, "Estudio de C");
+    tituloMovil = h("b", {}, "Estudio");
     backdropEl = h("div", { class: "lateral-backdrop", hidden: true, "aria-hidden": "true", onclick: cerrarMenu });
     menuBtn = h("button", { type: "button", class: "btn btn-chico btn-menu", "aria-controls": "lateral", "aria-expanded": "false", "aria-label": "Abrir o cerrar el menú de temas", onclick: alternarMenu }, "☰ Temas");
     const barraMovil = h("div", { class: "barra-movil" }, menuBtn, tituloMovil);

@@ -1,4 +1,4 @@
-# Estudio · Algoritmos y estructuras de datos en C
+# Estudio · plataforma de estudio de Irvin
 
 Sitio web interactivo para estudiar los programas de esta carpeta: explicaciones detalladas, animaciones SVG,
 pruebas de escritorio que siguen tu código C línea por línea (con stack, heap y apuntadores), laboratorio y quiz.
@@ -11,7 +11,7 @@ Es HTML + CSS + JavaScript puro, sin build ni dependencias (tipografías incluid
 ## Ver en tu computadora
 
 ```bash
-cd C/algoritmos_estructura_datos/Estudio
+cd estudio
 python3 -m http.server 8000     # y abre http://localhost:8000
 ```
 (También funciona abriendo `index.html` directamente.)
@@ -19,7 +19,7 @@ python3 -m http.server 8000     # y abre http://localhost:8000
 ## Desplegar en Vercel
 
 1. *Add New… → Project* e importa el repositorio.
-2. **Root Directory:** `C/algoritmos_estructura_datos/Estudio`
+2. **Root Directory:** `estudio`
 3. **Framework Preset:** Other · sin *Build Command* ni *Output Directory*.
 4. *Deploy*. `vercel.json` ya trae las cabeceras y la caché.
 
@@ -28,7 +28,7 @@ python3 -m http.server 8000     # y abre http://localhost:8000
 Vercel solo publica esta carpeta, así que el código de tus `.c`/`.h` se copia (sin comentarios) a `js/datos/fuentes.js`:
 
 ```bash
-python3 C/algoritmos_estructura_datos/Estudio/scripts/sincronizar_codigo.py
+python3 estudio/scripts/sincronizar_codigo.py
 ```
 
 Las animaciones están escritas a mano siguiendo tu código; si cambias líneas, la página avisa en la consola del navegador
@@ -36,7 +36,7 @@ qué línea ya no encontró. Para comprobar que las animaciones siguen siendo fi
 y compara salidas):
 
 ```bash
-node C/algoritmos_estructura_datos/Estudio/scripts/verificar.js
+node estudio/scripts/verificar.js
 ```
 
 ## Estructura

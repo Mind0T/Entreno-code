@@ -23,9 +23,9 @@ import sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ESTUDIO = os.path.dirname(AQUI)
-RAIZ_REPO = os.path.abspath(os.path.join(ESTUDIO, "..", "..", ".."))
+RAIZ_REPO = os.path.abspath(os.path.join(ESTUDIO, ".."))  # estudio/ está en la raíz del repo
 ED = "C/algoritmos_estructura_datos/estruc_datos"
-EST = "C/algoritmos_estructura_datos/Estudio/c_extra"
+EST = "estudio/c_extra"
 
 # modulo -> carpeta (relativa a la raiz del repo) + archivos [dec, impl, main]
 MANIFIESTO = {
