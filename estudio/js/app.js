@@ -208,33 +208,37 @@
     (topics || []).forEach((t) => ul.append(h("span", { class: "ptopic pronto" }, h("span", { class: "pdot" }), T(t), h("span", { class: "etq" }, D("soon")))));
     pop.append(h("div", { class: "pg" }, ul));
   }
-  function cerrarPops(excepto) {
-    document.querySelectorAll(".catlang-wrap.open").forEach((w) => {
-      if (w === excepto) return;
-      w.classList.remove("open"); const b = w.querySelector(".catlang"); if (b) b.setAttribute("aria-expanded", "false");
-    });
-  }
   function categoryZone() {
     const menu = h("div", { class: "catmenu" });
+    const hint = h("p", { class: "lzhint" }, D("pick"));
+    const panel = h("div", { class: "lzpanel", id: "lzpanel", hidden: true });
+    let activeId = null;
+    const botones = [];
     CATS.forEach((cat) => {
       const col = h("div", { class: "catcol" }, h("h3", { class: "cattitle" }, T(cat.titulo)));
       const list = h("div", { class: "catlist" });
       cat.langs.forEach((l) => {
-        const pop = h("div", { class: "catpop", role: "menu" });
-        if (l.real) popTemasC(pop); else popSoon(pop, l.soon);
-        const btn = h("button", { class: "catlang" + (l.real ? "" : " soon"), type: "button", "aria-haspopup": "true", "aria-expanded": "false" },
+        const btn = h("button", { class: "catlang" + (l.real ? "" : " soon"), type: "button", "aria-expanded": "false", "aria-controls": "lzpanel" },
           h("span", { class: "pix" }, l.label), l.real ? null : h("span", { class: "pronto-tag" }, D("soon")));
-        const wrap = h("div", { class: "catlang-wrap" }, btn, pop);
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const open = !wrap.classList.contains("open");
-          cerrarPops(wrap); wrap.classList.toggle("open", open); btn.setAttribute("aria-expanded", String(open));
+        botones.push(btn);
+        btn.addEventListener("click", () => {
+          if (activeId === l.id) {
+            activeId = null; panel.hidden = true; hint.hidden = false;
+            botones.forEach((b) => b.setAttribute("aria-expanded", "false"));
+            return;
+          }
+          activeId = l.id;
+          botones.forEach((b) => b.setAttribute("aria-expanded", String(b === btn)));
+          E.vaciar(panel);
+          if (l.real) popTemasC(panel); else popSoon(panel, l.soon);
+          panel.hidden = false; hint.hidden = true;
+          try { panel.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
         });
-        list.append(wrap);
+        list.append(btn);
       });
       col.append(list); menu.append(col);
     });
-    return h("section", { class: "catzone" }, menu);
+    return h("section", { class: "catzone" }, menu, hint, panel);
   }
 
   /* ---------- landing ---------- */
@@ -345,7 +349,6 @@
     principal = h("main", { class: "principal", id: "contenido", tabindex: "-1" });
     raiz.append(principal);
     window.addEventListener("hashchange", ruta);
-    document.addEventListener("click", function () { cerrarPops(null); });
     ruta();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);

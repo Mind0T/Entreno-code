@@ -165,27 +165,26 @@ html, body { overflow-x: hidden; }
 }
 
 /* ===================== Menú de categorías (reactivo) ===================== */
-.catzone{ display:flex; justify-content:center; }
-.catmenu{ display:flex; flex-wrap:wrap; justify-content:center; gap:36px clamp(36px,7vw,84px); }
-.cattitle{ font:200 12px var(--f-display); letter-spacing:.2em; text-transform:uppercase; color:var(--tinta2); margin:0 0 14px; }
-.catlist{ display:grid; gap:4px; }
-.catlang-wrap{ position:relative; }
-.catlang{ display:inline-flex; align-items:center; gap:10px; text-align:left; padding:7px 10px; border:1px solid transparent; background:none; cursor:pointer; border-radius:9px; transition:background .15s, border-color .15s; }
+.catzone{ display:grid; justify-items:center; gap:22px; }
+.catmenu{ display:flex; flex-wrap:wrap; justify-content:center; gap:30px clamp(36px,7vw,84px); }
+.cattitle{ font:200 12px var(--f-display); letter-spacing:.2em; text-transform:uppercase; color:var(--tinta2); margin:0 0 14px; text-align:center; }
+.catlist{ display:grid; gap:4px; justify-items:center; }
+.catlang{ display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border:1px solid transparent; background:none; cursor:pointer; border-radius:10px; transition:background .15s, border-color .15s; }
 .catlang .pix{ font-family:"Silkscreen","IBM Plex Mono",monospace; font-size:15px; color:var(--tinta); letter-spacing:.01em; transition:color .15s, text-shadow .15s; }
-.catlang-wrap:hover .catlang, .catlang-wrap:focus-within .catlang, .catlang-wrap.open .catlang{ background:var(--papel2); border-color:var(--linea); }
-.catlang-wrap:hover .pix, .catlang-wrap:focus-within .pix, .catlang-wrap.open .pix{ color:var(--azul); text-shadow:0 0 16px color-mix(in srgb,var(--azul) 55%,transparent); }
+.catlang:hover{ background:var(--papel2); border-color:var(--linea); }
+.catlang:hover .pix, .catlang[aria-expanded="true"] .pix{ color:var(--azul); text-shadow:0 0 16px color-mix(in srgb,var(--azul) 55%,transparent); }
+.catlang[aria-expanded="true"]{ background:var(--papel2); border-color:color-mix(in srgb,var(--azul) 45%,var(--linea)); }
 .catlang.soon .pix{ color:var(--tinta2); }
-.catlang-wrap:hover .catlang.soon .pix, .catlang-wrap.open .catlang.soon .pix{ color:var(--morado); text-shadow:0 0 16px color-mix(in srgb,var(--morado) 50%,transparent); }
+.catlang.soon:hover .pix, .catlang.soon[aria-expanded="true"] .pix{ color:var(--morado); text-shadow:0 0 16px color-mix(in srgb,var(--morado) 50%,transparent); }
 .pronto-tag{ font:700 9px var(--f-display); letter-spacing:.08em; text-transform:uppercase; color:var(--tinta2); border:1px solid var(--linea); border-radius:99px; padding:2px 7px; }
+.lzhint{ color:var(--tinta2); font-size:13.5px; margin:0; text-align:center; }
 
-/* popover de temas (aparece al pasar el mouse / tocar) */
-.catpop{ position:absolute; top:100%; left:0; z-index:40; width:max-content; min-width:230px; max-width:min(330px,82vw);
-  max-height:60vh; overflow:auto; margin-top:8px; padding:15px 16px; display:none; gap:14px;
-  background:var(--papel); border:1px solid var(--linea); border-radius:14px; box-shadow:var(--sombra); }
-.catlang-wrap::after{ content:""; position:absolute; top:100%; left:0; right:0; height:10px; }
-.catlang-wrap:hover .catpop, .catlang-wrap:focus-within .catpop, .catlang-wrap.open .catpop{ display:grid; animation:popin .18s ease-out; }
-@keyframes popin{ from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none} }
-.pg h4{ font:700 10.5px var(--f-display); letter-spacing:.1em; text-transform:uppercase; color:var(--tinta2); margin:0 0 6px; }
+/* panel de temas (en el flujo, al dar click en un lenguaje) */
+.lzpanel{ width:100%; max-width:860px; margin:0 auto; padding:20px 22px; border:1px solid var(--linea); border-radius:16px;
+  background:linear-gradient(160deg, rgba(20,20,20,.6), rgba(12,12,12,.4)); box-shadow:var(--sombra);
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px 26px; align-items:start; animation:lzdrop .22s ease-out; }
+@keyframes lzdrop{ from{opacity:0; transform:translateY(-8px)} to{opacity:1; transform:none} }
+.pg h4{ font:700 10.5px var(--f-display); letter-spacing:.1em; text-transform:uppercase; color:var(--tinta2); margin:0 0 7px; }
 .pg-list{ display:grid; gap:2px; }
 .ptopic{ display:flex; align-items:center; gap:9px; padding:7px 9px; border-radius:8px; color:var(--tinta); text-decoration:none; font-size:14px; transition:background .15s, color .15s; }
 .ptopic:hover:not(.pronto){ background:var(--papel2); color:#fff; }
@@ -194,11 +193,8 @@ html, body { overflow-x: hidden; }
 .ptopic.pronto{ color:var(--tinta2); cursor:default; }
 .ptopic .etq{ margin-left:auto; font:700 9px var(--f-display); text-transform:uppercase; letter-spacing:.05em; color:var(--tinta2); border:1px solid var(--linea); border-radius:99px; padding:2px 6px; }
 @media (max-width:600px){
-  .catmenu{ flex-direction:column; align-items:center; gap:22px; text-align:center; }
-  .catcol{ text-align:center; }
-  .catlist{ justify-items:center; }
-  .catpop{ left:50%; transform:translateX(-50%); }
-  .catlang-wrap:hover .catpop, .catlang-wrap:focus-within .catpop, .catlang-wrap.open .catpop{ animation:none; }
+  .catmenu{ flex-direction:column; align-items:center; gap:22px; }
+  .lzpanel{ grid-template-columns:1fr; }
 }
 
 /* ===================== Barra de temas (en cada lección) ===================== */
@@ -277,7 +273,7 @@ html, body { overflow-x: hidden; }
 .tema-cab h1 { font-size: clamp(30px, 4.5vw, 46px); line-height: 1.08; margin: 0 0 6px; letter-spacing: -0.02em; }
 .tema-cab h1 .sub { font-family: var(--f-mano); font-weight: 600; color: var(--cian); font-size: 0.62em; margin-left: 8px; white-space: nowrap; text-shadow: 0 0 14px rgba(157,180,207, 0.5); }
 .tema-cab p { margin: 0; max-width: 78ch; color: var(--tinta2); font-size: 17px; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .chip { font-family: var(--f-mono); font-size: 12.5px; padding: 3px 11px; border-radius: 99px; background: var(--papel); border: 1px solid var(--linea); }
 .chip b { color: var(--azul-claro); }
 
@@ -291,15 +287,15 @@ html, body { overflow-x: hidden; }
 .pestana .ok { color: var(--verde); margin-left: 6px; font-size: 12px; }
 
 /* ---------- prosa ---------- */
-.prosa { max-width: 80ch; margin-left: auto; margin-right: auto; }
+.prosa { max-width: 80ch; margin-left: auto; margin-right: auto; font-size: 16px; line-height: 1.72; }
 .prosa.ancha { max-width: none; }
-.prosa h2 { font-size: 26px; margin: 42px 0 8px; letter-spacing: -0.01em; line-height: 1.2; }
+.prosa h2 { font-size: 25px; margin: 54px 0 10px; letter-spacing: -0.01em; line-height: 1.22; }
 .prosa h2:first-child { margin-top: 0; }
 .prosa h2::before { content: "§"; color: var(--azul); margin-right: 8px; font-family: var(--f-mono); font-weight: 500; text-shadow: 0 0 12px rgba(91,141,239, 0.55); }
-.prosa h3 { font-size: 19px; margin: 26px 0 6px; color: #fff; }
-.prosa p { margin: 0 0 14px; }
+.prosa h3 { font-size: 18px; margin: 32px 0 8px; color: #fff; }
+.prosa p { margin: 0 0 17px; }
 .prosa ul, .prosa ol { padding-left: 22px; margin: 0 0 16px; }
-.prosa li { margin: 4px 0; }
+.prosa li { margin: 7px 0; }
 .prosa strong { font-weight: 600; color: #fff; }
 .prosa mark { background: var(--marca); color: var(--azul-claro); padding: 0 4px; border-radius: 3px; font-weight: 600; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--azul) 40%, transparent); }
 .prosa table { border-collapse: collapse; margin: 12px 0 20px; font-size: 15px; background: var(--papel); border-radius: 8px; overflow: hidden; }
@@ -309,7 +305,7 @@ html, body { overflow-x: hidden; }
 .tabla-wrap { overflow-x: auto; }
 
 .nota {
-  margin: 18px 0; padding: 14px 18px 14px 20px; border-radius: var(--radio); background: var(--papel); border: 1px solid var(--linea);
+  margin: 26px 0; padding: 14px 18px 14px 20px; border-radius: var(--radio); background: var(--papel); border: 1px solid var(--linea);
   border-left: 5px solid var(--azul); box-shadow: var(--sombra); max-width: 80ch;
 }
 .nota > :last-child { margin-bottom: 0; }
