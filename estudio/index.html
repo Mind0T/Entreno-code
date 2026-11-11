@@ -7,7 +7,10 @@
   <meta name="description" content="Pruebas de escritorio animadas en C: ordenamiento, pilas, colas, memoria dinámica y dobles apuntadores.">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0A0A0A">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='13' fill='none' stroke='%23D4D4D4' stroke-width='2.5'/%3E%3Ctext x='32' y='45' font-family='Montserrat,Arial,sans-serif' font-size='38' font-weight='800' text-anchor='middle' fill='%23EDEDED'%3EE%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <script>try{if(localStorage.getItem("estudio.lateral")==="oculto")document.documentElement.classList.add("lateral-colapsado");}catch(e){}</script>
   <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -16,6 +19,23 @@
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
   <a class="sr-only" href="#contenido">Saltar al contenido</a>
+
+  <!-- Header global del ecosistema irvingsoriano.com -->
+  <header class="eco-top">
+    <button type="button" class="eco-colapsar" id="ecoColapsar" aria-label="Mostrar u ocultar los temas" title="Mostrar u ocultar los temas">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Temas</span>
+    </button>
+    <a class="eco-marca" href="https://irvingsoriano.com" title="Ir al inicio de irvingsoriano.com">
+      <img src="assets/logo.png" width="34" height="34" alt="">
+      <span class="eco-txt"><b>Irvin Soriano</b><em>Estudio · irvingsoriano.com</em></span>
+    </a>
+    <nav class="eco-nav" aria-label="Ecosistema">
+      <a href="https://irvingsoriano.com">Hub</a>
+      <a href="https://tablero.irvingsoriano.com">Tablero</a>
+      <a class="on" href="#/inicio">Estudio</a>
+    </nav>
+  </header>
+
   <div id="app-raiz"></div>
   <noscript><p style="padding:2rem">Esta página necesita JavaScript para mostrar las animaciones.</p></noscript>
 
@@ -36,5 +56,17 @@
   <script src="js/contenido/busqueda.js"></script>
   <script src="js/app.js"></script>
   <script src="js/fondo.js"></script>
+  <script>
+  (function(){
+    var btn=document.getElementById("ecoColapsar"), r=document.documentElement;
+    function sync(){ var off=r.classList.contains("lateral-colapsado"); if(btn) btn.setAttribute("aria-pressed", String(off)); }
+    if(btn){ btn.addEventListener("click", function(){
+      var off=r.classList.toggle("lateral-colapsado");
+      try{ localStorage.setItem("estudio.lateral", off?"oculto":"visible"); }catch(e){}
+      sync();
+    }); }
+    sync();
+  })();
+  </script>
 </body>
 </html>

@@ -139,6 +139,7 @@
       h(
         "section",
         { class: "hero" },
+        h("p", { class: "hero-eyebrow" }, h("i", { "aria-hidden": "true" }), "Plataforma de estudio · abierta"),
         h("h1", { html: "Aprende viendo <em>cómo funciona</em>, paso a paso." }),
         h("p", {}, "Código real y temas explicados paso a paso: con pruebas de escritorio que siguen el código línea por línea — la memoria, los apuntadores y la lógica, a la vista."),
         h("p", { class: "suave" }, "Elige un tema del mapa. Cada uno trae explicación, código comentado línea por línea, prueba de escritorio animada, laboratorio y un mini quiz.")
