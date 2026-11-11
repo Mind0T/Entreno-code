@@ -98,7 +98,7 @@ html, body { overflow-x: hidden; }
 .top{ max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:clamp(16px,2.5vw,34px);
   padding:11px clamp(16px,3vw,28px); border-bottom:1px solid var(--linea); position:relative; z-index:30; }
 .brand{ display:flex; align-items:center; text-decoration:none; flex:1 1 0; min-width:0; }
-.brand .logo-full{ height:30px; width:auto; display:block; filter:drop-shadow(0 0 10px rgba(255,255,255,.08)); }
+.brand .logo-full{ height:40px; width:auto; display:block; filter:drop-shadow(0 0 10px rgba(255,255,255,.08)); }
 .nav{ flex:0 0 auto; display:flex; justify-content:center; min-width:0; }
 .seg2{ display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(14px,2.2vw,34px); padding:0; background:none; border:0; }
 .seg2 a{ display:inline-flex; align-items:center; font:600 14px var(--f-display); color:var(--tinta2); text-decoration:none; transition:color .18s; white-space:nowrap; }
@@ -281,7 +281,7 @@ html, body { overflow-x: hidden; }
 .chip { font-family: var(--f-mono); font-size: 12.5px; padding: 3px 11px; border-radius: 99px; background: var(--papel); border: 1px solid var(--linea); }
 .chip b { color: var(--azul-claro); }
 
-.pestanas { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--linea); margin: 20px 0 22px; position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); padding-top: 6px; }
+.pestanas { display: flex; justify-content: center; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--linea); margin: 20px 0 22px; position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); padding-top: 6px; }
 .pestana {
   font: inherit; font-size: 15px; font-weight: 500; border: 1px solid transparent; border-bottom: 0; background: transparent; color: var(--tinta2);
   padding: 9px 16px; border-radius: 10px 10px 0 0; cursor: pointer; position: relative; top: 1px; transition: color 0.15s, background 0.15s;
