@@ -24,16 +24,15 @@
   /* categorías del menú (solo "C" tiene contenido; el resto, pronto) */
   const CATS = [
     { titulo: { es: "Programación", en: "Programming" }, langs: [
-      { id: "c", label: "C", ready: true },
-      { id: "py", label: "Python", ready: false },
+      { id: "c", label: "C", real: true },
+      { id: "py", label: "Python", soon: [{ es: "Fundamentos de Python", en: "Python fundamentals" }, { es: "Python para ciencia de datos", en: "Python for data science" }] },
     ]},
     { titulo: { es: "Diseño", en: "Design" }, langs: [
-      { id: "ux", label: "UX-UI", ready: false },
-      { id: "fig", label: "Figma", ready: false },
+      { id: "ux", label: "UX-UI", soon: [{ es: "Design thinking", en: "Design thinking" }] },
     ]},
     { titulo: { es: "Cómputo en la nube", en: "Cloud computing" }, langs: [
-      { id: "gcp", label: "Google", ready: false },
-      { id: "aws", label: "AWS", ready: false },
+      { id: "gcp", label: "Google", soon: [{ es: "Cloud Engineer", en: "Cloud Engineer" }] },
+      { id: "aws", label: "AWS", soon: [{ es: "Cloud Practitioner", en: "Cloud Practitioner" }, { es: "AI Practitioner", en: "AI Practitioner" }] },
     ]},
   ];
 
@@ -190,28 +189,30 @@
   function gruposDe() {
     return GRUPOS.map((g) => ({ g, items: ordenados().filter((m) => m.grupo === g.id) })).filter((x) => x.items.length);
   }
-  function panelTemas(destino) {
-    E.vaciar(destino);
+  function popTemasC(pop) {
     gruposDe().forEach(({ g, items }) => {
-      const grp = h("div", { class: "tg" }, h("h4", {}, T(g.titulo)));
-      const ul = h("div", { class: "tg-list" });
+      const grp = h("div", { class: "pg" }, h("h4", {}, T(g.titulo)));
+      const ul = h("div", { class: "pg-list" });
       items.forEach((m) => {
         ul.append(h("a", {
-          class: "topic" + (m.pronto ? " pronto" : "") + (completo(m) ? " done" : ""),
-          href: m.pronto ? null : "#/" + m.id,
-          "aria-disabled": m.pronto ? "true" : null,
-        }, h("span", { class: "tdot", "aria-hidden": "true" }, completo(m) ? "✓" : ""), m.titulo,
+          class: "ptopic" + (m.pronto ? " pronto" : "") + (completo(m) ? " done" : ""),
+          href: m.pronto ? null : "#/" + m.id, "aria-disabled": m.pronto ? "true" : null,
+        }, h("span", { class: "pdot", "aria-hidden": "true" }, completo(m) ? "✓" : ""), m.titulo,
            m.pronto ? h("span", { class: "etq" }, D("soon")) : null));
       });
-      grp.append(ul); destino.append(grp);
+      grp.append(ul); pop.append(grp);
     });
   }
-  function seleccionarLang(id) {
-    document.querySelectorAll(".catlang").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === id)));
-    const panel = document.getElementById("catpanel"); if (!panel) return;
-    E.vaciar(panel);
-    if (id === "c") panelTemas(panel);
-    else panel.append(h("p", { class: "cat-soon" }, D("soon_long")));
+  function popSoon(pop, topics) {
+    const ul = h("div", { class: "pg-list" });
+    (topics || []).forEach((t) => ul.append(h("span", { class: "ptopic pronto" }, h("span", { class: "pdot" }), T(t), h("span", { class: "etq" }, D("soon")))));
+    pop.append(h("div", { class: "pg" }, ul));
+  }
+  function cerrarPops(excepto) {
+    document.querySelectorAll(".catlang-wrap.open").forEach((w) => {
+      if (w === excepto) return;
+      w.classList.remove("open"); const b = w.querySelector(".catlang"); if (b) b.setAttribute("aria-expanded", "false");
+    });
   }
   function categoryZone() {
     const menu = h("div", { class: "catmenu" });
@@ -219,17 +220,21 @@
       const col = h("div", { class: "catcol" }, h("h3", { class: "cattitle" }, T(cat.titulo)));
       const list = h("div", { class: "catlist" });
       cat.langs.forEach((l) => {
-        list.append(h("button", {
-          class: "catlang" + (l.ready ? "" : " pronto"), type: "button", "data-lang": l.id,
-          "aria-pressed": "false", disabled: l.ready ? null : true,
-          onclick: l.ready ? () => seleccionarLang(l.id) : null,
-        }, h("span", { class: "pix" }, l.label), l.ready ? null : h("span", { class: "pronto-tag" }, D("soon"))));
+        const pop = h("div", { class: "catpop", role: "menu" });
+        if (l.real) popTemasC(pop); else popSoon(pop, l.soon);
+        const btn = h("button", { class: "catlang" + (l.real ? "" : " soon"), type: "button", "aria-haspopup": "true", "aria-expanded": "false" },
+          h("span", { class: "pix" }, l.label), l.real ? null : h("span", { class: "pronto-tag" }, D("soon")));
+        const wrap = h("div", { class: "catlang-wrap" }, btn, pop);
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const open = !wrap.classList.contains("open");
+          cerrarPops(wrap); wrap.classList.toggle("open", open); btn.setAttribute("aria-expanded", String(open));
+        });
+        list.append(wrap);
       });
       col.append(list); menu.append(col);
     });
-    const panel = h("div", { class: "catpanel", id: "catpanel" });
-    const zone = h("section", { class: "catzone" }, menu, panel);
-    return zone;
+    return h("section", { class: "catzone" }, menu);
   }
 
   /* ---------- landing ---------- */
@@ -238,7 +243,6 @@
     const c = h("div", { class: "lz" }, heroCarousel(), categoryZone());
     principal.append(c);
     initCarousel();
-    seleccionarLang("c");
   }
 
   /* ============================================================
@@ -341,6 +345,7 @@
     principal = h("main", { class: "principal", id: "contenido", tabindex: "-1" });
     raiz.append(principal);
     window.addEventListener("hashchange", ruta);
+    document.addEventListener("click", function () { cerrarPops(null); });
     ruta();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
