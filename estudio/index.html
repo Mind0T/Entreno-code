@@ -3,41 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Estudio · Irvin Soriano</title>
-  <meta name="description" content="Pruebas de escritorio animadas en C: ordenamiento, pilas, colas, memoria dinámica y dobles apuntadores.">
+  <title>Learning Zone · Irving Soriano</title>
+  <meta name="description" content="Learning Zone: aprende viendo cómo funciona el código, paso a paso. Pruebas de escritorio animadas, estructuras de datos y más.">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0A0A0A">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <script>try{if(localStorage.getItem("estudio.lateral")==="oculto")document.documentElement.classList.add("lateral-colapsado");}catch(e){}</script>
   <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;600;700;800;900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
   <a class="sr-only" href="#contenido">Saltar al contenido</a>
 
-  <!-- Header global del ecosistema irvingsoriano.com -->
-  <header class="eco-top">
-    <button type="button" class="eco-colapsar" id="ecoColapsar" aria-label="Mostrar u ocultar los temas" title="Mostrar u ocultar los temas">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Temas</span>
-    </button>
-    <a class="eco-marca" href="https://irvingsoriano.com" title="Ir al inicio de irvingsoriano.com">
-      <img src="assets/logo.png" width="34" height="34" alt="">
-      <span class="eco-txt"><b>Irvin Soriano</b><em>Estudio · irvingsoriano.com</em></span>
+  <!-- Header global (mismo que irvingsoriano.com) -->
+  <header class="top">
+    <a class="brand" href="https://irvingsoriano.com" aria-label="Inicio">
+      <img class="logo" src="assets/logo.png" alt="">
+      <span class="wordmark">IRVING SORIANO</span>
     </a>
-    <nav class="eco-nav" aria-label="Ecosistema">
-      <a href="https://irvingsoriano.com">Hub</a>
-      <a href="https://tablero.irvingsoriano.com">Tablero</a>
-      <a class="on" href="#/inicio">Estudio</a>
-    </nav>
+    <nav class="nav"><div class="seg2" id="segnav">
+      <a href="https://irvingsoriano.com">Inicio</a>
+      <a href="https://irvingsoriano.com/proyectos">Proyectos</a>
+      <a href="https://irvingsoriano.com/perfil">Acerca de mí</a>
+      <a href="https://irvingsoriano.com/cursos">Comunidad</a>
+    </div></nav>
+    <div class="head-right">
+      <span class="lang" role="group" aria-label="Idioma"><button data-lang="es" type="button">ES</button><button data-lang="en" type="button">EN</button></span>
+      <button class="burger" id="burger" type="button" aria-label="Menú" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </header>
 
   <div id="app-raiz"></div>
   <noscript><p style="padding:2rem">Esta página necesita JavaScript para mostrar las animaciones.</p></noscript>
+
+  <footer class="eco-foot"><span>© 2026 Irvin Jair Soriano Rosales</span></footer>
 
   <script src="js/nucleo.js"></script>
   <script src="js/datos/fuentes.js"></script>
@@ -57,15 +60,15 @@
   <script src="js/app.js"></script>
   <script src="js/fondo.js"></script>
   <script>
+  /* idioma del header (compartido con el hub) + menú móvil */
   (function(){
-    var btn=document.getElementById("ecoColapsar"), r=document.documentElement;
-    function sync(){ var off=r.classList.contains("lateral-colapsado"); if(btn) btn.setAttribute("aria-pressed", String(off)); }
-    if(btn){ btn.addEventListener("click", function(){
-      var off=r.classList.toggle("lateral-colapsado");
-      try{ localStorage.setItem("estudio.lateral", off?"oculto":"visible"); }catch(e){}
-      sync();
-    }); }
-    sync();
+    var lang="es"; try{ lang=localStorage.getItem("irvin.lang")==="en"?"en":"es"; }catch(e){}
+    document.querySelectorAll(".lang [data-lang]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.lang===lang)); });
+    var langBox=document.querySelector(".lang");
+    if(langBox) langBox.addEventListener("click", function(e){ var b=e.target.closest("[data-lang]"); if(!b) return;
+      try{ localStorage.setItem("irvin.lang", b.dataset.lang); }catch(_){} location.reload(); });
+    var burger=document.getElementById("burger"), seg=document.getElementById("segnav");
+    if(burger&&seg) burger.addEventListener("click", function(){ var o=seg.classList.toggle("open"); burger.setAttribute("aria-expanded", String(o)); });
   })();
   </script>
 </body>
