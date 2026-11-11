@@ -165,7 +165,7 @@
     dt.forEach((el, n) => el.setAttribute("aria-pressed", n === cIdx));
     const g = document.getElementById("stage"); if (g) g.style.setProperty("--c", CAR[cIdx].c);
   }
-  function cStart() { cStop(); if (reduce || cPaused) return; cTimer = setInterval(() => cShow(cIdx + 1), 4600); }
+  function cStart() { cStop(); if (reduce || cPaused) return; cTimer = setInterval(() => cShow(cIdx + 1), 3000); }
   function cStop() { if (cTimer) { clearInterval(cTimer); cTimer = null; } }
   function initCarousel() {
     cIdx = 0; cPaused = false;
@@ -180,6 +180,14 @@
       this.innerHTML = cPaused ? '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>';
       if (cPaused) cStop(); else cStart();
     });
+    // deslizar con dedo o mouse para adelantar/retroceder
+    let sx = null;
+    stage.addEventListener("pointerdown", (e) => { if (e.target.closest(".ctrl,.dots")) return; sx = e.clientX; });
+    stage.addEventListener("pointerup", (e) => {
+      if (sx === null) return; const dx = e.clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) { cShow(cIdx + (dx < 0 ? 1 : -1)); cStart(); }
+    });
+    stage.addEventListener("pointercancel", () => { sx = null; });
     if (!reduce) cStart();
   }
 
