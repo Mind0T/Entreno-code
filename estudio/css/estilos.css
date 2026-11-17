@@ -816,3 +816,8 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .lz-callout p{margin:0; font-size:14px; line-height:1.6; color:var(--tinta2)}
 .lz-callout b{color:var(--tinta)}
 .lz-try{display:block; max-width:80ch; margin:6px auto -6px; font:700 11px var(--f-display); letter-spacing:.1em; text-transform:uppercase; color:var(--verde)}
+
+/* ---- imágenes en páginas de entorno ---- */
+.lz-figura { margin: 18px auto; max-width: 80ch; text-align: center; }
+.lz-figura img { max-width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; box-shadow: var(--sombra); display: block; margin: 0 auto; }
+.lz-figura figcaption { margin-top: 8px; font-size: 13px; color: var(--tinta2); font-style: italic; }

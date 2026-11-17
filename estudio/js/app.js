@@ -21,6 +21,7 @@
     { id: "cola", lang: "c", titulo: { es: "Estructura: Cola", en: "Structure: Queue" } },
     { id: "busqueda", lang: "c", titulo: { es: "Algoritmos de búsqueda", en: "Search algorithms" } },
     // Python — organizado por TEMAS (no por semanas)
+    { id: "py-entorno", lang: "py", titulo: { es: "Entorno y flujo de trabajo", en: "Environment & workflow" } },
     { id: "py-fundamentos", lang: "py", titulo: { es: "Fundamentos de Python", en: "Python fundamentals" } },
     { id: "py-herramientas", lang: "py", titulo: { es: "Herramientas de Python", en: "Python tools" } },
   ];
