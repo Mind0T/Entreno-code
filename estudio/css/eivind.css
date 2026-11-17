@@ -1,0 +1,119 @@
+/* ============================================================
+   Home "Eivind" — identidad reactiva + menú infinito + detalle.
+   Usa los tokens de sistema.css; funciona en tema claro y oscuro.
+   ============================================================ */
+.eiv{position:relative; z-index:1; min-height:calc(100vh - 150px); display:flex; flex-direction:column; justify-content:center; gap:clamp(18px,3vh,40px); padding:18px 0 40px}
+
+/* ----- escenario / identidad ----- */
+.eiv-stage{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px}
+.eiv-kicker{font:600 11px/1.3 var(--font-display); letter-spacing:.26em; text-transform:uppercase; color:var(--text-muted); margin:0}
+.eiv-kicker b{color:var(--acc,var(--silver)); font-weight:700; transition:color .5s}
+.eiv-core{position:relative; width:clamp(230px,34vh,330px); height:clamp(230px,34vh,330px); display:grid; place-items:center; cursor:pointer; touch-action:manipulation}
+.eiv-core canvas{position:absolute; inset:0; width:100%; height:100%}
+.eiv-core:focus-visible{outline:none}
+.eiv-core:focus-visible::after{content:""; position:absolute; inset:6%; border-radius:50%; outline:2px solid var(--acc,var(--silver)); outline-offset:6px}
+.eiv-hint{position:absolute; bottom:-2px; left:50%; transform:translateX(-50%); font:600 10.5px var(--font-display); letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); opacity:.0; transition:opacity .3s; pointer-events:none; white-space:nowrap}
+.eiv-core:hover .eiv-hint{opacity:.75}
+
+.eiv-name{font-size:clamp(26px,4.4vw,44px); font-weight:900; color:var(--text-primary); margin:2px 0 0; letter-spacing:-.015em; line-height:1.05; transition:color .4s}
+.eiv-sub{font:600 12px var(--font-display); letter-spacing:.14em; text-transform:uppercase; color:var(--acc,var(--text-muted)); margin:0; transition:color .5s; min-height:16px}
+.eiv-phrase{font-size:clamp(15px,2vw,18px); color:var(--text-secondary); max-width:52ch; margin:8px auto 0; min-height:2.6em; font-style:italic; opacity:0; transform:translateY(6px); transition:opacity .4s, transform .4s}
+.eiv-phrase.show{opacity:1; transform:none}
+
+.eiv-cta{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:4px; flex-wrap:wrap}
+.eiv-open{display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 20px; border-radius:99px; background:var(--acc,var(--silver)); color:var(--on-silver); font:800 13.5px var(--font-display); border:1px solid transparent; transition:transform .15s, box-shadow .2s, background .4s}
+.eiv-open:hover{transform:translateY(-1px); box-shadow:0 10px 26px color-mix(in oklab, var(--acc,var(--silver)) 40%, transparent)}
+.eiv-open svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round}
+.eiv-voice{width:42px; height:42px; border-radius:99px; border:1px solid var(--border-strong); color:var(--text-secondary); display:inline-flex; align-items:center; justify-content:center; transition:var(--transition-base)}
+.eiv-voice:hover{border-color:var(--acc,var(--silver)); color:var(--text-primary)}
+.eiv-voice svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.eiv-voice .on-mute{display:none}
+.eiv-voice[aria-pressed="false"] .on-live{display:none}
+.eiv-voice[aria-pressed="false"] .on-mute{display:block}
+
+/* ----- menú infinito ----- */
+.eiv-menu{display:flex; align-items:center; gap:10px; max-width:1180px; margin:0 auto; width:100%}
+.eiv-arrow{flex:0 0 auto; width:40px; height:40px; border-radius:99px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-secondary); display:inline-flex; align-items:center; justify-content:center; transition:var(--transition-base)}
+.eiv-arrow:hover{border-color:var(--silver); color:var(--text-primary); background:var(--bg-surface-2)}
+.eiv-arrow svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+.eiv-track-wrap{position:relative; flex:1 1 auto; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.eiv-track{display:flex; gap:12px; list-style:none; margin:0; padding:6px 0; will-change:transform; cursor:grab}
+.eiv-track.drag{cursor:grabbing}
+.eiv-item{flex:0 0 auto}
+.eiv-chip{display:flex; flex-direction:column; align-items:center; gap:8px; width:112px; padding:14px 8px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--bg-surface); transition:transform .18s ease, border-color .18s, background .18s; text-align:center}
+.eiv-chip:hover{transform:translateY(-3px); border-color:var(--c,var(--silver)); background:var(--bg-surface-2)}
+.eiv-chip .ic{width:46px; height:46px; border-radius:50%; display:grid; place-items:center; border:1px solid color-mix(in oklab, var(--c,var(--silver)) 45%, var(--border-default)); background:color-mix(in oklab, var(--c,var(--silver)) 12%, transparent); transition:border-color .18s, background .18s}
+.eiv-chip .ic svg{width:24px; height:24px; stroke:var(--c,var(--text-primary)); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.eiv-chip .nm{font:700 11px/1.2 var(--font-display); color:var(--text-secondary); letter-spacing:.01em}
+.eiv-chip[aria-current="true"]{border-color:var(--c,var(--silver)); background:var(--bg-surface-2); box-shadow:0 0 0 1px var(--c,var(--silver)) inset}
+.eiv-chip[aria-current="true"] .ic{background:var(--c,var(--silver)); border-color:var(--c,var(--silver))}
+.eiv-chip[aria-current="true"] .ic svg{stroke:var(--on-silver)}
+.eiv-chip[aria-current="true"] .nm{color:var(--text-primary)}
+
+/* ----- hoja de detalle ----- */
+.eiv-sheet{position:fixed; inset:0; z-index:60; display:flex; justify-content:flex-end; opacity:0; pointer-events:none; transition:opacity .28s}
+.eiv-sheet.open{opacity:1; pointer-events:auto}
+.eiv-scrim{position:absolute; inset:0; background:rgba(5,6,10,.58); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px)}
+:root[data-tema="claro"] .eiv-scrim{background:rgba(30,40,70,.30)}
+.eiv-panel{position:relative; width:min(680px,94vw); max-height:100vh; overflow-y:auto; background:var(--bg-surface); border-left:1px solid var(--border-default); box-shadow:-20px 0 60px rgba(0,0,0,.4); transform:translateX(40px); transition:transform .32s cubic-bezier(.2,.7,.2,1); padding:0}
+.eiv-sheet.open .eiv-panel{transform:none}
+.eiv-ph{position:relative; padding:26px clamp(20px,4vw,38px) 20px; border-bottom:1px solid var(--border-default); overflow:hidden}
+.eiv-ph::before{content:""; position:absolute; inset:0 0 auto 0; height:4px; background:var(--c,var(--silver))}
+.eiv-ph::after{content:""; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, color-mix(in oklab, var(--c,var(--silver)) 22%, transparent), transparent 70%); pointer-events:none}
+.eiv-close{position:absolute; top:16px; right:16px; width:38px; height:38px; border-radius:99px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-secondary); display:grid; place-items:center; transition:var(--transition-base); z-index:2}
+.eiv-close:hover{color:var(--text-primary); border-color:var(--silver); background:var(--bg-surface-2)}
+.eiv-close svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round}
+.eiv-area{display:inline-flex; align-items:center; gap:7px; font:700 10.5px var(--font-display); letter-spacing:.14em; text-transform:uppercase; color:var(--c,var(--silver))}
+.eiv-area .dot{width:8px; height:8px; border-radius:50%; background:var(--c,var(--silver))}
+.eiv-ph h2{font-size:clamp(22px,3.4vw,30px); font-weight:900; color:var(--text-primary); margin:10px 0 6px; max-width:22ch}
+.eiv-ph .pf{font-size:15px; font-style:italic; color:var(--text-secondary); max-width:46ch; margin:0}
+.eiv-rol{display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:6px 12px; border-radius:99px; border:1px dashed var(--c,var(--silver)); color:var(--text-primary); font:700 12px var(--font-display)}
+.eiv-rol span{color:var(--c,var(--silver)); letter-spacing:.08em; font-size:10.5px; text-transform:uppercase}
+
+.eiv-body{padding:22px clamp(20px,4vw,38px) 36px; display:flex; flex-direction:column; gap:24px}
+.eiv-sec h3{font:800 12px var(--font-display); letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin:0 0 10px}
+.eiv-body p.lead{font-size:15.5px; line-height:1.72; color:var(--text-secondary); margin:0; max-width:60ch}
+.eiv-hl{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+.eiv-hl li{position:relative; padding-left:26px; font-size:14.5px; line-height:1.55; color:var(--text-secondary)}
+.eiv-hl li::before{content:""; position:absolute; left:4px; top:7px; width:9px; height:9px; border-radius:50%; border:2px solid var(--c,var(--silver))}
+.eiv-tech{display:flex; flex-wrap:wrap; gap:8px}
+.eiv-tech span{font:700 12px var(--font-display); color:var(--text-secondary); border:1px solid var(--border-strong); border-radius:99px; padding:6px 13px}
+
+/* preview */
+.eiv-frame{position:relative; border:1px solid var(--border-default); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-lane); aspect-ratio:16/10}
+.eiv-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background:#fff}
+.eiv-frame .load{position:absolute; inset:0; display:grid; place-items:center; color:var(--text-muted); font:600 12px var(--font-display); letter-spacing:.08em; text-transform:uppercase; gap:8px; pointer-events:none}
+.eiv-shots{display:flex; flex-direction:column; gap:14px}
+.eiv-shot{border:1px solid var(--border-default); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-lane)}
+.eiv-shot img{width:100%; display:block}
+.eiv-shot .cap{font-size:12.5px; color:var(--text-muted); padding:9px 14px; border-top:1px solid var(--border-default)}
+.eiv-viz{border:1px solid var(--border-default); border-radius:var(--radius-lg); background:var(--bg-lane); padding:18px}
+.eiv-viz svg{width:100%; height:auto; display:block; overflow:visible}
+
+.eiv-links{display:flex; flex-wrap:wrap; gap:10px}
+.eiv-link{display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 17px; border-radius:99px; font:700 13px var(--font-display); transition:var(--transition-base); border:1px solid var(--border-strong); color:var(--text-primary)}
+.eiv-link:hover{border-color:var(--silver); background:var(--bg-surface-2); transform:translateY(-1px)}
+.eiv-link.live{background:var(--c,var(--silver)); border-color:var(--c,var(--silver)); color:var(--on-silver)}
+.eiv-link.live:hover{filter:brightness(1.06)}
+.eiv-link svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+/* animación de barras en viz */
+@keyframes eivGrow{from{transform:scaleY(.001)} to{transform:scaleY(1)}}
+.eiv-sheet.open .vbar{transform-origin:bottom; animation:eivGrow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes eivDash{from{stroke-dashoffset:var(--len)} to{stroke-dashoffset:0}}
+.eiv-sheet.open .vdash{animation:eivDash 1.3s ease-out both}
+
+/* responsive */
+@media (max-width:640px){
+  .eiv{min-height:auto; padding-top:6px}
+  .eiv-core{width:min(72vw,300px); height:min(72vw,300px)}
+  .eiv-menu{gap:6px}
+  .eiv-arrow{display:none}
+  .eiv-track-wrap{-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent); mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+  .eiv-chip{width:92px; padding:12px 6px}
+  .eiv-panel{width:100vw; border-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .eiv-sheet.open .vbar,.eiv-sheet.open .vdash{animation:none}
+  .eiv-phrase{transition:none}
+}

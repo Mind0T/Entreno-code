@@ -249,12 +249,80 @@
     return h("section", { class: "catzone" }, menu, hint, panel);
   }
 
+  /* ============================================================
+     LANDING estilo "Eivind" — identidad + menú infinito de CURSOS
+     ============================================================ */
+  const ICON_CUR = {
+    c: '<rect x="3.5" y="5" width="17" height="14" rx="3" opacity=".4"/><path d="M15.5 9.2a4 4 0 1 0 0 5.6"/>',
+    py: '<rect x="5" y="4" width="9" height="9" rx="2.5"/><rect x="10" y="11" width="9" height="9" rx="2.5"/><circle cx="8" cy="7.3" r="1"/><circle cx="16" cy="16.7" r="1"/>',
+    pydata: '<path d="M4 20V5"/><path d="M4 20h16"/><path d="M7.5 16l3-4 3 2 4.5-7"/><circle cx="18" cy="7" r="1.3"/>',
+    ux: '<path d="M9.5 18.5h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.8 10.6c.7.6 1 1 1 2.4h5.6c0-1.4.3-1.8 1-2.4A6 6 0 0 0 12 3z"/>',
+    uiux: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 8h18"/><path d="m13 13 3.5 5.5 1.3-2.4 2.6-.5L13 13z"/>',
+    gcp: '<path d="M12 4 5.5 7.8v4.4L12 16l6.5-3.8V7.8L12 4z"/><path d="M12 10.2 5.7 7.9M12 10.2l6.3-2.3M12 10.2V16"/>',
+    aws: '<path d="M7.5 15.5a3.5 3.5 0 0 1-.3-7 5 5 0 0 1 9.6-.6 3.4 3.4 0 0 1 .2 6.8"/><path d="M6 18.5c3.5 2 8.5 2 12 0"/>',
+    ai: '<path d="M12 4a3.5 3.5 0 0 0-3.5 3.5v9a3 3 0 0 0 6 .3V7.5A3.5 3.5 0 0 0 12 4z" opacity=".45"/><path d="m12 10.5 1.8 1.8L12 14l-1.8-1.7L12 10.5z"/><circle cx="12" cy="7.6" r="1"/>'
+  };
+  const AZ="#5B8DEF", MO="#B79CC9", CI="#9DB4CF", AM="#E2A336";
+  function cTopics() {
+    return gruposDe().reduce(function (acc, x) {
+      x.items.forEach(function (m) { acc.push({ id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto }); });
+      return acc;
+    }, []);
+  }
+  function CURSOS(tops, firstC) {
+    return [
+      { id:"c", icon:"c", area:AZ, real:true, first:firstC, topics:tops,
+        nombre:{es:"Fundamentos de C", en:"C fundamentals"}, sub:{es:"Programación", en:"Programming"},
+        frase:{es:"Empieza por aquí: C, viendo correr el código línea por línea.", en:"Start here: C, watching the code run line by line."},
+        resumen:{es:"El corazón de la Learning Zone: aprende C mirando la memoria, los apuntadores y cada estructura cobrar vida con animaciones y pruebas de escritorio.", en:"The heart of the Learning Zone: learn C by watching memory, pointers and every structure come alive with animations and desktop traces."},
+        aprende:{es:["Pila, cola y estructuras de datos paso a paso","Pruebas de escritorio que siguen el código línea por línea","Ordenamiento y búsqueda con animaciones"], en:["Stack, queue and data structures step by step","Desktop traces following the code line by line","Sorting and search with animations"]} },
+      { id:"py", icon:"py", area:AZ, nombre:{es:"Fundamentos de Python", en:"Python fundamentals"}, sub:{es:"Programación", en:"Programming"},
+        frase:{es:"Pronto: Python desde cero, con la misma magia de ver todo por dentro.", en:"Soon: Python from scratch, with the same magic of seeing it all inside."},
+        resumen:{es:"Fundamentos de Python explicados con claridad visual: variables, flujo, funciones y estructuras, para quien empieza a programar.", en:"Python fundamentals explained with visual clarity: variables, flow, functions and structures, for those starting out."},
+        aprende:{es:["Sintaxis y tipos desde cero","Flujo, funciones y estructuras","Buenas prácticas para principiantes"], en:["Syntax and types from scratch","Flow, functions and structures","Good practices for beginners"]} },
+      { id:"pydata", icon:"pydata", area:MO, nombre:{es:"Python para Ciencia de Datos", en:"Python for Data Science"}, sub:{es:"Programación · Datos", en:"Programming · Data"},
+        frase:{es:"Pronto: Python para ciencia de datos, de pandas a los primeros modelos.", en:"Soon: Python for data science, from pandas to your first models."},
+        resumen:{es:"El puente entre programar y analizar: pandas, visualización y los primeros modelos de machine learning, con ejemplos reales.", en:"The bridge between coding and analysis: pandas, visualization and your first machine-learning models, with real examples."},
+        aprende:{es:["pandas y limpieza de datos","Visualización con matplotlib y seaborn","Primeros modelos de machine learning"], en:["pandas and data cleaning","Visualization with matplotlib and seaborn","Your first machine-learning models"]} },
+      { id:"ux", icon:"ux", area:MO, nombre:{es:"Design Thinking", en:"Design Thinking"}, sub:{es:"Diseño", en:"Design"},
+        frase:{es:"Pronto: Design Thinking, para resolver problemas centrados en las personas.", en:"Soon: Design Thinking, to solve problems centered on people."},
+        resumen:{es:"El proceso que uso en mis proyectos: empatizar, definir, idear, prototipar y probar, con casos reales como el reto de la NASA.", en:"The process I use in my projects: empathize, define, ideate, prototype and test, with real cases like the NASA challenge."},
+        aprende:{es:["Las 5 fases del Design Thinking","Persona, empathy map y journey map","De la idea al prototipo"], en:["The 5 phases of Design Thinking","Persona, empathy map and journey map","From idea to prototype"]} },
+      { id:"uiux", icon:"uiux", area:MO, nombre:{es:"UX / UI", en:"UX / UI"}, sub:{es:"Diseño", en:"Design"},
+        frase:{es:"Pronto: UX/UI, del wireframe a una interfaz que se siente bien.", en:"Soon: UX/UI, from wireframe to an interface that feels right."},
+        resumen:{es:"Diseño de interfaces con intención: jerarquía, affordance, heurísticas de Nielsen y economía del comportamiento aplicadas a pantallas reales.", en:"Interface design with intent: hierarchy, affordance, Nielsen's heuristics and behavioral economics applied to real screens."},
+        aprende:{es:["Heurísticas de usabilidad","Jerarquía visual y affordance","De wireframe a alta fidelidad"], en:["Usability heuristics","Visual hierarchy and affordance","From wireframe to high fidelity"]} },
+      { id:"gcp", icon:"gcp", area:CI, nombre:{es:"Cloud Engineer · Google", en:"Cloud Engineer · Google"}, sub:{es:"Cómputo en la nube", en:"Cloud computing"},
+        frase:{es:"Pronto: Google Cloud, rumbo a la certificación de Cloud Engineer.", en:"Soon: Google Cloud, on the way to the Cloud Engineer cert."},
+        resumen:{es:"Fundamentos de Google Cloud orientados a la certificación Associate Cloud Engineer: cómputo, redes, almacenamiento e identidad.", en:"Google Cloud fundamentals aimed at the Associate Cloud Engineer cert: compute, networking, storage and identity."},
+        aprende:{es:["Cómputo, redes y almacenamiento","IAM e identidad","Rumbo a Associate Cloud Engineer"], en:["Compute, networking and storage","IAM and identity","Toward Associate Cloud Engineer"]} },
+      { id:"aws", icon:"aws", area:AM, nombre:{es:"Cloud Practitioner · AWS", en:"Cloud Practitioner · AWS"}, sub:{es:"Cómputo en la nube", en:"Cloud computing"},
+        frase:{es:"Pronto: AWS desde los cimientos, rumbo a Cloud Practitioner.", en:"Soon: AWS from the ground up, toward Cloud Practitioner."},
+        resumen:{es:"Los fundamentos de AWS para la certificación Cloud Practitioner: la nube, sus servicios clave, precios y seguridad.", en:"AWS fundamentals for the Cloud Practitioner cert: the cloud, its key services, pricing and security."},
+        aprende:{es:["La nube y el modelo de responsabilidad","Servicios clave de AWS","Rumbo a Cloud Practitioner"], en:["The cloud and the shared responsibility model","Key AWS services","Toward Cloud Practitioner"]} },
+      { id:"ai", icon:"ai", area:AM, nombre:{es:"AI Practitioner · AWS", en:"AI Practitioner · AWS"}, sub:{es:"Cómputo en la nube", en:"Cloud computing"},
+        frase:{es:"Pronto: IA en AWS, rumbo a la certificación AI Practitioner.", en:"Soon: AI on AWS, toward the AI Practitioner cert."},
+        resumen:{es:"Inteligencia artificial y machine learning en AWS para la certificación AI Practitioner: conceptos, servicios y casos de uso responsables.", en:"Artificial intelligence and machine learning on AWS for the AI Practitioner cert: concepts, services and responsible use cases."},
+        aprende:{es:["Conceptos de IA y ML","Servicios de IA en AWS","IA responsable · rumbo a AI Practitioner"], en:["AI and ML concepts","AI services on AWS","Responsible AI · toward AI Practitioner"]} }
+    ];
+  }
+
   /* ---------- landing ---------- */
   function pintarInicio() {
     document.title = "Learning Zone · Irving Soriano";
-    const c = h("div", { class: "lz" }, heroCarousel(), categoryZone());
-    principal.append(c);
-    initCarousel();
+    if (!window.EivindLZ) { // respaldo: menú clásico si el motor no cargó
+      const c = h("div", { class: "lz" }, heroCarousel(), categoryZone());
+      principal.append(c); initCarousel(); return;
+    }
+    const mountEl = h("div", { class: "eiv", id: "eivMount" });
+    principal.append(mountEl);
+    const tops = cTopics();
+    const firstC = (tops.find((t) => !t.pronto) || {}).id || "";
+    window.EivindLZ.mount(mountEl, {
+      lang: lang, icons: ICON_CUR, cId: "c", cFirst: firstC,
+      cursos: CURSOS(tops, firstC),
+      nav: function (hash) { location.hash = hash; }
+    });
   }
 
   /* ============================================================

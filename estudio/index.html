@@ -5,15 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Learning Zone · Irving Soriano</title>
   <meta name="description" content="Learning Zone: aprende viendo cómo funciona el código, paso a paso. Pruebas de escritorio animadas, estructuras de datos y más.">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#0A0A0A">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <script>
+  (function(){try{var t=localStorage.getItem("irvin.tema");if(t!=="claro"&&t!=="oscuro"){t=(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)?"claro":"oscuro";}document.documentElement.setAttribute("data-tema",t);}catch(e){document.documentElement.setAttribute("data-tema","oscuro");}})();
+  </script>
   <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;600;700;800;900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,600;0,700;0,800;0,900;1,500&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/eivind.css">
 </head>
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
@@ -22,16 +26,19 @@
   <!-- Header global (mismo que irvingsoriano.com) -->
   <header class="top">
     <a class="brand" href="https://irvingsoriano.com" aria-label="Irving Soriano · Inicio">
-      <img class="logo-full" src="assets/logo-wordmark.png" alt="Irving Soriano">
+      <img id="logoImg" class="logo-full" src="assets/logo-wordmark.png" alt="Irving Soriano">
     </a>
     <nav class="nav"><div class="seg2" id="segnav">
       <a href="https://irvingsoriano.com">Inicio</a>
-      <a href="https://irvingsoriano.com/proyectos">Proyectos</a>
       <a href="https://irvingsoriano.com/perfil">Acerca de mí</a>
       <a href="#/inicio" aria-current="page">Learning Zone</a>
       <a href="https://irvingsoriano.com/cursos">Comunidad</a>
     </div></nav>
     <div class="head-right">
+      <button class="theme-tog" id="themeTog" type="button" aria-label="Cambiar tema">
+        <svg class="ico-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+      </button>
       <span class="lang" role="group" aria-label="Idioma"><button data-lang="es" type="button">ES</button><button data-lang="en" type="button">EN</button></span>
       <button class="burger" id="burger" type="button" aria-label="Menú" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </div>
@@ -57,10 +64,11 @@
   <script src="js/contenido/infija.js"></script>
   <script src="js/contenido/colas.js"></script>
   <script src="js/contenido/busqueda.js"></script>
+  <script src="js/eivind-lz.js"></script>
   <script src="js/app.js"></script>
   <script src="js/fondo.js"></script>
   <script>
-  /* idioma del header (compartido con el hub) + menú móvil */
+  /* idioma + tema del header (compartido con el hub) + menú móvil */
   (function(){
     var lang="es"; try{ lang=localStorage.getItem("irvin.lang")==="en"?"en":"es"; }catch(e){}
     document.querySelectorAll(".lang [data-lang]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.lang===lang)); });
@@ -69,6 +77,12 @@
       try{ localStorage.setItem("irvin.lang", b.dataset.lang); }catch(_){} location.reload(); });
     var burger=document.getElementById("burger"), seg=document.getElementById("segnav");
     if(burger&&seg) burger.addEventListener("click", function(){ var o=seg.classList.toggle("open"); burger.setAttribute("aria-expanded", String(o)); });
+    // tema claro/oscuro
+    function tema(){ return document.documentElement.getAttribute("data-tema")==="claro"?"claro":"oscuro"; }
+    function aplicar(t){ document.documentElement.setAttribute("data-tema", t); var li=document.getElementById("logoImg"); if(li) li.src = t==="claro"?"assets/logo-wordmark-dark.png":"assets/logo-wordmark.png"; window.TEMA=t; try{ window.dispatchEvent(new CustomEvent("temachange",{detail:t})); }catch(_){}}
+    aplicar(tema());
+    var tog=document.getElementById("themeTog");
+    if(tog) tog.addEventListener("click", function(){ var t=tema()==="claro"?"oscuro":"claro"; try{ localStorage.setItem("irvin.tema", t); }catch(_){} aplicar(t); });
   })();
   </script>
 </body>
