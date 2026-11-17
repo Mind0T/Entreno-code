@@ -9,7 +9,8 @@
 .eiv-kicker{font:600 11px/1.3 var(--font-display); letter-spacing:.26em; text-transform:uppercase; color:var(--text-muted); margin:0}
 .eiv-kicker b{color:var(--acc,var(--silver)); font-weight:700; transition:color .5s}
 .eiv-core{position:relative; width:clamp(230px,34vh,330px); height:clamp(230px,34vh,330px); display:grid; place-items:center; cursor:pointer; touch-action:manipulation}
-.eiv-core canvas{position:absolute; inset:0; width:100%; height:100%}
+/* el lienzo rebasa el core para que el aura se desvanezca libre (sin recorte cuadrado) */
+.eiv-core canvas{position:absolute; top:-32%; left:-32%; width:164%; height:164%; pointer-events:none}
 .eiv-core:focus-visible{outline:none}
 .eiv-core:focus-visible::after{content:""; position:absolute; inset:6%; border-radius:50%; outline:2px solid var(--acc,var(--silver)); outline-offset:6px}
 .eiv-hint{position:absolute; bottom:-2px; left:50%; transform:translateX(-50%); font:600 10.5px var(--font-display); letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); opacity:.0; transition:opacity .3s; pointer-events:none; white-space:nowrap}
@@ -133,7 +134,7 @@
   .eiv-dial-arc path{fill:none; stroke:var(--border-strong); stroke-width:1; opacity:.55}
   .eiv-dial-items{position:absolute; left:50%; top:0; width:340px; height:140px; transform:translateX(-50%)}
   .eiv-dslot{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:5px;
-    transition:left .34s cubic-bezier(.2,.7,.2,1), top .34s cubic-bezier(.2,.7,.2,1), opacity .3s; background:none; padding:0}
+    transition:left .34s cubic-bezier(.2,.7,.2,1), top .34s cubic-bezier(.2,.7,.2,1), opacity .3s; background:none; border:0; padding:0; cursor:pointer}
   .eiv-dslot .ic{width:46px; height:46px; border-radius:50%; display:grid; place-items:center;
     border:1px solid color-mix(in oklab, var(--c,var(--silver)) 45%, var(--border-default)); background:var(--bg-surface); transition:all .25s}
   .eiv-dslot .ic svg{width:22px; height:22px; stroke:var(--c,var(--text-primary)); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}

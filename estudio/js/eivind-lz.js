@@ -9,12 +9,13 @@
 
   function hex2rgb(h){ h=(h||"").replace("#",""); if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; var n=parseInt(h||"5b8def",16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255}; }
 
-  /* Identidad "Eivind" — esfera de NODOS INTERCONECTADOS + HUD + barrido
-     (estilo Jarvis/Ultron): red neuronal que rota, con anillos de interfaz,
-     ticks, barrido tipo radar y núcleo vivo. Reacciona al hablar. */
+  /* Identidad "Eivind" — esfera de NODOS INTERCONECTADOS + núcleo.
+     Solo puntos y conexiones (sin anillos, ticks ni barrido). El aura
+     se desvanece antes del borde para no verse "en recuadro". Al navegar
+     el menú, reacciona con un pulso de brillo. */
   function Identity(canvas) {
-    var ctx = canvas.getContext("2d"), dpr = 1, S = 300, t = 0, amp = 0, ampT = 0, pulse = 0, raf = 0;
-    var cur = hex2rgb("#5B8DEF"), tgt = hex2rgb("#5B8DEF"), ripples = [];
+    var ctx = canvas.getContext("2d"), dpr = 1, S = 300, t = 0, en = 0, enT = 0, pulse = 0, raf = 0;
+    var cur = hex2rgb("#5B8DEF"), tgt = hex2rgb("#5B8DEF");
     var N = 118, nodes = [];
     for (var i = 0; i < N; i++) {
       var y = 1 - 2 * (i + .5) / N, rr = Math.sqrt(Math.max(0, 1 - y * y)), ph = i * 2.399963;
@@ -31,36 +32,25 @@
     function col(a) { return "rgba(" + Math.round(cur.r) + "," + Math.round(cur.g) + "," + Math.round(cur.b) + "," + a + ")"; }
     function draw() {
       ctx.clearRect(0, 0, S, S);
-      var cx = S / 2, cy = S / 2, R = S * .30;
+      var cx = S / 2, cy = S / 2, R = S * .175;
       cur.r += (tgt.r - cur.r) * .08; cur.g += (tgt.g - cur.g) * .08; cur.b += (tgt.b - cur.b) * .08;
-      amp += (ampT - amp) * .12; if (pulse > 0) pulse *= .92;
-      var en = Math.min(1, amp + pulse), br = .5 + .5 * Math.sin(t * 1.2);
+      en += (enT - en) * .1; if (pulse > 0) pulse *= .93;
+      var energy = Math.min(1, en + pulse), br = .5 + .5 * Math.sin(t * 1.2);
       var ry = t * .33, rx = .44, ca = Math.cos(ry), sa = Math.sin(ry), cb = Math.cos(rx), sb = Math.sin(rx), pr = [];
       for (var i = 0; i < N; i++) { var n = nodes[i];
         var x = n.x * ca - n.z * sa, z = n.x * sa + n.z * ca, yy = n.y * cb - z * sb, z2 = n.y * sb + z * cb;
         pr.push({ sx: cx + x * R, sy: cy + yy * R, d: (z2 + 1) / 2 }); }
-      var hg = ctx.createRadialGradient(cx, cy, R * .2, cx, cy, R * (1.7 + en * .5));
-      hg.addColorStop(0, col(.14 + en * .12)); hg.addColorStop(.5, col(.04)); hg.addColorStop(1, col(0));
+      // aura libre: se desvanece a 0 antes de tocar el borde (sin recuadro)
+      var hg = ctx.createRadialGradient(cx, cy, R * .2, cx, cy, S * .42);
+      hg.addColorStop(0, col(.16 + energy * .14)); hg.addColorStop(.55, col(.04)); hg.addColorStop(1, col(0));
       ctx.fillStyle = hg; ctx.fillRect(0, 0, S, S);
-      for (var r = ripples.length - 1; r >= 0; r--) { var o = ripples[r]; o.rad += 1.9; o.life -= .012; if (o.life <= 0) { ripples.splice(r, 1); continue; } ctx.strokeStyle = col(o.life * .4); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.arc(cx, cy, R * .6 + o.rad, 0, 6.283); ctx.stroke(); }
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * .18);
-      ctx.strokeStyle = col(.16); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, R * 1.22, 0, 6.283); ctx.stroke();
-      ctx.strokeStyle = col(.3 + en * .3); ctx.lineWidth = 1.4;
-      for (var a2 = 0; a2 < 48; a2++) { var an = a2 / 48 * 6.283, r1 = R * 1.18, r2 = (a2 % 4 === 0) ? R * 1.29 : R * 1.24; ctx.beginPath(); ctx.moveTo(Math.cos(an) * r1, Math.sin(an) * r1); ctx.lineTo(Math.cos(an) * r2, Math.sin(an) * r2); ctx.stroke(); }
-      ctx.restore();
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-t * .12); ctx.strokeStyle = col(.22 + en * .25); ctx.lineWidth = 1.6;
-      for (var g = 0; g < 3; g++) { var s0 = g * 2.094 + .3; ctx.beginPath(); ctx.arc(0, 0, R * 1.4, s0, s0 + 1.12); ctx.stroke(); }
-      ctx.restore();
-      var sweep = (t * .9) % 6.283, sg = ctx.createLinearGradient(cx, cy, cx + Math.cos(sweep) * R * 1.15, cy + Math.sin(sweep) * R * 1.15);
-      sg.addColorStop(0, col(0)); sg.addColorStop(1, col(.5 + en * .3));
-      ctx.strokeStyle = sg; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R * 1.12, cy + Math.sin(sweep) * R * 1.12); ctx.stroke();
       ctx.lineWidth = 1;
       for (var e = 0; e < edges.length; e++) { var ea = pr[edges[e][0]], eb = pr[edges[e][1]], da = (ea.d + eb.d) / 2, fl = .6 + .4 * Math.sin(t * 2 + edges[e][2]);
-        ctx.strokeStyle = col((.04 + .28 * da) * (.6 + en * .7) * fl); ctx.beginPath(); ctx.moveTo(ea.sx, ea.sy); ctx.lineTo(eb.sx, eb.sy); ctx.stroke(); }
-      for (var i2 = 0; i2 < N; i2++) { var p = pr[i2], n2 = nodes[i2], tw = .6 + .4 * Math.sin(n2.tw + t * n2.sp), rad = (.5 + 1.7 * p.d) * (1 + en * .3);
+        ctx.strokeStyle = col((.04 + .28 * da) * (.6 + energy * .7) * fl); ctx.beginPath(); ctx.moveTo(ea.sx, ea.sy); ctx.lineTo(eb.sx, eb.sy); ctx.stroke(); }
+      for (var i2 = 0; i2 < N; i2++) { var p = pr[i2], n2 = nodes[i2], tw = .6 + .4 * Math.sin(n2.tw + t * n2.sp), rad = (.5 + 1.7 * p.d) * (1 + energy * .3);
         ctx.fillStyle = col((.25 + .6 * p.d) * tw); ctx.beginPath(); ctx.arc(p.sx, p.sy, rad, 0, 6.283); ctx.fill();
         if (p.d > .82) { ctx.fillStyle = "rgba(255,255,255," + (.5 * tw).toFixed(3) + ")"; ctx.beginPath(); ctx.arc(p.sx, p.sy, rad * .5, 0, 6.283); ctx.fill(); } }
-      var coreR = R * (.26 + br * .04 + en * .14), cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      var coreR = R * (.26 + br * .04 + energy * .16), cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
       cg.addColorStop(0, "rgba(255,255,255,.95)"); cg.addColorStop(.4, col(.8)); cg.addColorStop(1, col(0));
       ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, coreR, 0, 6.283); ctx.fill();
       t += reduce ? 0 : .016;
@@ -68,37 +58,21 @@
     function loop() { draw(); raf = requestAnimationFrame(loop); }
     this.setColor = function (h) { tgt = hex2rgb(h); };
     this.refreshColor = function (h) { cur = hex2rgb(h); tgt = hex2rgb(h); };
-    this.setSpeaking = function (b) { ampT = b ? 1 : 0; if (b) ripples.push({ rad: 0, life: 1 }); };
-    this.pulse = function () { pulse = .6; ripples.push({ rad: 0, life: .8 }); };
+    this.setSpeaking = function (b) { enT = b ? .6 : 0; };
+    this.pulse = function () { pulse = .7; };
     this.resize = size;
     this.start = function () { size(); if (reduce) draw(); else loop(); };
     this.stop = function () { cancelAnimationFrame(raf); };
   }
 
 
-  /* ---- voz cálida ---- */
-  function Voice(){
-    var synth=window.speechSynthesis,chosen=null,on=true,gestured=false;
-    try{on=localStorage.getItem("irvin.voz")!=="off";}catch(e){}
-    function pick(){if(!synth)return;var vs=synth.getVoices()||[],es=vs.filter(function(v){return /^es/i.test(v.lang);});
-      var pref=["paulina","sabina","mónica","monica","esperanza","helena","laura","marisol","google español","angelica","female","mujer"];
-      for(var i=0;i<pref.length;i++){var f=es.find(function(v){return v.name.toLowerCase().indexOf(pref[i])>=0;});if(f){chosen=f;return;}}
-      chosen=es.find(function(v){return /es-MX/i.test(v.lang);})||es[0]||null;}
-    if(synth){pick();synth.onvoiceschanged=pick;}
-    this.gesture=function(){gestured=true;};
-    this.enabled=function(){return on;};
-    this.toggle=function(){on=!on;try{localStorage.setItem("irvin.voz",on?"on":"off");}catch(e){}if(!on&&synth)synth.cancel();return on;};
-    this.say=function(text,a,b){if(!synth||!on||!gestured||!text)return;try{synth.cancel();var u=new SpeechSynthesisUtterance(text);if(chosen)u.voice=chosen;u.lang=chosen?chosen.lang:"es-MX";u.rate=.98;u.pitch=1.18;u.onstart=a;u.onend=b;u.onerror=b;synth.speak(u);}catch(e){if(b)b();}};
-    this.shush=function(){if(synth)synth.cancel();};
-  }
-
   function mount(container, cfg){
     var lang=(cfg.lang==="en")?"en":"es", C=cfg.cursos||[], ICON=cfg.icons||{}, nav=cfg.nav||function(){};
     if(!C.length) return;
     var tx={
-      es:{kick:'LEARNING ZONE · <b>CURSOS</b>', guide:"Eivind, tu guía", intro:"Soy Eivind. Toca un curso y te cuento de qué va — el de C ya está listo para empezar.",
+      es:{titulo:"Learning Zone", subtitulo:"Cursos", hint:"Abrir curso",
           start:"Empezar", view:"Ver curso", soon:"pronto", explore:"Explorar C", topics:"Temas del curso", learn:"Lo que aprenderás", about:"De qué va", comingTitle:"Próximamente", comingMsg:"Este curso está en construcción. Mientras tanto, el curso de C ya tiene temas listos para ti."},
-      en:{kick:'LEARNING ZONE · <b>COURSES</b>', guide:"Eivind, your guide", intro:"I'm Eivind. Tap a course and I'll tell you what it's about — the C one is ready to start.",
+      en:{titulo:"Learning Zone", subtitulo:"Courses", hint:"Open course",
           start:"Start", view:"View course", soon:"soon", explore:"Explore C", topics:"Course topics", learn:"What you'll learn", about:"What it is", comingTitle:"Coming soon", comingMsg:"This course is in the works. Meanwhile, the C course already has topics ready for you."}
     }[lang];
 
@@ -110,14 +84,11 @@
 
     container.innerHTML=
       '<section class="eiv-stage">'+
-        '<p class="eiv-kicker">'+tx.kick+'</p>'+
-        '<div class="eiv-core" id="eivCore" role="button" tabindex="0" aria-label="'+tx.view+'"><canvas id="eivCanvas"></canvas><span class="eiv-hint">'+tx.guide+'</span></div>'+
-        '<h1 class="eiv-name" id="eivName">Eivind</h1>'+
-        '<p class="eiv-sub" id="eivSub"></p>'+
-        '<p class="eiv-phrase" id="eivPhrase">'+tx.intro+'</p>'+
+        '<h1 class="eiv-name">'+tx.titulo+'</h1>'+
+        '<p class="eiv-sub eiv-role">'+tx.subtitulo+'</p>'+
+        '<div class="eiv-core" id="eivCore" role="button" tabindex="0" aria-label="'+tx.view+'"><canvas id="eivCanvas"></canvas><span class="eiv-hint">'+tx.hint+'</span></div>'+
         '<div class="eiv-cta">'+
           '<button class="eiv-open" id="eivOpen">'+tx.view+' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>'+
-          '<button class="eiv-voice" id="eivVoice" aria-pressed="true"><svg class="on-live" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><svg class="on-mute" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg></button>'+
         '</div>'+
       '</section>'+
       '<nav class="eiv-menu" aria-label="Cursos">'+
@@ -132,10 +103,7 @@
       '</div>';
 
     var canvas=container.querySelector("#eivCanvas"), idn=new Identity(canvas); idn.start();
-    var voice=new Voice();
-    var nameEl=container.querySelector("#eivName"),subEl=container.querySelector("#eivSub"),
-        phraseEl=container.querySelector("#eivPhrase"),kickEl=container.querySelector(".eiv-kicker"),
-        core=container.querySelector("#eivCore"),track=container.querySelector("#eivTrack"),openBtn=container.querySelector("#eivOpen");
+    var core=container.querySelector("#eivCore"),track=container.querySelector("#eivTrack"),openBtn=container.querySelector("#eivOpen");
 
     function chipHTML(c,idx){
       return '<li class="eiv-item"><button class="eiv-chip islz" data-idx="'+idx+'" style="--c:'+c.area+'">'+
@@ -157,14 +125,11 @@
 
     var sel=-1,paused=false;
     function markCurrent(idx){track.querySelectorAll(".eiv-chip").forEach(function(c){c.setAttribute("aria-current",String(+c.dataset.idx===idx));});}
-    function setSel(idx,speak){
+    function setSel(idx){
       if(idx<0||idx>=C.length)return; sel=idx; var c=C[idx];
-      document.documentElement.style.setProperty("--acc",c.area); container.style.setProperty("--acc",c.area); kickEl.style.setProperty("--acc",c.area);
-      nameEl.textContent=c.nombre[lang]; subEl.textContent=c.sub?c.sub[lang]:"";
-      phraseEl.classList.remove("show"); setTimeout(function(){phraseEl.textContent=c.frase[lang];phraseEl.classList.add("show");},120);
+      document.documentElement.style.setProperty("--acc",c.area); container.style.setProperty("--acc",c.area);
       openBtn.firstChild && (openBtn.childNodes[0].nodeValue=(c.real?tx.start:tx.view)+" ");
       idn.setColor(c.area); idn.pulse(); markCurrent(idx); updateDial();
-      if(speak) voice.say(c.frase[lang],function(){idn.setSpeaking(true);},function(){idn.setSpeaking(false);});
     }
 
     function topicsHTML(c){
@@ -187,7 +152,7 @@
           '<span class="eiv-area"><span class="dot"></span>'+(c.sub?c.sub[lang].toUpperCase():"")+(c.real?"":" · "+tx.soon.toUpperCase())+'</span>'+
           '<h2>'+c.nombre[lang]+'</h2><p class="pf">“'+c.frase[lang]+'”</p>'+
         '</div><div class="eiv-body">'+body+'</div>';
-      sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; paused=true; voice.shush();
+      sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; paused=true;
       sheet.querySelector("#eivClose").addEventListener("click",closeDetail);
       sheet.querySelectorAll("[data-nav]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();closeDetail();nav(a.dataset.nav);});});
     }
@@ -220,22 +185,8 @@
     core.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openCurrent();}});
     openBtn.addEventListener("click",openCurrent);
 
-    var vbtn=container.querySelector("#eivVoice");
-    vbtn.addEventListener("click",function(){var on=voice.toggle();vbtn.setAttribute("aria-pressed",String(on));if(on){voice.gesture();setSel(sel<0?0:sel,true);}});
-    vbtn.setAttribute("aria-pressed",String(voice.enabled()));
-    function fg(){voice.gesture();window.removeEventListener("pointerdown",fg);window.removeEventListener("keydown",fg);}
-    window.addEventListener("pointerdown",fg);window.addEventListener("keydown",fg);
-
-    var menu=container.querySelector(".eiv-menu");
-    [menu,core].forEach(function(el){el.addEventListener("pointerenter",function(){paused=true;});el.addEventListener("pointerleave",function(){if(!sheet.classList.contains("open"))paused=false;});});
-
-    var lastCycle=performance.now();
-    function tick(now){
-      if(auto&&!dragging&&!paused){pos+=.35;wrap();applyTrack();}
-      if(!paused&&!sheet.classList.contains("open")&&now-lastCycle>5200){lastCycle=now;setSel((sel+1)%C.length,true);}
-      requestAnimationFrame(tick);
-    }
-    function boot(){measure();applyTrack();setSel(0,false);if(!reduce)requestAnimationFrame(tick);}
+    // arranque (el menú NO avanza solo: lo recorre el usuario)
+    function boot(){measure();applyTrack();setSel(0);}
     if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){setTimeout(boot,30);});else setTimeout(boot,60);
 
     var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){idn.resize();measure();applyTrack();},200);});
