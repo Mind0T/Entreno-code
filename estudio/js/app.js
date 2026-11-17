@@ -15,10 +15,13 @@
   const T = (o) => (o && (o[lang] != null ? o[lang] : o.es)) || "";
 
   const GRUPOS = [
-    { id: "ordenamiento", titulo: { es: "Algoritmos de ordenamiento", en: "Sorting algorithms" } },
-    { id: "pila", titulo: { es: "Estructura: Pila", en: "Structure: Stack" } },
-    { id: "cola", titulo: { es: "Estructura: Cola", en: "Structure: Queue" } },
-    { id: "busqueda", titulo: { es: "Algoritmos de búsqueda", en: "Search algorithms" } },
+    // C
+    { id: "ordenamiento", lang: "c", titulo: { es: "Algoritmos de ordenamiento", en: "Sorting algorithms" } },
+    { id: "pila", lang: "c", titulo: { es: "Estructura: Pila", en: "Structure: Stack" } },
+    { id: "cola", lang: "c", titulo: { es: "Estructura: Cola", en: "Structure: Queue" } },
+    { id: "busqueda", lang: "c", titulo: { es: "Algoritmos de búsqueda", en: "Search algorithms" } },
+    // Python — organizado por TEMAS (no por semanas)
+    { id: "py-fundamentos", lang: "py", titulo: { es: "Fundamentos de Python", en: "Python fundamentals" } },
   ];
 
   /* categorías del menú (solo "C" tiene contenido; el resto, pronto) */
@@ -194,8 +197,11 @@
   /* ============================================================
      MENÚ DE CATEGORÍAS (reemplaza al sidebar)
      ============================================================ */
-  function gruposDe() {
-    return GRUPOS.map((g) => ({ g, items: ordenados().filter((m) => m.grupo === g.id) })).filter((x) => x.items.length);
+  function gruposDe(lenguaje) {
+    lenguaje = lenguaje || "c";
+    return GRUPOS.filter((g) => (g.lang || "c") === lenguaje)
+      .map((g) => ({ g, items: ordenados().filter((m) => m.grupo === g.id) }))
+      .filter((x) => x.items.length);
   }
   function popTemasC(pop) {
     gruposDe().forEach(({ g, items }) => {
@@ -263,23 +269,28 @@
     ai: '<path d="M12 4a3.5 3.5 0 0 0-3.5 3.5v9a3 3 0 0 0 6 .3V7.5A3.5 3.5 0 0 0 12 4z" opacity=".45"/><path d="m12 10.5 1.8 1.8L12 14l-1.8-1.7L12 10.5z"/><circle cx="12" cy="7.6" r="1"/>'
   };
   const AZ="#5B8DEF", MO="#B79CC9", CI="#9DB4CF", AM="#E2A336";
-  function cTopics() {
-    return gruposDe().reduce(function (acc, x) {
+  function cTopics(lenguaje) {
+    return gruposDe(lenguaje).reduce(function (acc, x) {
       x.items.forEach(function (m) { acc.push({ id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto }); });
       return acc;
     }, []);
   }
-  function CURSOS(tops, firstC) {
+  function CURSOS(data) {
+    data = data || {};
+    const dC = data.c || {}, dPy = data.py || {};
+    const pyReal = !!(dPy.topics && dPy.topics.length);
     return [
-      { id:"c", icon:"c", area:AZ, real:true, first:firstC, topics:tops,
+      { id:"c", icon:"c", area:AZ, real:true, first:dC.first, topics:dC.topics,
         nombre:{es:"Fundamentos de C", en:"C fundamentals"}, sub:{es:"Programación", en:"Programming"},
         frase:{es:"Empieza por aquí: C, viendo correr el código línea por línea.", en:"Start here: C, watching the code run line by line."},
         resumen:{es:"El corazón de la Learning Zone: aprende C mirando la memoria, los apuntadores y cada estructura cobrar vida con animaciones y pruebas de escritorio.", en:"The heart of the Learning Zone: learn C by watching memory, pointers and every structure come alive with animations and desktop traces."},
         aprende:{es:["Pila, cola y estructuras de datos paso a paso","Pruebas de escritorio que siguen el código línea por línea","Ordenamiento y búsqueda con animaciones"], en:["Stack, queue and data structures step by step","Desktop traces following the code line by line","Sorting and search with animations"]} },
-      { id:"py", icon:"py", area:AZ, nombre:{es:"Fundamentos de Python", en:"Python fundamentals"}, sub:{es:"Programación", en:"Programming"},
-        frase:{es:"Pronto: Python desde cero, con la misma magia de ver todo por dentro.", en:"Soon: Python from scratch, with the same magic of seeing it all inside."},
-        resumen:{es:"Fundamentos de Python explicados con claridad visual: variables, flujo, funciones y estructuras, para quien empieza a programar.", en:"Python fundamentals explained with visual clarity: variables, flow, functions and structures, for those starting out."},
-        aprende:{es:["Sintaxis y tipos desde cero","Flujo, funciones y estructuras","Buenas prácticas para principiantes"], en:["Syntax and types from scratch","Flow, functions and structures","Good practices for beginners"]} },
+      { id:"py", icon:"py", area:AZ, real:pyReal, first:dPy.first, topics:dPy.topics, nombre:{es:"Fundamentos de Python", en:"Python fundamentals"}, sub:{es:"Programación", en:"Programming"},
+        frase: pyReal
+          ? {es:"Lee, escribe y ejecuta Python aquí mismo — como un cuaderno que vive en tu navegador.", en:"Read, write and run Python right here — like a notebook living in your browser."}
+          : {es:"Pronto: Python desde cero, con la misma magia de ver todo por dentro.", en:"Soon: Python from scratch, with the same magic of seeing it all inside."},
+        resumen:{es:"Fundamentos de Python con celdas de código que corres y verificas al instante: tipos, variables, flujo, funciones y estructuras — practicas mientras lees, como en un Jupyter Notebook.", en:"Python fundamentals with code cells you run and check instantly: types, variables, flow, functions and structures — you practice as you read, like a Jupyter Notebook."},
+        aprende:{es:["Tipos, variables y operadores, ejecutando código real","Celdas tipo notebook: escribe, corre y verifica","Un quiz en cada tema para fijar lo aprendido"], en:["Types, variables and operators, running real code","Notebook-style cells: write, run and check","A quiz in every topic to lock in what you learn"]} },
       { id:"pydata", icon:"pydata", area:MO, nombre:{es:"Python para Ciencia de Datos", en:"Python for Data Science"}, sub:{es:"Programación · Datos", en:"Programming · Data"},
         frase:{es:"Pronto: Python para ciencia de datos, de pandas a los primeros modelos.", en:"Soon: Python for data science, from pandas to your first models."},
         resumen:{es:"El puente entre programar y analizar: pandas, visualización y los primeros modelos de machine learning, con ejemplos reales.", en:"The bridge between coding and analysis: pandas, visualization and your first machine-learning models, with real examples."},
@@ -316,11 +327,13 @@
     }
     const mountEl = h("div", { class: "eiv", id: "eivMount" });
     principal.append(mountEl);
-    const tops = cTopics();
-    const firstC = (tops.find((t) => !t.pronto) || {}).id || "";
+    const topsC = cTopics("c");
+    const topsPy = cTopics("py");
+    const firstC = (topsC.find((t) => !t.pronto) || {}).id || "";
+    const firstPy = (topsPy.find((t) => !t.pronto) || {}).id || "";
     window.EivindLZ.mount(mountEl, {
       lang: lang, icons: ICON_CUR, cId: "c", cFirst: firstC,
-      cursos: CURSOS(tops, firstC),
+      cursos: CURSOS({ c: { topics: topsC, first: firstC }, py: { topics: topsPy, first: firstPy } }),
       nav: function (hash) { location.hash = hash; }
     });
   }
@@ -332,7 +345,7 @@
     const btn = h("button", { class: "tb-switch-btn", type: "button", id: "tbBtn", "aria-expanded": "false" },
       D("temas"), h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", html: '<path d="M6 9l6 6 6-6"/>' }));
     const menu = h("div", { class: "tb-menu", id: "tbMenu", hidden: true });
-    gruposDe().forEach(({ g, items }) => {
+    gruposDe(actual.lenguaje || "c").forEach(({ g, items }) => {
       const grp = h("div", { class: "tb-g" }, h("h4", {}, T(g.titulo)));
       const ul = h("div", { class: "tb-g-list" });
       items.forEach((m) => {

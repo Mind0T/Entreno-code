@@ -785,3 +785,34 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .eiv-topics .pronto{opacity:.6}
 .eiv-topics .etq{margin-left:auto; font:700 9.5px var(--f-display); letter-spacing:.08em; text-transform:uppercase; color:var(--gris); border:1px solid var(--border-strong); border-radius:99px; padding:3px 8px}
 .eiv-soonbox{border:1px dashed var(--c,var(--silver)); border-radius:var(--radio); padding:16px 18px; color:var(--text-secondary); font-size:14px; line-height:1.6}
+
+/* ============================================================
+   Celdas de Python ejecutables (tipo notebook / "try it")
+   ============================================================ */
+.pycell{border:1px solid var(--linea); border-radius:12px; overflow:hidden; background:var(--codigo-bg); margin:18px 0; box-shadow:var(--sombra)}
+.pc-head{display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--linea2); background:var(--papel2)}
+.pc-dot{width:9px; height:9px; border-radius:50%; background:var(--azul)}
+.pc-lang{font:700 11px var(--f-mono); color:var(--tinta2); letter-spacing:.06em; text-transform:uppercase}
+.pc-tools{margin-left:auto; display:flex; gap:6px}
+.pc-reset{width:28px; height:28px; border-radius:7px; border:1px solid var(--linea); background:none; color:var(--tinta2); display:grid; place-items:center; cursor:pointer; transition:all .15s}
+.pc-reset:hover{color:var(--tinta); border-color:var(--azul)}
+.pc-reset svg{width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.pc-codewrap{padding:0}
+.pc-code{width:100%; box-sizing:border-box; border:0; outline:none; resize:none; background:transparent; color:var(--tinta); font:500 13.5px/1.6 var(--f-mono); padding:14px 16px; display:block; tab-size:4; -moz-tab-size:4}
+.pc-bar{display:flex; align-items:center; gap:12px; padding:10px 14px; border-top:1px solid var(--linea2); background:var(--papel2)}
+.pc-run{display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 16px; border-radius:8px; border:0; background:var(--verde); color:#07130d; font:800 13px var(--f-display); cursor:pointer; transition:filter .15s, transform .1s}
+.pc-run:hover{filter:brightness(1.08); transform:translateY(-1px)}
+.pc-run:disabled{opacity:.55; cursor:default; transform:none}
+.pc-run svg{width:13px; height:13px; fill:currentColor}
+.pc-status{font:600 12px var(--f-display); color:var(--tinta2)}
+.pc-out{margin:0; padding:14px 16px; background:var(--bg); border-top:1px solid var(--linea2); color:var(--tinta); font:500 13px/1.55 var(--f-mono); white-space:pre-wrap; word-break:break-word; max-height:320px; overflow:auto}
+.pycell.ok .pc-out{border-top-color:color-mix(in oklab, var(--verde) 45%, var(--linea2))}
+.pycell.err .pc-out{color:var(--rojo); border-top-color:color-mix(in oklab, var(--rojo) 45%, var(--linea2))}
+
+/* callouts pedagógicos del contenido */
+.lz-callout{display:flex; gap:12px; align-items:flex-start; border:1px solid var(--linea); border-left:3px solid var(--c,var(--azul)); background:var(--papel); border-radius:10px; padding:14px 16px; margin:18px auto; max-width:80ch}
+.lz-callout .ic{flex:0 0 auto; width:24px; height:24px; color:var(--c,var(--azul))}
+.lz-callout .ic svg{width:24px; height:24px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.lz-callout p{margin:0; font-size:14px; line-height:1.6; color:var(--tinta2)}
+.lz-callout b{color:var(--tinta)}
+.lz-try{display:block; max-width:80ch; margin:6px auto -6px; font:700 11px var(--f-display); letter-spacing:.1em; text-transform:uppercase; color:var(--verde)}
