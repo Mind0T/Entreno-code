@@ -87,49 +87,48 @@
         '<h1 class="eiv-name">'+tx.titulo+'</h1>'+
         '<p class="eiv-sub eiv-role">'+tx.subtitulo+'</p>'+
         '<div class="eiv-core" id="eivCore" role="button" tabindex="0" aria-label="'+tx.view+'"><canvas id="eivCanvas"></canvas><span class="eiv-hint">'+tx.hint+'</span></div>'+
-        '<div class="eiv-cta">'+
-          '<button class="eiv-open" id="eivOpen">'+tx.view+' <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>'+
-        '</div>'+
       '</section>'+
-      '<nav class="eiv-menu" aria-label="Cursos">'+
-        '<button class="eiv-arrow" data-dir="-1" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>'+
-        '<div class="eiv-track-wrap"><ul class="eiv-track" id="eivTrack"></ul></div>'+
-        '<button class="eiv-arrow" data-dir="1" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>'+
-      '</nav>'+
-      '<div class="eiv-dial" id="eivDial" aria-hidden="true">'+
-        '<svg class="eiv-dial-arc" viewBox="0 0 340 140" aria-hidden="true"><path id="eivDialArc" d=""/></svg>'+
-        '<div class="eiv-dial-items" id="eivDialItems"></div>'+
-        '<p class="eiv-dial-hint">'+(lang==="en"?"Swipe ← → · tap to open":"Desliza ← → · toca para abrir")+'</p>'+
+      '<div class="eiv-dial" id="eivDial" aria-label="'+(lang==="en"?"Courses":"Cursos")+'">'+
+        '<button class="eiv-arrow" data-dir="-1" aria-label="'+(lang==="en"?"Previous":"Anterior")+'"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>'+
+        '<div class="eiv-dial-stage" id="eivDialStage">'+
+          '<svg class="eiv-dial-arc" id="eivDialSvg" aria-hidden="true"><path id="eivDialArc" d=""/></svg>'+
+          '<div class="eiv-dial-items" id="eivDialItems"></div>'+
+        '</div>'+
+        '<button class="eiv-arrow" data-dir="1" aria-label="'+(lang==="en"?"Next":"Siguiente")+'"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>'+
+        '<p class="eiv-dial-hint">'+(lang==="en"?"Swipe or use the arrows · tap to open":"Desliza o usa las flechas · toca para abrir")+'</p>'+
       '</div>';
 
     var canvas=container.querySelector("#eivCanvas"), idn=new Identity(canvas); idn.start();
-    var core=container.querySelector("#eivCore"),track=container.querySelector("#eivTrack"),openBtn=container.querySelector("#eivOpen");
+    var core=container.querySelector("#eivCore");
 
-    function chipHTML(c,idx){
-      return '<li class="eiv-item"><button class="eiv-chip islz" data-idx="'+idx+'" style="--c:'+c.area+'">'+
-        '<span class="ic"><svg viewBox="0 0 24 24">'+(ICON[c.icon]||"")+'</svg></span>'+
-        '<span class="nm">'+c.nombre[lang]+'</span>'+(c.real?'':'<span class="soon">'+tx.soon+'</span>')+'</button></li>';
-    }
-    var html=""; for(var s=0;s<3;s++)for(var i=0;i<C.length;i++)html+=chipHTML(C[i],i); track.innerHTML=html;
-
-    // ---- menú de media luna (vista de celular) ----
-    var DCX=170,DCY=255,DR=205,dslots=[];
-    function dialArc(){var a=2.45*0.34,x1=(DCX-DR*Math.sin(a)).toFixed(1),x2=(DCX+DR*Math.sin(a)).toFixed(1),y=(DCY-DR*Math.cos(a)).toFixed(1);var p=container.querySelector("#eivDialArc");if(p)p.setAttribute("d","M"+x1+" "+y+" A"+DR+" "+DR+" 0 0 1 "+x2+" "+y);}
-    function buildDial(){var host=container.querySelector("#eivDialItems");if(!host)return;host.innerHTML="";dslots=[];for(var i=0;i<5;i++){var b=document.createElement("button");b.className="eiv-dslot";b.type="button";b.innerHTML='<span class="ic"><svg viewBox="0 0 24 24"></svg></span><span class="dl"></span>';host.appendChild(b);dslots.push(b);}dialArc();}
-    function updateDial(){if(!dslots.length||sel<0)return;for(var s2=0;s2<5;s2++){var off=s2-2,idx=(((sel+off)%C.length)+C.length)%C.length,p=C[idx],th=off*0.34,x=DCX+DR*Math.sin(th),y=DCY-DR*Math.cos(th),b=dslots[s2];b.style.left=x.toFixed(1)+"px";b.style.top=y.toFixed(1)+"px";b.style.setProperty("--c",p.area);b.dataset.idx=idx;b.classList.toggle("on",off===0);b.style.opacity=Math.abs(off)===2?".5":"1";b.querySelector(".ic svg").innerHTML=ICON[p.icon]||"";b.querySelector(".dl").textContent=off===0?(p.sub?p.sub[lang]:p.nombre[lang]):"";}}
-
-    var segW=0,pos=0,auto=!reduce,dragging=false,dragX=0,dragPos=0,moved=false;
-    function measure(){var it=track.children;segW=0;for(var i=0;i<C.length;i++)segW+=it[i].getBoundingClientRect().width+12;wrap();}
-    function wrap(){if(segW>0)pos=((pos%segW)+segW)%segW;}
-    function applyTrack(){track.style.transform="translateX("+(-(segW+pos)).toFixed(1)+"px)";}
-
-    var sel=-1,paused=false;
-    function markCurrent(idx){track.querySelectorAll(".eiv-chip").forEach(function(c){c.setAttribute("aria-current",String(+c.dataset.idx===idx));});}
+    // ---- selección ----
+    var sel=-1;
     function setSel(idx){
       if(idx<0||idx>=C.length)return; sel=idx; var c=C[idx];
       document.documentElement.style.setProperty("--acc",c.area); container.style.setProperty("--acc",c.area);
-      openBtn.firstChild && (openBtn.childNodes[0].nodeValue=(c.real?tx.start:tx.view)+" ");
-      idn.setColor(c.area); idn.pulse(); markCurrent(idx); updateDial();
+      idn.setColor(c.area); idn.pulse(); updateDial();
+    }
+
+    // ---- menú de media luna (todos los dispositivos, estilo ORBI, infinito) ----
+    var DN=5, SP=0.30, dslots=[];
+    var dialStage=container.querySelector("#eivDialStage"),
+        dialSvg=container.querySelector("#eivDialSvg"),
+        dialPath=container.querySelector("#eivDialArc"),
+        dialItems=container.querySelector("#eivDialItems");
+    function buildDial(){
+      dialItems.innerHTML=""; dslots=[];
+      for(var i=0;i<DN;i++){var b=document.createElement("button");b.className="eiv-dslot islz";b.type="button";
+        b.innerHTML='<span class="ic"><svg viewBox="0 0 24 24"></svg></span><span class="dl"></span><span class="dsoon">'+tx.soon+'</span>';dialItems.appendChild(b);dslots.push(b);}
+    }
+    function updateDial(){
+      if(!dslots.length||sel<0)return;
+      var W=dialStage.clientWidth||340, H=dialStage.clientHeight||150, R=W*0.58, cx=W/2, cy=R+16;
+      if(dialSvg)dialSvg.setAttribute("viewBox","0 0 "+W+" "+H);
+      if(dialPath){var am=2.4*SP,x1=(cx-R*Math.sin(am)).toFixed(1),x2=(cx+R*Math.sin(am)).toFixed(1),ay=(cy-R*Math.cos(am)).toFixed(1);dialPath.setAttribute("d","M"+x1+" "+ay+" A"+R.toFixed(1)+" "+R.toFixed(1)+" 0 0 1 "+x2+" "+ay);}
+      for(var s2=0;s2<DN;s2++){var off=s2-(DN-1)/2,idx=(((sel+off)%C.length)+C.length)%C.length,p=C[idx],th=off*SP,x=cx+R*Math.sin(th),y=cy-R*Math.cos(th),b=dslots[s2];
+        b.style.left=x.toFixed(1)+"px";b.style.top=y.toFixed(1)+"px";b.style.setProperty("--c",p.area);
+        b.dataset.idx=idx;b.classList.toggle("on",off===0);b.classList.toggle("issoon",!p.real);b.style.opacity=Math.abs(off)>=2?".5":"1";
+        b.querySelector(".ic svg").innerHTML=ICON[p.icon]||"";b.querySelector(".dl").textContent=off===0?(p.sub?p.sub[lang]:p.nombre[lang]):"";}
     }
 
     function topicsHTML(c){
@@ -152,45 +151,36 @@
           '<span class="eiv-area"><span class="dot"></span>'+(c.sub?c.sub[lang].toUpperCase():"")+(c.real?"":" · "+tx.soon.toUpperCase())+'</span>'+
           '<h2>'+c.nombre[lang]+'</h2><p class="pf">“'+c.frase[lang]+'”</p>'+
         '</div><div class="eiv-body">'+body+'</div>';
-      sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; paused=true;
+      sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden";
       sheet.querySelector("#eivClose").addEventListener("click",closeDetail);
       sheet.querySelectorAll("[data-nav]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();closeDetail();nav(a.dataset.nav);});});
     }
-    function closeDetail(){sheet.classList.remove("open");sheet.setAttribute("aria-hidden","true");document.body.style.overflow="";paused=false;setTimeout(function(){var p=sheet.querySelector("#eivPanelInner");if(p)p.innerHTML="";},300);}
+    function closeDetail(){sheet.classList.remove("open");sheet.setAttribute("aria-hidden","true");document.body.style.overflow="";setTimeout(function(){var p=sheet.querySelector("#eivPanelInner");if(p)p.innerHTML="";},300);}
     sheet.querySelector(".eiv-scrim").addEventListener("click",closeDetail);
     document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sheet.classList.contains("open"))closeDetail();});
 
-    // eventos menú
-    track.addEventListener("pointerdown",function(e){dragging=true;moved=false;dragX=e.clientX;dragPos=pos;track.classList.add("drag");track.setPointerCapture(e.pointerId);});
-    track.addEventListener("pointermove",function(e){if(!dragging)return;var dx=e.clientX-dragX;if(Math.abs(dx)>4)moved=true;pos=dragPos-dx;wrap();applyTrack();});
-    track.addEventListener("pointerup",function(){dragging=false;track.classList.remove("drag");});
-    track.addEventListener("pointercancel",function(){dragging=false;track.classList.remove("drag");});
-    track.addEventListener("click",function(e){var b=e.target.closest(".eiv-chip");if(!b)return;if(moved){e.preventDefault();return;}var idx=+b.dataset.idx;setSel(idx,true);openDetail(idx);});
-    track.addEventListener("pointerover",function(e){var b=e.target.closest(".eiv-chip");if(!b)return;var idx=+b.dataset.idx;if(idx!==sel)setSel(idx,true);});
-    track.addEventListener("focusin",function(e){var b=e.target.closest(".eiv-chip");if(!b)return;setSel(+b.dataset.idx,true);});
-    container.querySelectorAll(".eiv-arrow").forEach(function(a){a.addEventListener("click",function(){var d=+a.dataset.dir,n=C.length;setSel((sel+d+n)%n,true);pos+=d*(segW/C.length);wrap();applyTrack();});});
-    // dial de media luna (móvil)
+    // ---- interacción del dial ----
     buildDial();
-    var dial=container.querySelector("#eivDial"),ddx=null,dmoved=false;
-    if(dial){
-      dial.addEventListener("pointerdown",function(e){ddx=e.clientX;dmoved=false;paused=true;});
-      dial.addEventListener("pointermove",function(e){if(ddx==null)return;var dx=e.clientX-ddx;if(Math.abs(dx)>42){setSel((sel+(dx<0?1:-1)+C.length)%C.length,true);ddx=e.clientX;dmoved=true;}});
-      dial.addEventListener("pointerup",function(){ddx=null;setTimeout(function(){if(!sheet.classList.contains("open"))paused=false;},3500);});
-      dial.addEventListener("pointercancel",function(){ddx=null;});
-      dial.addEventListener("click",function(e){var b=e.target.closest(".eiv-dslot");if(!b)return;if(dmoved){dmoved=false;return;}var idx=+b.dataset.idx;if(idx===sel)openDetail(idx);else setSel(idx,true);});
-    }
+    var dial=container.querySelector("#eivDial"), ddx=null, dmoved=false;
+    function rotate(step){ setSel(((sel+step)%C.length+C.length)%C.length); }
+    dialStage.addEventListener("pointerdown",function(e){ddx=e.clientX;dmoved=false;});
+    dialStage.addEventListener("pointermove",function(e){if(ddx==null)return;var dx=e.clientX-ddx;if(Math.abs(dx)>38){rotate(dx<0?1:-1);ddx=e.clientX;dmoved=true;}});
+    dialStage.addEventListener("pointerup",function(){ddx=null;});
+    dialStage.addEventListener("pointercancel",function(){ddx=null;});
+    dialStage.addEventListener("click",function(e){var b=e.target.closest(".eiv-dslot");if(!b)return;if(dmoved){dmoved=false;return;}var idx=+b.dataset.idx;setSel(idx);openDetail(idx);});
+    dial.addEventListener("wheel",function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>4){e.preventDefault();rotate(e.deltaX>0?1:-1);}},{passive:false});
+    dial.querySelectorAll(".eiv-arrow").forEach(function(a){a.addEventListener("click",function(){rotate(+a.dataset.dir);});});
 
-    function openCurrent(){if(sel<0)setSel(0,true);openDetail(sel<0?0:sel);}
+    function openCurrent(){if(sel<0)setSel(0);openDetail(sel<0?0:sel);}
     core.addEventListener("click",openCurrent);
     core.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openCurrent();}});
-    openBtn.addEventListener("click",openCurrent);
 
     // arranque (el menú NO avanza solo: lo recorre el usuario)
-    function boot(){measure();applyTrack();setSel(0);}
+    function boot(){setSel(0);updateDial();}
     if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){setTimeout(boot,30);});else setTimeout(boot,60);
 
-    var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){idn.resize();measure();applyTrack();},200);});
-    window.addEventListener("temachange",function(){if(sel>=0){idn.refreshColor(C[sel].area);}});
+    var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){idn.resize();updateDial();},150);});
+    window.addEventListener("temachange",function(){if(sel>=0){idn.refreshColor(C[sel].area);updateDial();}});
   }
 
   window.EivindLZ={ mount:mount };

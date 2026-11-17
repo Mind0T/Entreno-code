@@ -1,63 +1,58 @@
 /* ============================================================
-   Home "Eivind" — identidad reactiva + menú infinito + detalle.
+   Home "Eivind" — identidad reactiva + menú de media luna
+   (todos los dispositivos) + detalle flotante centrado.
    Usa los tokens de sistema.css; funciona en tema claro y oscuro.
    ============================================================ */
-.eiv{position:relative; z-index:1; min-height:calc(100vh - 150px); display:flex; flex-direction:column; justify-content:center; gap:clamp(18px,3vh,40px); padding:18px 0 40px}
+.eiv{position:relative; z-index:1; min-height:calc(100vh - 140px); display:flex; flex-direction:column; justify-content:center; gap:clamp(14px,3vh,32px); padding:14px 0 36px}
 
 /* ----- escenario / identidad ----- */
-.eiv-stage{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px}
-.eiv-kicker{font:600 11px/1.3 var(--font-display); letter-spacing:.26em; text-transform:uppercase; color:var(--text-muted); margin:0}
-.eiv-kicker b{color:var(--acc,var(--silver)); font-weight:700; transition:color .5s}
-.eiv-core{position:relative; width:clamp(230px,34vh,330px); height:clamp(230px,34vh,330px); display:grid; place-items:center; cursor:pointer; touch-action:manipulation}
+.eiv-stage{display:flex; flex-direction:column; align-items:center; text-align:center; gap:4px}
+.eiv-name{font-size:clamp(30px,5vw,56px); font-weight:900; color:var(--text-primary); margin:0; letter-spacing:-.02em; line-height:1.04; transition:color .4s}
+.eiv-sub,.eiv-role{font:700 clamp(11px,1.4vw,14px) var(--font-display); letter-spacing:.2em; text-transform:uppercase; color:var(--acc,var(--text-muted)); margin:5px 0 0; transition:color .5s}
+.eiv-core{position:relative; width:clamp(300px,42vh,460px); height:clamp(300px,42vh,460px); display:grid; place-items:center; cursor:pointer; touch-action:manipulation; margin-top:clamp(2px,2vh,16px)}
 /* el lienzo rebasa el core para que el aura se desvanezca libre (sin recorte cuadrado) */
-.eiv-core canvas{position:absolute; top:-32%; left:-32%; width:164%; height:164%; pointer-events:none}
+.eiv-core canvas{position:absolute; top:-30%; left:-30%; width:160%; height:160%; pointer-events:none}
 .eiv-core:focus-visible{outline:none}
-.eiv-core:focus-visible::after{content:""; position:absolute; inset:6%; border-radius:50%; outline:2px solid var(--acc,var(--silver)); outline-offset:6px}
-.eiv-hint{position:absolute; bottom:-2px; left:50%; transform:translateX(-50%); font:600 10.5px var(--font-display); letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); opacity:.0; transition:opacity .3s; pointer-events:none; white-space:nowrap}
-.eiv-core:hover .eiv-hint{opacity:.75}
+.eiv-core:focus-visible::after{content:""; position:absolute; inset:16%; border-radius:50%; outline:2px solid var(--acc,var(--silver)); outline-offset:6px}
+.eiv-hint{position:absolute; bottom:5%; left:50%; transform:translateX(-50%); font:600 10.5px var(--font-display); letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap}
+.eiv-core:hover .eiv-hint{opacity:.7}
 
-.eiv-name{font-size:clamp(26px,4.4vw,44px); font-weight:900; color:var(--text-primary); margin:2px 0 0; letter-spacing:-.015em; line-height:1.05; transition:color .4s}
-.eiv-sub{font:600 12px var(--font-display); letter-spacing:.14em; text-transform:uppercase; color:var(--acc,var(--text-muted)); margin:0; transition:color .5s; min-height:16px}
-.eiv-phrase{font-size:clamp(15px,2vw,18px); color:var(--text-secondary); max-width:52ch; margin:8px auto 0; min-height:2.6em; font-style:italic; opacity:0; transform:translateY(6px); transition:opacity .4s, transform .4s}
-.eiv-phrase.show{opacity:1; transform:none}
+/* el contenedor principal se enfoca por el router: sin recuadro */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible{outline:none}
 
-.eiv-cta{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:4px; flex-wrap:wrap}
-.eiv-open{display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 20px; border-radius:99px; background:var(--acc,var(--silver)); color:var(--on-silver); font:800 13.5px var(--font-display); border:1px solid transparent; transition:transform .15s, box-shadow .2s, background .4s}
-.eiv-open:hover{transform:translateY(-1px); box-shadow:0 10px 26px color-mix(in oklab, var(--acc,var(--silver)) 40%, transparent)}
-.eiv-open svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round}
-.eiv-voice{width:42px; height:42px; border-radius:99px; border:1px solid var(--border-strong); color:var(--text-secondary); display:inline-flex; align-items:center; justify-content:center; transition:var(--transition-base)}
-.eiv-voice:hover{border-color:var(--acc,var(--silver)); color:var(--text-primary)}
-.eiv-voice svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
-.eiv-voice .on-mute{display:none}
-.eiv-voice[aria-pressed="false"] .on-live{display:none}
-.eiv-voice[aria-pressed="false"] .on-mute{display:block}
-
-/* ----- menú infinito ----- */
-.eiv-menu{display:flex; align-items:center; gap:10px; max-width:1180px; margin:0 auto; width:100%}
-.eiv-arrow{flex:0 0 auto; width:40px; height:40px; border-radius:99px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-secondary); display:inline-flex; align-items:center; justify-content:center; transition:var(--transition-base)}
+/* ===== menú de media luna (móvil, tablet y escritorio) ===== */
+.eiv-dial{display:flex; align-items:center; justify-content:center; gap:clamp(8px,2vw,24px); width:100%; max-width:780px; margin:0 auto; position:relative; flex-wrap:wrap}
+.eiv-arrow{flex:0 0 auto; width:clamp(38px,4vw,46px); height:clamp(38px,4vw,46px); border-radius:99px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-secondary); display:inline-flex; align-items:center; justify-content:center; transition:var(--transition-base); cursor:pointer}
 .eiv-arrow:hover{border-color:var(--silver); color:var(--text-primary); background:var(--bg-surface-2)}
 .eiv-arrow svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
-.eiv-track-wrap{position:relative; flex:1 1 auto; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-.eiv-track{display:flex; gap:12px; list-style:none; margin:0; padding:6px 0; will-change:transform; cursor:grab}
-.eiv-track.drag{cursor:grabbing}
-.eiv-item{flex:0 0 auto}
-.eiv-chip{display:flex; flex-direction:column; align-items:center; gap:8px; width:112px; padding:14px 8px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--bg-surface); transition:transform .18s ease, border-color .18s, background .18s; text-align:center}
-.eiv-chip:hover{transform:translateY(-3px); border-color:var(--c,var(--silver)); background:var(--bg-surface-2)}
-.eiv-chip .ic{width:46px; height:46px; border-radius:50%; display:grid; place-items:center; border:1px solid color-mix(in oklab, var(--c,var(--silver)) 45%, var(--border-default)); background:color-mix(in oklab, var(--c,var(--silver)) 12%, transparent); transition:border-color .18s, background .18s}
-.eiv-chip .ic svg{width:24px; height:24px; stroke:var(--c,var(--text-primary)); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
-.eiv-chip .nm{font:700 11px/1.2 var(--font-display); color:var(--text-secondary); letter-spacing:.01em}
-.eiv-chip[aria-current="true"]{border-color:var(--c,var(--silver)); background:var(--bg-surface-2); box-shadow:0 0 0 1px var(--c,var(--silver)) inset}
-.eiv-chip[aria-current="true"] .ic{background:var(--c,var(--silver)); border-color:var(--c,var(--silver))}
-.eiv-chip[aria-current="true"] .ic svg{stroke:var(--on-silver)}
-.eiv-chip[aria-current="true"] .nm{color:var(--text-primary)}
+.eiv-dial-stage{position:relative; flex:0 0 auto; width:clamp(300px,54vw,540px); height:clamp(124px,15vw,164px); touch-action:pan-y; cursor:grab; user-select:none}
+.eiv-dial-stage:active{cursor:grabbing}
+.eiv-dial-arc{position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none}
+.eiv-dial-arc path{fill:none; stroke:var(--border-strong); stroke-width:1; opacity:.5}
+.eiv-dial-items{position:absolute; inset:0}
+.eiv-dslot{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:6px;
+  transition:left .34s cubic-bezier(.2,.7,.2,1), top .34s cubic-bezier(.2,.7,.2,1), opacity .3s; background:none; border:0; padding:0; cursor:pointer}
+.eiv-dslot .ic{position:relative; width:clamp(44px,5vw,56px); height:clamp(44px,5vw,56px); border-radius:50%; display:grid; place-items:center;
+  border:1px solid color-mix(in oklab, var(--c,var(--silver)) 45%, var(--border-default)); background:var(--bg-surface); transition:width .25s, height .25s, background .25s, border-color .25s}
+.eiv-dslot .ic svg{width:48%; height:48%; stroke:var(--c,var(--text-primary)); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.eiv-dslot .dl{font:700 clamp(10px,1.1vw,12px) var(--font-display); color:var(--text-secondary); max-width:130px; text-align:center; line-height:1.18; opacity:0; transition:opacity .3s}
+.eiv-dslot .dsoon{display:none}
+.eiv-dslot:hover .ic{border-color:var(--c,var(--silver))}
+.eiv-dslot.on{z-index:3}
+.eiv-dslot.on .ic{width:clamp(60px,7.5vw,80px); height:clamp(60px,7.5vw,80px); background:var(--c,var(--silver)); border-color:var(--c,var(--silver)); box-shadow:0 10px 28px color-mix(in oklab, var(--c,var(--silver)) 48%, transparent)}
+.eiv-dslot.on .ic svg{stroke:var(--on-silver)}
+.eiv-dslot.on .dl{opacity:1; color:var(--text-primary)}
+.eiv-dslot.issoon .dsoon{display:block; position:absolute; top:-3px; right:-3px; font:700 8px var(--font-display); letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); background:var(--bg-base); border:1px solid var(--border-strong); border-radius:99px; padding:2px 5px}
+.eiv-dslot.on.issoon .dsoon{color:var(--on-silver); background:color-mix(in oklab, var(--c,var(--silver)) 60%, transparent); border-color:transparent}
+.eiv-dial-hint{flex-basis:100%; text-align:center; font:600 clamp(10px,1.1vw,12px) var(--font-display); letter-spacing:.05em; color:var(--text-muted); margin:6px 0 0}
 
-/* ----- hoja de detalle ----- */
-.eiv-sheet{position:fixed; inset:0; z-index:60; display:flex; justify-content:flex-end; opacity:0; pointer-events:none; transition:opacity .28s}
+/* ===== detalle: ventana flotante centrada ===== */
+.eiv-sheet{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:clamp(12px,3vw,30px); opacity:0; pointer-events:none; transition:opacity .26s}
 .eiv-sheet.open{opacity:1; pointer-events:auto}
-.eiv-scrim{position:absolute; inset:0; background:rgba(5,6,10,.58); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px)}
-:root[data-tema="claro"] .eiv-scrim{background:rgba(30,40,70,.30)}
-.eiv-panel{position:relative; width:min(680px,94vw); max-height:100vh; overflow-y:auto; background:var(--bg-surface); border-left:1px solid var(--border-default); box-shadow:-20px 0 60px rgba(0,0,0,.4); transform:translateX(40px); transition:transform .32s cubic-bezier(.2,.7,.2,1); padding:0}
-.eiv-sheet.open .eiv-panel{transform:none}
+.eiv-scrim{position:absolute; inset:0; background:rgba(5,6,10,.64); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px)}
+:root[data-tema="claro"] .eiv-scrim{background:rgba(30,40,70,.34)}
+.eiv-panel{position:relative; width:min(680px,100%); max-height:90vh; overflow-y:auto; background:var(--bg-surface); border:1px solid var(--border-default); border-radius:20px; box-shadow:0 30px 90px rgba(0,0,0,.5); transform:translateY(14px) scale(.97); opacity:.4; transition:transform .3s cubic-bezier(.2,.7,.2,1), opacity .3s; padding:0}
+.eiv-sheet.open .eiv-panel{transform:none; opacity:1}
 .eiv-ph{position:relative; padding:26px clamp(20px,4vw,38px) 20px; border-bottom:1px solid var(--border-default); overflow:hidden}
 .eiv-ph::before{content:""; position:absolute; inset:0 0 auto 0; height:4px; background:var(--c,var(--silver))}
 .eiv-ph::after{content:""; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, color-mix(in oklab, var(--c,var(--silver)) 22%, transparent), transparent 70%); pointer-events:none}
@@ -104,45 +99,20 @@
 @keyframes eivDash{from{stroke-dashoffset:var(--len)} to{stroke-dashoffset:0}}
 .eiv-sheet.open .vdash{animation:eivDash 1.3s ease-out both}
 
-/* responsive */
+/* ===== responsive ===== */
+@media (max-width:980px){
+  .eiv-dial-stage{width:clamp(300px,64vw,520px)}
+}
 @media (max-width:640px){
-  .eiv{min-height:auto; gap:8px; padding:4px 0 22px}
-  .eiv-core{width:min(52vw,212px); height:min(52vw,212px)}
-  .eiv-kicker{font-size:10px}
-  .eiv-name{font-size:21px; margin-top:0}
-  .eiv-sub{font-size:11px}
-  .eiv-phrase{font-size:13.5px; min-height:2.4em; margin-top:3px}
-  .eiv-cta{margin-top:0}
-  .eiv-open{height:40px}
-  .eiv-menu{gap:6px}
+  .eiv{min-height:auto; gap:10px; padding:4px 0 26px}
+  .eiv-name{font-size:clamp(24px,8vw,34px)}
+  .eiv-core{width:min(72vw,310px); height:min(72vw,310px); margin-top:2px}
+  .eiv-dial{gap:4px}
   .eiv-arrow{display:none}
-  .eiv-track-wrap{-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent); mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
-  .eiv-chip{width:92px; padding:12px 6px}
-  .eiv-panel{width:100vw; border-left:0}
+  .eiv-dial-stage{width:min(94vw,380px); height:clamp(120px,36vw,150px)}
+  .eiv-panel{width:100%; max-height:92vh; border-radius:18px}
 }
 @media (prefers-reduced-motion:reduce){
   .eiv-sheet.open .vbar,.eiv-sheet.open .vdash{animation:none}
-  .eiv-phrase{transition:none}
+  .eiv-dslot{transition:none}
 }
-
-/* ===== menú de media luna (vista de celular) ===== */
-.eiv-dial{display:none}
-@media (max-width:640px){
-  .eiv-menu{display:none}
-  .eiv-dial{display:block; position:relative; width:100%; max-width:340px; margin:10px auto 0; height:150px; touch-action:pan-y}
-  .eiv-dial-arc{position:absolute; left:50%; top:0; transform:translateX(-50%); width:340px; height:140px; overflow:visible; pointer-events:none}
-  .eiv-dial-arc path{fill:none; stroke:var(--border-strong); stroke-width:1; opacity:.55}
-  .eiv-dial-items{position:absolute; left:50%; top:0; width:340px; height:140px; transform:translateX(-50%)}
-  .eiv-dslot{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:5px;
-    transition:left .34s cubic-bezier(.2,.7,.2,1), top .34s cubic-bezier(.2,.7,.2,1), opacity .3s; background:none; border:0; padding:0; cursor:pointer}
-  .eiv-dslot .ic{width:46px; height:46px; border-radius:50%; display:grid; place-items:center;
-    border:1px solid color-mix(in oklab, var(--c,var(--silver)) 45%, var(--border-default)); background:var(--bg-surface); transition:all .25s}
-  .eiv-dslot .ic svg{width:22px; height:22px; stroke:var(--c,var(--text-primary)); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
-  .eiv-dslot .dl{font:700 10.5px var(--font-display); color:var(--text-secondary); max-width:100px; text-align:center; line-height:1.18; opacity:0; transition:opacity .3s}
-  .eiv-dslot.on{z-index:3}
-  .eiv-dslot.on .ic{width:62px; height:62px; background:var(--c,var(--silver)); border-color:var(--c,var(--silver)); box-shadow:0 8px 24px color-mix(in oklab, var(--c,var(--silver)) 48%, transparent)}
-  .eiv-dslot.on .ic svg{width:29px; height:29px; stroke:var(--on-silver)}
-  .eiv-dslot.on .dl{opacity:1; color:var(--text-primary)}
-  .eiv-dial-hint{position:absolute; left:0; right:0; bottom:-14px; text-align:center; font:600 10.5px var(--font-display); letter-spacing:.05em; color:var(--text-muted); margin:0}
-}
-@media (prefers-reduced-motion:reduce){ .eiv-dslot{transition:none} }
