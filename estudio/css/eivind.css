@@ -105,8 +105,14 @@
 
 /* responsive */
 @media (max-width:640px){
-  .eiv{min-height:auto; padding-top:6px}
-  .eiv-core{width:min(72vw,300px); height:min(72vw,300px)}
+  .eiv{min-height:auto; gap:8px; padding:4px 0 22px}
+  .eiv-core{width:min(52vw,212px); height:min(52vw,212px)}
+  .eiv-kicker{font-size:10px}
+  .eiv-name{font-size:21px; margin-top:0}
+  .eiv-sub{font-size:11px}
+  .eiv-phrase{font-size:13.5px; min-height:2.4em; margin-top:3px}
+  .eiv-cta{margin-top:0}
+  .eiv-open{height:40px}
   .eiv-menu{gap:6px}
   .eiv-arrow{display:none}
   .eiv-track-wrap{-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent); mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
@@ -117,3 +123,25 @@
   .eiv-sheet.open .vbar,.eiv-sheet.open .vdash{animation:none}
   .eiv-phrase{transition:none}
 }
+
+/* ===== menú de media luna (vista de celular) ===== */
+.eiv-dial{display:none}
+@media (max-width:640px){
+  .eiv-menu{display:none}
+  .eiv-dial{display:block; position:relative; width:100%; max-width:340px; margin:10px auto 0; height:150px; touch-action:pan-y}
+  .eiv-dial-arc{position:absolute; left:50%; top:0; transform:translateX(-50%); width:340px; height:140px; overflow:visible; pointer-events:none}
+  .eiv-dial-arc path{fill:none; stroke:var(--border-strong); stroke-width:1; opacity:.55}
+  .eiv-dial-items{position:absolute; left:50%; top:0; width:340px; height:140px; transform:translateX(-50%)}
+  .eiv-dslot{position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:5px;
+    transition:left .34s cubic-bezier(.2,.7,.2,1), top .34s cubic-bezier(.2,.7,.2,1), opacity .3s; background:none; padding:0}
+  .eiv-dslot .ic{width:46px; height:46px; border-radius:50%; display:grid; place-items:center;
+    border:1px solid color-mix(in oklab, var(--c,var(--silver)) 45%, var(--border-default)); background:var(--bg-surface); transition:all .25s}
+  .eiv-dslot .ic svg{width:22px; height:22px; stroke:var(--c,var(--text-primary)); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+  .eiv-dslot .dl{font:700 10.5px var(--font-display); color:var(--text-secondary); max-width:100px; text-align:center; line-height:1.18; opacity:0; transition:opacity .3s}
+  .eiv-dslot.on{z-index:3}
+  .eiv-dslot.on .ic{width:62px; height:62px; background:var(--c,var(--silver)); border-color:var(--c,var(--silver)); box-shadow:0 8px 24px color-mix(in oklab, var(--c,var(--silver)) 48%, transparent)}
+  .eiv-dslot.on .ic svg{width:29px; height:29px; stroke:var(--on-silver)}
+  .eiv-dslot.on .dl{opacity:1; color:var(--text-primary)}
+  .eiv-dial-hint{position:absolute; left:0; right:0; bottom:-14px; text-align:center; font:600 10.5px var(--font-display); letter-spacing:.05em; color:var(--text-muted); margin:0}
+}
+@media (prefers-reduced-motion:reduce){ .eiv-dslot{transition:none} }
