@@ -436,11 +436,32 @@
     principal.focus({ preventScroll: true });
   }
 
+  /* ---------- botón "volver arriba" (solo en vista de curso) ---------- */
+  function montarBotonArriba() {
+    const btn = h("button", {
+      class: "lz-top", type: "button",
+      "aria-label": lang === "en" ? "Back to top" : "Volver arriba",
+      html: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>'
+    });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    document.body.appendChild(btn);
+    let tick = false;
+    function sync() {
+      tick = false;
+      const mostrar = window.scrollY > 400 && !!document.querySelector(".contenedor");
+      btn.classList.toggle("show", mostrar);
+    }
+    window.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(sync); } }, { passive: true });
+    window.addEventListener("hashchange", () => setTimeout(sync, 60));
+    sync();
+  }
+
   function iniciar() {
     principal = h("main", { class: "principal", id: "contenido", tabindex: "-1" });
     raiz.append(principal);
     window.addEventListener("hashchange", ruta);
     ruta();
+    montarBotonArriba();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
   else iniciar();

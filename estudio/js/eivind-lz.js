@@ -86,6 +86,7 @@
       '<section class="eiv-stage">'+
         '<h1 class="eiv-name">'+tx.titulo+'</h1>'+
         '<p class="eiv-sub eiv-role">'+tx.subtitulo+'</p>'+
+        '<p class="eiv-current" id="eivCurrent" aria-live="polite"></p>'+
         '<div class="eiv-core" id="eivCore" role="button" tabindex="0" aria-label="'+tx.view+'"><canvas id="eivCanvas"></canvas><span class="eiv-hint">'+tx.hint+'</span></div>'+
       '</section>'+
       '<div class="eiv-dial" id="eivDial" aria-label="'+(lang==="en"?"Courses":"Cursos")+'">'+
@@ -99,16 +100,22 @@
     var canvas=container.querySelector("#eivCanvas"), idn=new Identity(canvas); idn.start();
     var core=container.querySelector("#eivCore");
 
-    // ---- selección ----
-    var sel=-1;
-    function setSel(idx){
-      if(idx<0||idx>=C.length)return; sel=idx; var c=C[idx];
+    // ---- selección (posición fraccional continua, giro fluido e infinito) ----
+    // sel  = índice entero objetivo (hacia donde se asienta el anillo)
+    // selF = posición fraccional real; el contenido se centra en round(selF)
+    var sel=0, selF=0, dialRAF=0, lastBase=null;
+    var curEl=container.querySelector("#eivCurrent");
+    function idxOf(u){ return ((u % C.length)+C.length)%C.length; }
+    function nombreDe(c){ return c.nombre?c.nombre[lang]:(c.sub?c.sub[lang]:""); }
+    function applyAccent(ix){
+      var c=C[ix];
       document.documentElement.style.setProperty("--acc",c.area); container.style.setProperty("--acc",c.area);
-      idn.setColor(c.area); idn.pulse(); updateDial();
+      idn.setColor(c.area); idn.pulse();
     }
+    function updateCurrent(ix){ if(curEl) curEl.textContent=nombreDe(C[ix]); }
 
-    // ---- menú de media luna (todos los dispositivos, estilo ORBI, infinito) ----
-    var DN=5, SP=0.30, dslots=[];
+    // ---- menú de media luna ----
+    var DN=7, SP=0.30, center=(DN-1)/2, dslots=[];
     var dialStage=container.querySelector("#eivDialStage"),
         dialSvg=container.querySelector("#eivDialSvg"),
         dialPath=container.querySelector("#eivDialArc"),
@@ -118,16 +125,35 @@
       for(var i=0;i<DN;i++){var b=document.createElement("button");b.className="eiv-dslot islz";b.type="button";
         b.innerHTML='<span class="ic"><svg viewBox="0 0 24 24"></svg></span><span class="dl"></span><span class="dsoon">'+tx.soon+'</span>';dialItems.appendChild(b);dslots.push(b);}
     }
-    function updateDial(){
-      if(!dslots.length||sel<0)return;
+    function renderDial(){
+      if(!dslots.length)return;
       var W=dialStage.clientWidth||340, H=dialStage.clientHeight||150, R=W*0.58, cx=W/2, cy=R+16;
       if(dialSvg)dialSvg.setAttribute("viewBox","0 0 "+W+" "+H);
-      if(dialPath){var am=2.4*SP,x1=(cx-R*Math.sin(am)).toFixed(1),x2=(cx+R*Math.sin(am)).toFixed(1),ay=(cy-R*Math.cos(am)).toFixed(1);dialPath.setAttribute("d","M"+x1+" "+ay+" A"+R.toFixed(1)+" "+R.toFixed(1)+" 0 0 1 "+x2+" "+ay);}
-      for(var s2=0;s2<DN;s2++){var off=s2-(DN-1)/2,idx=(((sel+off)%C.length)+C.length)%C.length,p=C[idx],th=off*SP,x=cx+R*Math.sin(th),y=cy-R*Math.cos(th),b=dslots[s2];
-        b.style.left=x.toFixed(1)+"px";b.style.top=y.toFixed(1)+"px";b.style.setProperty("--c",p.area);
-        b.dataset.idx=idx;b.classList.toggle("on",off===0);b.classList.toggle("issoon",!p.real);b.style.opacity=Math.abs(off)>=2?".5":"1";
-        b.querySelector(".ic svg").innerHTML=ICON[p.icon]||"";b.querySelector(".dl").textContent=off===0?(p.sub?p.sub[lang]:p.nombre[lang]):"";}
+      if(dialPath){var am=2*SP,x1=(cx-R*Math.sin(am)).toFixed(1),x2=(cx+R*Math.sin(am)).toFixed(1),ay=(cy-R*Math.cos(am)).toFixed(1);dialPath.setAttribute("d","M"+x1+" "+ay+" A"+R.toFixed(1)+" "+R.toFixed(1)+" 0 0 1 "+x2+" "+ay);}
+      var base=Math.round(selF), nearest=-1, nearestAbs=1e9;
+      for(var s2=0;s2<DN;s2++){
+        var off=s2-center, u=base+off, ix=idxOf(u), p=C[ix], b=dslots[s2];
+        var ang=(off+(base-selF))*SP, aa=Math.abs(ang);
+        b.style.left=(cx+R*Math.sin(ang)).toFixed(1)+"px";
+        b.style.top=(cy-R*Math.cos(ang)).toFixed(1)+"px";
+        b.style.opacity=Math.max(0,1-Math.pow(aa/(SP*2.4),1.5)).toFixed(3);
+        if(aa<nearestAbs){nearestAbs=aa;nearest=s2;}
+        if(b._ix!==ix){ b._ix=ix; b.dataset.idx=ix; b.style.setProperty("--c",p.area);
+          b.classList.toggle("issoon",!p.real); b.querySelector(".ic svg").innerHTML=ICON[p.icon]||""; }
+        b.dataset.off=off;
+      }
+      for(var s3=0;s3<DN;s3++) dslots[s3].classList.toggle("on", s3===nearest);
+      if(base!==lastBase){ lastBase=base; applyAccent(idxOf(base)); updateCurrent(idxOf(base)); }
     }
+    var updateDial=renderDial;
+    function stepDial(){
+      var d=sel-selF;
+      if(Math.abs(d)<0.0015){ selF=sel; renderDial(); dialRAF=0; return; }
+      selF+=d*0.2; renderDial(); dialRAF=requestAnimationFrame(stepDial);
+    }
+    function startDialAnim(){ if(!dialRAF) dialRAF=requestAnimationFrame(stepDial); }
+    function setSel(u){ sel=u; if(reduce){ selF=u; renderDial(); } else startDialAnim(); }
+    function rotate(step){ setSel(Math.round(selF)+step); }
 
     function topicsHTML(c){
       if(!c.topics||!c.topics.length) return "";
@@ -166,27 +192,40 @@
     sheet.querySelector(".eiv-scrim").addEventListener("click",closeDetail);
     document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sheet.classList.contains("open"))closeDetail();});
 
-    // ---- interacción del dial ----
+    // ---- interacción del dial (arrastre continuo: el anillo sigue al dedo) ----
     buildDial();
-    var dial=container.querySelector("#eivDial"), ddx=null, dmoved=false;
-    function rotate(step){ setSel(((sel+step)%C.length+C.length)%C.length); }
-    dialStage.addEventListener("pointerdown",function(e){ddx=e.clientX;dmoved=false;});
-    dialStage.addEventListener("pointermove",function(e){if(ddx==null)return;var dx=e.clientX-ddx;if(Math.abs(dx)>38){rotate(dx<0?1:-1);ddx=e.clientX;dmoved=true;}});
-    dialStage.addEventListener("pointerup",function(){ddx=null;});
-    dialStage.addEventListener("pointercancel",function(){ddx=null;});
-    dialStage.addEventListener("click",function(e){var b=e.target.closest(".eiv-dslot");if(!b)return;if(dmoved){dmoved=false;return;}var idx=+b.dataset.idx;if(idx===sel)openDetail(idx);else setSel(idx);});
+    var dial=container.querySelector("#eivDial"), dragX=null, dragSelF=0, dragMoved=false, dragStep=1;
+    dialStage.addEventListener("pointerdown",function(e){
+      dragX=e.clientX; dragSelF=selF; dragMoved=false;
+      dragStep=(dialStage.clientWidth||340)*0.16;
+      if(dialRAF){cancelAnimationFrame(dialRAF);dialRAF=0;}
+      try{dialStage.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    dialStage.addEventListener("pointermove",function(e){
+      if(dragX==null)return; var dx=e.clientX-dragX; if(Math.abs(dx)>4)dragMoved=true;
+      selF=dragSelF-dx/dragStep; renderDial();
+    });
+    function endDrag(){ if(dragX==null)return; dragX=null; sel=Math.round(selF); if(reduce){selF=sel;renderDial();} else startDialAnim(); }
+    dialStage.addEventListener("pointerup",endDrag);
+    dialStage.addEventListener("pointercancel",endDrag);
+    dialStage.addEventListener("click",function(e){
+      var b=e.target.closest(".eiv-dslot"); if(!b)return;
+      if(dragMoved){dragMoved=false;return;}
+      var off=+b.dataset.off, tgt=Math.round(selF)+off;
+      if(off===0 && Math.abs(selF-Math.round(selF))<0.08) openDetail(idxOf(tgt)); else setSel(tgt);
+    });
     dial.addEventListener("wheel",function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>4){e.preventDefault();rotate(e.deltaX>0?1:-1);}},{passive:false});
 
-    function openCurrent(){if(sel<0)setSel(0);openDetail(sel<0?0:sel);}
+    function openCurrent(){ openDetail(idxOf(Math.round(selF))); }
     core.addEventListener("click",openCurrent);
     core.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openCurrent();}});
 
     // arranque (el menú NO avanza solo: lo recorre el usuario)
-    function boot(){setSel(0);updateDial();}
+    function boot(){ selF=0; sel=0; lastBase=null; renderDial(); }
     if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){setTimeout(boot,30);});else setTimeout(boot,60);
 
-    var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){idn.resize();updateDial();},150);});
-    window.addEventListener("temachange",function(){if(sel>=0){idn.refreshColor(C[sel].area);updateDial();}});
+    var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){idn.resize();renderDial();},150);});
+    window.addEventListener("temachange",function(){idn.refreshColor(C[idxOf(Math.round(selF))].area);renderDial();});
   }
 
   window.EivindLZ={ mount:mount };
