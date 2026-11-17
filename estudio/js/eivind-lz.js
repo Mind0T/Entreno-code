@@ -89,13 +89,11 @@
         '<div class="eiv-core" id="eivCore" role="button" tabindex="0" aria-label="'+tx.view+'"><canvas id="eivCanvas"></canvas><span class="eiv-hint">'+tx.hint+'</span></div>'+
       '</section>'+
       '<div class="eiv-dial" id="eivDial" aria-label="'+(lang==="en"?"Courses":"Cursos")+'">'+
-        '<button class="eiv-arrow" data-dir="-1" aria-label="'+(lang==="en"?"Previous":"Anterior")+'"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>'+
         '<div class="eiv-dial-stage" id="eivDialStage">'+
           '<svg class="eiv-dial-arc" id="eivDialSvg" aria-hidden="true"><path id="eivDialArc" d=""/></svg>'+
           '<div class="eiv-dial-items" id="eivDialItems"></div>'+
         '</div>'+
-        '<button class="eiv-arrow" data-dir="1" aria-label="'+(lang==="en"?"Next":"Siguiente")+'"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>'+
-        '<p class="eiv-dial-hint">'+(lang==="en"?"Swipe or use the arrows · tap to open":"Desliza o usa las flechas · toca para abrir")+'</p>'+
+        '<p class="eiv-dial-hint">'+(lang==="en"?"Swipe · tap a course to browse · the center one opens":"Desliza · toca un curso para recorrer · el del centro abre")+'</p>'+
       '</div>';
 
     var canvas=container.querySelector("#eivCanvas"), idn=new Identity(canvas); idn.start();
@@ -138,24 +136,33 @@
         return '<a href="#/'+t.id+'" data-nav="#/'+t.id+'"'+(t.done?' class="done"':'')+'><span class="tdot"></span>'+t.titulo+'</a>';
       }).join("")+'</div></div>';
     }
+    function wireGrab(panel, grab){
+      if(!grab) return; var sy=null, dy=0;
+      grab.addEventListener("pointerdown",function(e){sy=e.clientY;dy=0;panel.style.transition="none";try{grab.setPointerCapture(e.pointerId);}catch(_){}});
+      grab.addEventListener("pointermove",function(e){if(sy==null)return;dy=Math.max(0,e.clientY-sy);panel.style.transform="translateY("+dy+"px)";});
+      grab.addEventListener("pointerup",function(){if(sy==null)return;sy=null;panel.style.transition="";if(dy>120)closeDetail();else panel.style.transform="";});
+      grab.addEventListener("pointercancel",function(){sy=null;panel.style.transition="";panel.style.transform="";});
+    }
     function openDetail(idx){
-      var c=C[idx]; sheet.style.setProperty("--c",c.area); sheet.querySelector(".eiv-panel").scrollTop=0;
-      var body=
-        (c.real? topicsHTML(c) : '<div class="eiv-sec"><h3>'+tx.comingTitle+'</h3><div class="eiv-soonbox">'+tx.comingMsg+'</div></div>')+
+      var c=C[idx], panel=sheet.querySelector(".eiv-panel"); sheet.style.setProperty("--c",c.area); panel.scrollTop=0; panel.style.transform="";
+      var media = (c.real? topicsHTML(c) : '<div class="eiv-sec"><h3>'+tx.comingTitle+'</h3><div class="eiv-soonbox">'+tx.comingMsg+'</div></div>');
+      var text =
         '<div class="eiv-sec"><h3>'+tx.about+'</h3><p class="lead">'+c.resumen[lang]+'</p></div>'+
         (c.aprende?'<div class="eiv-sec"><h3>'+tx.learn+'</h3><ul class="eiv-hl">'+c.aprende[lang].map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul></div>':'')+
         '<div class="eiv-links">'+(c.real?'<a class="eiv-link live" href="#/'+c.first+'" data-nav="#/'+c.first+'"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'+tx.start+'</a>':'<a class="eiv-link live" href="#/'+(cfg.cId||"")+'" data-nav="#/'+(cfg.cFirst||"")+'"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'+tx.explore+'</a>')+'</div>';
       sheet.querySelector("#eivPanelInner").innerHTML=
+        '<div class="eiv-grab" id="eivGrab"><span></span></div>'+
         '<div class="eiv-ph">'+
           '<button class="eiv-close" id="eivClose" aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'+
           '<span class="eiv-area"><span class="dot"></span>'+(c.sub?c.sub[lang].toUpperCase():"")+(c.real?"":" · "+tx.soon.toUpperCase())+'</span>'+
           '<h2>'+c.nombre[lang]+'</h2><p class="pf">“'+c.frase[lang]+'”</p>'+
-        '</div><div class="eiv-body">'+body+'</div>';
+        '</div><div class="eiv-body"><div class="eiv-col-media">'+media+'</div><div class="eiv-col-text">'+text+'</div></div>';
       sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden";
       sheet.querySelector("#eivClose").addEventListener("click",closeDetail);
       sheet.querySelectorAll("[data-nav]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();closeDetail();nav(a.dataset.nav);});});
+      wireGrab(panel, sheet.querySelector("#eivGrab"));
     }
-    function closeDetail(){sheet.classList.remove("open");sheet.setAttribute("aria-hidden","true");document.body.style.overflow="";setTimeout(function(){var p=sheet.querySelector("#eivPanelInner");if(p)p.innerHTML="";},300);}
+    function closeDetail(){sheet.classList.remove("open");sheet.setAttribute("aria-hidden","true");document.body.style.overflow="";setTimeout(function(){var p=sheet.querySelector("#eivPanelInner");if(p)p.innerHTML="";var pp=sheet.querySelector(".eiv-panel");if(pp){pp.style.transform="";pp.style.transition="";}},300);}
     sheet.querySelector(".eiv-scrim").addEventListener("click",closeDetail);
     document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sheet.classList.contains("open"))closeDetail();});
 
@@ -167,9 +174,8 @@
     dialStage.addEventListener("pointermove",function(e){if(ddx==null)return;var dx=e.clientX-ddx;if(Math.abs(dx)>38){rotate(dx<0?1:-1);ddx=e.clientX;dmoved=true;}});
     dialStage.addEventListener("pointerup",function(){ddx=null;});
     dialStage.addEventListener("pointercancel",function(){ddx=null;});
-    dialStage.addEventListener("click",function(e){var b=e.target.closest(".eiv-dslot");if(!b)return;if(dmoved){dmoved=false;return;}var idx=+b.dataset.idx;setSel(idx);openDetail(idx);});
+    dialStage.addEventListener("click",function(e){var b=e.target.closest(".eiv-dslot");if(!b)return;if(dmoved){dmoved=false;return;}var idx=+b.dataset.idx;if(idx===sel)openDetail(idx);else setSel(idx);});
     dial.addEventListener("wheel",function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>4){e.preventDefault();rotate(e.deltaX>0?1:-1);}},{passive:false});
-    dial.querySelectorAll(".eiv-arrow").forEach(function(a){a.addEventListener("click",function(){rotate(+a.dataset.dir);});});
 
     function openCurrent(){if(sel<0)setSel(0);openDetail(sel<0?0:sel);}
     core.addEventListener("click",openCurrent);

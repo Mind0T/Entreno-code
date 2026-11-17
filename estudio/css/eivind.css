@@ -51,9 +51,12 @@
 .eiv-sheet.open{opacity:1; pointer-events:auto}
 .eiv-scrim{position:absolute; inset:0; background:rgba(5,6,10,.64); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px)}
 :root[data-tema="claro"] .eiv-scrim{background:rgba(30,40,70,.34)}
-.eiv-panel{position:relative; width:min(680px,100%); max-height:90vh; overflow-y:auto; background:var(--bg-surface); border:1px solid var(--border-default); border-radius:20px; box-shadow:0 30px 90px rgba(0,0,0,.5); transform:translateY(14px) scale(.97); opacity:.4; transition:transform .3s cubic-bezier(.2,.7,.2,1), opacity .3s; padding:0}
+.eiv-panel{position:relative; width:min(1060px,96vw); max-height:93vh; overflow-y:auto; background:var(--bg-surface); border:1px solid var(--border-default); border-radius:20px; box-shadow:0 30px 90px rgba(0,0,0,.5); transform:translateY(14px) scale(.98); opacity:.4; transition:transform .3s cubic-bezier(.2,.7,.2,1), opacity .3s; padding:0; -webkit-overflow-scrolling:touch}
 .eiv-sheet.open .eiv-panel{transform:none; opacity:1}
-.eiv-ph{position:relative; padding:26px clamp(20px,4vw,38px) 20px; border-bottom:1px solid var(--border-default); overflow:hidden}
+.eiv-grab{display:flex; align-items:center; justify-content:center; padding:11px 0 3px; cursor:grab; touch-action:none}
+.eiv-grab span{width:44px; height:5px; border-radius:99px; background:var(--border-strong)}
+.eiv-grab:active{cursor:grabbing}
+.eiv-ph{position:relative; padding:12px clamp(20px,4vw,38px) 20px; border-bottom:1px solid var(--border-default); overflow:hidden}
 .eiv-ph::before{content:""; position:absolute; inset:0 0 auto 0; height:4px; background:var(--c,var(--silver))}
 .eiv-ph::after{content:""; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, color-mix(in oklab, var(--c,var(--silver)) 22%, transparent), transparent 70%); pointer-events:none}
 .eiv-close{position:absolute; top:16px; right:16px; width:38px; height:38px; border-radius:99px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-secondary); display:grid; place-items:center; transition:var(--transition-base); z-index:2}
@@ -66,7 +69,9 @@
 .eiv-rol{display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:6px 12px; border-radius:99px; border:1px dashed var(--c,var(--silver)); color:var(--text-primary); font:700 12px var(--font-display)}
 .eiv-rol span{color:var(--c,var(--silver)); letter-spacing:.08em; font-size:10.5px; text-transform:uppercase}
 
-.eiv-body{padding:22px clamp(20px,4vw,38px) 36px; display:flex; flex-direction:column; gap:24px}
+.eiv-body{padding:22px clamp(20px,4vw,38px) 34px; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:clamp(20px,3vw,34px); align-items:start}
+.eiv-col-media{min-width:0}
+.eiv-col-text{min-width:0; display:flex; flex-direction:column; gap:22px}
 .eiv-sec h3{font:800 12px var(--font-display); letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin:0 0 10px}
 .eiv-body p.lead{font-size:15.5px; line-height:1.72; color:var(--text-secondary); margin:0; max-width:60ch}
 .eiv-hl{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
@@ -75,14 +80,25 @@
 .eiv-tech{display:flex; flex-wrap:wrap; gap:8px}
 .eiv-tech span{font:700 12px var(--font-display); color:var(--text-secondary); border:1px solid var(--border-strong); border-radius:99px; padding:6px 13px}
 
-/* preview */
-.eiv-frame{position:relative; border:1px solid var(--border-default); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-lane); aspect-ratio:16/10}
-.eiv-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background:#fff}
-.eiv-frame .load{position:absolute; inset:0; display:grid; place-items:center; color:var(--text-muted); font:600 12px var(--font-display); letter-spacing:.08em; text-transform:uppercase; gap:8px; pointer-events:none}
+/* preview — póster clicable que siempre renderiza (+ iframe que aparece si carga) */
+.eiv-frame{position:relative; display:block; border:1px solid var(--border-default); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-lane); aspect-ratio:16/10; isolation:isolate; transition:border-color .2s, transform .2s}
+.eiv-frame:hover{border-color:var(--c,var(--silver)); transform:translateY(-2px)}
+.eiv-poster{position:absolute; inset:0; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; padding:18px; background:radial-gradient(120% 120% at 50% 0%, color-mix(in oklab, var(--c,var(--silver)) 26%, var(--bg-lane)), var(--bg-lane))}
+.eiv-poster .pic{width:66px; height:66px; border-radius:50%; display:grid; place-items:center; border:1px solid color-mix(in oklab, var(--c,var(--silver)) 55%, transparent); background:color-mix(in oklab, var(--c,var(--silver)) 16%, transparent)}
+.eiv-poster .pic svg{width:34px; height:34px; stroke:var(--c,var(--silver)); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+.eiv-poster .pnm{font:800 clamp(15px,1.7vw,19px) var(--font-display); color:var(--text-primary); max-width:24ch; line-height:1.25}
+.eiv-poster .popen{display:inline-flex; align-items:center; gap:6px; margin-top:4px; font:800 11.5px var(--font-display); color:var(--on-silver); background:var(--c,var(--silver)); border-radius:99px; padding:7px 13px; box-shadow:0 6px 18px rgba(0,0,0,.28)}
+.eiv-poster .popen svg{width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+.eiv-frame:hover .popen{filter:brightness(1.08)}
+.eiv-frame-badge{position:absolute; z-index:3; right:10px; top:10px; display:inline-flex; align-items:center; gap:6px; font:800 11.5px var(--font-display); color:var(--on-silver); background:var(--c,var(--silver)); border-radius:99px; padding:6px 12px; box-shadow:0 6px 18px rgba(0,0,0,.32)}
+.eiv-frame-badge svg{width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
 .eiv-shots{display:flex; flex-direction:column; gap:14px}
-.eiv-shot{border:1px solid var(--border-default); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-lane)}
+.eiv-shot{position:relative; display:block; border:1px solid var(--border-default); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-lane); color:inherit}
+.eiv-shot.link{transition:border-color .2s, transform .2s}
+.eiv-shot.link:hover{border-color:var(--c,var(--silver)); transform:translateY(-2px)}
 .eiv-shot img{width:100%; display:block}
-.eiv-shot .cap{font-size:12.5px; color:var(--text-muted); padding:9px 14px; border-top:1px solid var(--border-default)}
+.eiv-shot .cap{display:block; font-size:12.5px; color:var(--text-muted); padding:9px 14px; border-top:1px solid var(--border-default)}
+.eiv-shot .eiv-frame-badge{bottom:auto; top:10px}
 .eiv-viz{border:1px solid var(--border-default); border-radius:var(--radius-lg); background:var(--bg-lane); padding:18px}
 .eiv-viz svg{width:100%; height:auto; display:block; overflow:visible}
 
@@ -103,14 +119,17 @@
 @media (max-width:980px){
   .eiv-dial-stage{width:clamp(300px,64vw,520px)}
 }
+@media (max-width:760px){
+  .eiv-body{grid-template-columns:1fr; gap:22px}
+}
 @media (max-width:640px){
   .eiv{min-height:auto; gap:10px; padding:4px 0 26px}
   .eiv-name{font-size:clamp(24px,8vw,34px)}
   .eiv-core{width:min(72vw,310px); height:min(72vw,310px); margin-top:2px}
   .eiv-dial{gap:4px}
-  .eiv-arrow{display:none}
   .eiv-dial-stage{width:min(94vw,380px); height:clamp(120px,36vw,150px)}
-  .eiv-panel{width:100%; max-height:92vh; border-radius:18px}
+  .eiv-sheet{padding:0}
+  .eiv-panel{width:100%; max-width:100%; max-height:94vh; border-radius:18px 18px 0 0; align-self:flex-end}
 }
 @media (prefers-reduced-motion:reduce){
   .eiv-sheet.open .vbar,.eiv-sheet.open .vdash{animation:none}
