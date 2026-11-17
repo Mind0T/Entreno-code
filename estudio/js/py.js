@@ -81,8 +81,15 @@
       runBtn.disabled = true; cell.classList.remove("ok", "err");
       status.textContent = _py ? "Ejecutando…" : "Cargando Python… (unos segundos la primera vez)";
       E.py.cargar().then(function (py) {
-        status.textContent = "Ejecutando…";
         var buf = "";
+        // carga paquetes del propio código (numpy, pandas, etc.) si hace falta
+        var prep = Promise.resolve();
+        if (py.loadPackagesFromImports) {
+          status.textContent = "Preparando paquetes…";
+          prep = py.loadPackagesFromImports(ta.value).catch(function () {});
+        }
+        return prep.then(function () {
+        status.textContent = "Ejecutando…";
         try { py.setStdout({ batched: function (s) { buf += s + "\n"; } }); py.setStderr({ batched: function (s) { buf += s + "\n"; } }); } catch (e) {}
         return py.runPythonAsync(ta.value).then(function (val) {
           if (val !== undefined && val !== null) { var r = String(val); if (r !== "undefined") buf += r + "\n"; }
@@ -94,6 +101,7 @@
           // recorta el traceback interno de Pyodide y deja lo útil
           var m = msg.split("\n").filter(function (l) { return l.trim(); });
           mostrar((buf ? buf + "\n" : "") + m.slice(-6).join("\n"), true);
+        });
         });
       }).catch(function (e) {
         runBtn.disabled = false; status.textContent = "";

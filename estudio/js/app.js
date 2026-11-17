@@ -22,6 +22,7 @@
     { id: "busqueda", lang: "c", titulo: { es: "Algoritmos de búsqueda", en: "Search algorithms" } },
     // Python — organizado por TEMAS (no por semanas)
     { id: "py-fundamentos", lang: "py", titulo: { es: "Fundamentos de Python", en: "Python fundamentals" } },
+    { id: "py-herramientas", lang: "py", titulo: { es: "Herramientas de Python", en: "Python tools" } },
   ];
 
   /* categorías del menú (solo "C" tiene contenido; el resto, pronto) */
