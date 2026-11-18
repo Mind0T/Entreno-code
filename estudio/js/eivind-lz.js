@@ -94,7 +94,6 @@
           '<svg class="eiv-dial-arc" id="eivDialSvg" aria-hidden="true"><path id="eivDialArc" d=""/></svg>'+
           '<div class="eiv-dial-items" id="eivDialItems"></div>'+
         '</div>'+
-        '<p class="eiv-dial-hint">'+(lang==="en"?"Swipe · tap a course to browse · the center one opens":"Desliza · toca un curso para recorrer · el del centro abre")+'</p>'+
       '</div>';
 
     var canvas=container.querySelector("#eivCanvas"), idn=new Identity(canvas); idn.start();
