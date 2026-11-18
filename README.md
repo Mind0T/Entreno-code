@@ -31,7 +31,11 @@ El repositorio está organizado por carpetas, cada una correspondiente a un leng
 
 ## ✍️ Sobre mí
 
-Soy estudiante de ingeniería en inteligencia artificial y estoy en proceso de fortalecer mis habilidades como programador. Este repositorio es parte de ese viaje.
+Soy estudiante de la Licenciatura en Ciencia de Datos en la Escuela Superior de Cómputo (ESCOM) del IPN y estoy en proceso de fortalecer mis habilidades como programador. Este repositorio es parte de ese viaje.
+
+Puedes ver más de mi trabajo aquí:
+* **GitHub**: [Mind0T](https://github.com/Mind0T)
+* **LinkedIn**: [Irving Soriano](https://www.linkedin.com/in/irving-soriano)
 
 ## 🛠️ Estado del repositorio
 
