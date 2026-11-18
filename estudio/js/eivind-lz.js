@@ -157,13 +157,24 @@
     function setSel(u){ sel=u; if(reduce){ selF=u; vel=0; renderDial(); } else startDialAnim(); }
     function rotate(step){ setSel(Math.round(selF)+step); }
 
+    function topicLink(t){
+      if(t.pronto) return '<span class="pronto"><span class="tdot"></span>'+t.titulo+'<span class="etq">'+tx.soon+'</span></span>';
+      if(t.enlace) return '<a href="'+t.enlace+'" target="_blank" rel="noopener" class="enlace"><span class="tdot"></span>'+t.titulo+'<svg class="tlink" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>';
+      return '<a href="#/'+t.id+'" data-nav="#/'+t.id+'"'+(t.done?' class="done"':'')+'><span class="tdot"></span>'+t.titulo+'</a>';
+    }
     function topicsHTML(c){
+      // Curso con esferas: cada esfera es una sección plegable (details/summary).
+      if(c.grupos&&c.grupos.length){
+        return '<div class="eiv-sec"><h3>'+tx.topics+'</h3>'+c.grupos.map(function(g,i){
+          return '<details class="eiv-esfera"'+(i===0?' open':'')+'>'+
+            '<summary><span class="eiv-esf-tit">'+g.titulo+'</span>'+
+              '<span class="eiv-esf-n">'+g.topics.length+'</span>'+
+              '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
+            '<div class="eiv-topics">'+g.topics.map(topicLink).join("")+'</div></details>';
+        }).join("")+'</div>';
+      }
       if(!c.topics||!c.topics.length) return "";
-      return '<div class="eiv-sec"><h3>'+tx.topics+'</h3><div class="eiv-topics">'+c.topics.map(function(t){
-        if(t.pronto) return '<span class="pronto"><span class="tdot"></span>'+t.titulo+'<span class="etq">'+tx.soon+'</span></span>';
-        if(t.enlace) return '<a href="'+t.enlace+'" target="_blank" rel="noopener" class="enlace"><span class="tdot"></span>'+t.titulo+'<svg class="tlink" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>';
-        return '<a href="#/'+t.id+'" data-nav="#/'+t.id+'"'+(t.done?' class="done"':'')+'><span class="tdot"></span>'+t.titulo+'</a>';
-      }).join("")+'</div></div>';
+      return '<div class="eiv-sec"><h3>'+tx.topics+'</h3><div class="eiv-topics">'+c.topics.map(topicLink).join("")+'</div></div>';
     }
     function wireGrab(panel, grab){
       if(!grab) return; var sy=null, dy=0;

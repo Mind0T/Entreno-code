@@ -784,6 +784,19 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .eiv-topics a.done .tdot{background:var(--c,var(--silver))}
 .eiv-topics .pronto{opacity:.6}
 .eiv-topics .etq{margin-left:auto; font:700 9.5px var(--f-display); letter-spacing:.08em; text-transform:uppercase; color:var(--gris); border:1px solid var(--border-strong); border-radius:99px; padding:3px 8px}
+/* Esferas plegables dentro de un curso (details/summary) */
+.eiv-esfera{border:1px solid var(--border-default); border-radius:var(--radio); margin-bottom:10px; overflow:hidden; background:var(--bg-surface-1)}
+.eiv-esfera+.eiv-esfera{margin-top:0}
+.eiv-esfera>summary{display:flex; align-items:center; gap:10px; padding:13px 15px; cursor:pointer; list-style:none; font:800 13px var(--f-display); color:var(--text-primary); transition:var(--transition-base)}
+.eiv-esfera>summary::-webkit-details-marker{display:none}
+.eiv-esfera>summary:hover{background:var(--bg-surface-2)}
+.eiv-esfera>summary .eiv-esf-tit{flex:1 1 auto; letter-spacing:.01em}
+.eiv-esfera>summary .eiv-esf-n{flex:0 0 auto; font:700 11px var(--f-display); color:var(--text-muted); border:1px solid var(--border-strong); border-radius:99px; padding:2px 9px}
+.eiv-esfera>summary .eiv-esf-chev{flex:0 0 auto; width:18px; height:18px; fill:none; stroke:var(--text-muted); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; transition:transform .25s ease}
+.eiv-esfera[open]>summary .eiv-esf-chev{transform:rotate(180deg)}
+.eiv-esfera[open]>summary{border-bottom:1px solid var(--border-default)}
+.eiv-esfera>.eiv-topics{padding:12px 13px}
+@media (prefers-reduced-motion:reduce){.eiv-esfera>summary .eiv-esf-chev{transition:none}}
 .eiv-soonbox{border:1px dashed var(--c,var(--silver)); border-radius:var(--radio); padding:16px 18px; color:var(--text-secondary); font-size:14px; line-height:1.6}
 
 /* ============================================================

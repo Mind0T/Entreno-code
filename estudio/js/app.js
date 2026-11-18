@@ -43,7 +43,7 @@
       { id: "gcp", label: "Google", soon: [{ es: "Cloud Engineer", en: "Cloud Engineer" }] },
       { id: "aws", label: "AWS", soon: [{ es: "Cloud Practitioner", en: "Cloud Practitioner" }, { es: "AI Practitioner", en: "AI Practitioner" }] },
     ]},
-    { titulo: { es: "Fundamentos", en: "Foundations" }, langs: [
+    { titulo: { es: "Fundamentos teóricos", en: "Theoretical Foundations" }, langs: [
       { id: "fund", label: "Teoría", real: true },
     ]},
   ];
@@ -286,6 +286,15 @@
       return acc;
     }, []);
   }
+  // Igual que cTopics pero conservando las esferas (grupos) para mostrarlas plegables.
+  function cTopicsGrouped(lenguaje) {
+    return gruposDe(lenguaje).map(function (x) {
+      return {
+        titulo: T(x.g.titulo),
+        topics: x.items.map(function (m) { return { id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto, enlace: m.enlace || null }; })
+      };
+    });
+  }
   function CURSOS(data) {
     data = data || {};
     const dC = data.c || {}, dPy = data.py || {}, dFund = data.fund || {};
@@ -303,8 +312,8 @@
           : {es:"Pronto: Python desde cero, con la misma magia de ver todo por dentro.", en:"Soon: Python from scratch, with the same magic of seeing it all inside."},
         resumen:{es:"Fundamentos de Python con celdas de código que corres y verificas al instante: tipos, variables, flujo, funciones y estructuras — practicas mientras lees, como en un Jupyter Notebook.", en:"Python fundamentals with code cells you run and check instantly: types, variables, flow, functions and structures — you practice as you read, like a Jupyter Notebook."},
         aprende:{es:["Tipos, variables y operadores, ejecutando código real","Celdas tipo notebook: escribe, corre y verifica","Un quiz en cada tema para fijar lo aprendido"], en:["Types, variables and operators, running real code","Notebook-style cells: write, run and check","A quiz in every topic to lock in what you learn"]} },
-      { id:"fund", icon:"fund", area:CO, real:fundReal, first:dFund.first, topics:dFund.topics,
-        nombre:{es:"Fundamentos", en:"Foundations"}, sub:{es:"Teoría y conceptos", en:"Theory and concepts"},
+      { id:"fund", icon:"fund", area:CO, real:fundReal, first:dFund.first, topics:dFund.topics, grupos:dFund.grupos,
+        nombre:{es:"Fundamentos teóricos", en:"Theoretical Foundations"}, sub:{es:"Teoría y conceptos", en:"Theory and concepts"},
         frase: fundReal
           ? {es:"La base teórica de todo: tres esferas — la mente, la máquina y el diseño.", en:"The theory beneath it all: three spheres — mind, machine and design."}
           : {es:"Pronto: los fundamentos teóricos que sostienen la mente, la máquina y el diseño.", en:"Soon: the theoretical foundations behind mind, machine and design."},
@@ -354,7 +363,7 @@
     const firstFund = (topsFund.find((t) => !t.pronto && !t.enlace) || topsFund.find((t) => !t.pronto) || {}).id || "";
     window.EivindLZ.mount(mountEl, {
       lang: lang, icons: ICON_CUR, cId: "c", cFirst: firstC,
-      cursos: CURSOS({ c: { topics: topsC, first: firstC }, py: { topics: topsPy, first: firstPy }, fund: { topics: topsFund, first: firstFund } }),
+      cursos: CURSOS({ c: { topics: topsC, first: firstC }, py: { topics: topsPy, first: firstPy }, fund: { topics: topsFund, first: firstFund, grupos: cTopicsGrouped("fund") } }),
       nav: function (hash) { location.hash = hash; }
     });
   }
