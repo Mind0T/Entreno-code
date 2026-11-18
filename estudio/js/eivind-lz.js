@@ -146,13 +146,16 @@
       if(base!==lastBase){ lastBase=base; applyAccent(idxOf(base)); updateCurrent(idxOf(base)); }
     }
     var updateDial=renderDial;
+    // física: resorte amortiguado hacia 'sel' + momentum → sensación ligera y fluida
+    var vel=0;
     function stepDial(){
-      var d=sel-selF;
-      if(Math.abs(d)<0.0015){ selF=sel; renderDial(); dialRAF=0; return; }
-      selF+=d*0.2; renderDial(); dialRAF=requestAnimationFrame(stepDial);
+      vel=(vel+(sel-selF)*0.20)*0.62;
+      selF+=vel;
+      if(Math.abs(sel-selF)<0.0012 && Math.abs(vel)<0.0012){ selF=sel; vel=0; renderDial(); dialRAF=0; return; }
+      renderDial(); dialRAF=requestAnimationFrame(stepDial);
     }
     function startDialAnim(){ if(!dialRAF) dialRAF=requestAnimationFrame(stepDial); }
-    function setSel(u){ sel=u; if(reduce){ selF=u; renderDial(); } else startDialAnim(); }
+    function setSel(u){ sel=u; if(reduce){ selF=u; vel=0; renderDial(); } else startDialAnim(); }
     function rotate(step){ setSel(Math.round(selF)+step); }
 
     function topicsHTML(c){
@@ -194,18 +197,30 @@
 
     // ---- interacción del dial (arrastre continuo: el anillo sigue al dedo) ----
     buildDial();
-    var dial=container.querySelector("#eivDial"), dragX=null, dragSelF=0, dragMoved=false, dragStep=1;
+    var dial=container.querySelector("#eivDial"), dragX=null, dragSelF=0, dragMoved=false, dragStep=1, lastSelF=0, lastT=0;
     dialStage.addEventListener("pointerdown",function(e){
-      dragX=e.clientX; dragSelF=selF; dragMoved=false;
+      dragX=e.clientX; dragSelF=selF; dragMoved=false; vel=0;
       dragStep=(dialStage.clientWidth||340)*0.16;
+      lastSelF=selF; lastT=performance.now();
       if(dialRAF){cancelAnimationFrame(dialRAF);dialRAF=0;}
       try{dialStage.setPointerCapture(e.pointerId);}catch(_){}
     });
     dialStage.addEventListener("pointermove",function(e){
       if(dragX==null)return; var dx=e.clientX-dragX; if(Math.abs(dx)>4)dragMoved=true;
-      selF=dragSelF-dx/dragStep; renderDial();
+      selF=dragSelF-dx/dragStep;
+      var now=performance.now(), dt=now-lastT;
+      if(dt>0){ var inst=(selF-lastSelF)/(dt/16); vel=vel*0.6+inst*0.4; lastSelF=selF; lastT=now; }
+      renderDial();
     });
-    function endDrag(){ if(dragX==null)return; dragX=null; sel=Math.round(selF); if(reduce){selF=sel;renderDial();} else startDialAnim(); }
+    function endDrag(){
+      if(dragX==null)return; dragX=null;
+      if(reduce){ sel=Math.round(selF); selF=sel; vel=0; renderDial(); return; }
+      // inercia: el "flick" proyecta el aterrizaje; el resorte lo asienta
+      var v=Math.max(-1.2,Math.min(1.2,vel)), base=Math.round(selF);
+      var tgt=Math.round(selF+v*6);
+      tgt=Math.max(base-4,Math.min(base+4,tgt));
+      sel=tgt; startDialAnim();
+    }
     dialStage.addEventListener("pointerup",endDrag);
     dialStage.addEventListener("pointercancel",endDrag);
     dialStage.addEventListener("click",function(e){
