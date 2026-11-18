@@ -821,3 +821,88 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .lz-figura { margin: 18px auto; max-width: 80ch; text-align: center; }
 .lz-figura img { max-width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 10px; box-shadow: var(--sombra); display: block; margin: 0 auto; }
 .lz-figura figcaption { margin-top: 8px; font-size: 13px; color: var(--tinta2); font-style: italic; }
+
+/* ============================================================
+   Ciencias Cognitivas — componentes didácticos (.cog-*)
+   ============================================================ */
+.cog-prosa h2::before{ color:#7C83E8; text-shadow:0 0 12px rgba(124,131,232,.5); }
+.cog-prosa h3{ color:#fff; }
+:root[data-tema="claro"] .cog-prosa h3{ color:#15171c; }
+.cog-mini{ display:block; margin-top:8px; font-size:13px; color:var(--tinta2); }
+
+/* epígrafe / cita */
+.cog-epi{ max-width:80ch; margin:22px auto; padding:4px 0 4px 18px; border-left:3px solid #7C83E8; }
+.cog-epi p{ margin:0; font-size:17px; font-style:italic; color:var(--tinta); line-height:1.5; }
+.cog-epi cite{ display:block; margin-top:6px; font-size:13px; font-style:normal; color:var(--tinta2); }
+
+/* tarjetas de concepto */
+.cog-grid{ max-width:80ch; margin:18px auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+.cog-card{ border:1px solid var(--linea); border-top:3px solid var(--c,#7C83E8); background:var(--papel); border-radius:12px; padding:16px 18px; box-shadow:var(--sombra); }
+.cog-card-ic{ display:inline-flex; width:26px; height:26px; color:var(--c,#7C83E8); margin-bottom:6px; }
+.cog-card-ic svg{ width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.8; }
+.cog-card-tag{ display:inline-block; font:700 10.5px var(--f-display); letter-spacing:.09em; text-transform:uppercase; color:var(--c,#7C83E8); margin-bottom:4px; }
+.cog-card-tit{ margin:2px 0 8px; font-size:18px; color:#fff; }
+:root[data-tema="claro"] .cog-card-tit{ color:#15171c; }
+.cog-card-body{ font-size:14.5px; line-height:1.6; color:var(--tinta2); }
+.cog-card-body b{ color:var(--tinta); }
+
+/* tabla comparativa */
+.cog-tabla-wrap{ max-width:80ch; margin:18px auto; overflow-x:auto; border:1px solid var(--linea); border-radius:12px; }
+.cog-tabla{ width:100%; border-collapse:collapse; font-size:14px; background:var(--papel); }
+.cog-tabla th, .cog-tabla td{ padding:10px 14px; text-align:left; border-bottom:1px solid var(--linea); vertical-align:top; }
+.cog-tabla thead th{ background:var(--papel2); }
+.cog-tabla tbody tr:last-child th, .cog-tabla tbody tr:last-child td{ border-bottom:none; }
+.cog-t-k{ color:var(--tinta); font-weight:600; white-space:nowrap; }
+.cog-t-h{ color:var(--c,#7C83E8); font-weight:700; }
+.cog-t-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--c,#7C83E8); margin-right:7px; vertical-align:middle; }
+.cog-tabla td{ color:var(--tinta2); }
+.cog-tabla td b, .cog-tabla td i{ color:var(--tinta); }
+
+/* acordeón */
+.cog-acc-box{ max-width:80ch; margin:18px auto; }
+.cog-acc-tit{ font-size:15px; color:var(--tinta2); margin:0 0 10px; font-weight:600; }
+.cog-acc{ border:1px solid var(--linea); border-radius:10px; background:var(--papel); margin-bottom:8px; overflow:hidden; }
+.cog-acc summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 16px; font-size:15px; font-weight:600; color:var(--tinta); }
+.cog-acc summary::-webkit-details-marker{ display:none; }
+.cog-acc-chev{ flex:0 0 auto; width:20px; height:20px; color:var(--tinta2); transition:transform .2s; }
+.cog-acc-chev svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.cog-acc[open] .cog-acc-chev{ transform:rotate(180deg); }
+.cog-acc-a{ padding:0 16px 15px; font-size:14.5px; line-height:1.65; color:var(--tinta2); }
+.cog-acc-a b{ color:var(--tinta); }
+
+/* figura con SVG */
+.cog-fig{ max-width:80ch; margin:20px auto; padding:0; }
+.cog-fig-tit{ font:700 11px var(--f-display); letter-spacing:.08em; text-transform:uppercase; color:var(--c,#7C83E8); margin:0 0 8px; text-align:center; }
+.cog-fig-svg{ color:var(--tinta2); background:var(--papel); border:1px solid var(--linea); border-radius:14px; padding:18px 14px; }
+.cog-fig-svg svg{ width:100%; height:auto; display:block; }
+.cog-fig-pie{ margin:10px auto 0; max-width:70ch; font-size:13.5px; line-height:1.55; color:var(--tinta2); text-align:center; }
+.cog-fig-pie b{ color:var(--tinta); }
+
+/* ejercicio "Distingue" */
+.cog-ej{ max-width:80ch; margin:22px auto; border:1px solid var(--linea); border-radius:14px; background:var(--papel); padding:4px 0; box-shadow:var(--sombra); }
+.cog-ej-head{ display:flex; gap:12px; align-items:flex-start; padding:16px 18px 8px; }
+.cog-ej-ic{ flex:0 0 auto; width:26px; height:26px; color:var(--verde); }
+.cog-ej-ic svg{ width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.cog-ej-head b{ color:var(--tinta); font-size:15px; }
+.cog-ej-intro{ margin:2px 0 0; font-size:13.5px; color:var(--tinta2); }
+.cog-ej-item{ padding:12px 18px; border-top:1px solid var(--linea); }
+.cog-ej-p{ margin:0 0 10px; font-size:15px; color:var(--tinta); line-height:1.5; }
+.cog-ej-ops{ display:flex; flex-wrap:wrap; gap:8px; }
+.cog-ej-op{ font:600 14px var(--f-display); color:var(--tinta); background:var(--papel2); border:1px solid var(--linea); border-radius:9px; padding:9px 14px; cursor:pointer; transition:border-color .15s, background .15s; }
+.cog-ej-op:hover:not(:disabled){ border-color:#7C83E8; }
+.cog-ej-op:disabled{ cursor:default; }
+.cog-ej-op.ok{ border-color:var(--verde); background:color-mix(in oklab, var(--verde) 16%, var(--papel2)); color:var(--tinta); }
+.cog-ej-op.mal{ border-color:var(--rojo); background:color-mix(in oklab, var(--rojo) 14%, var(--papel2)); }
+.cog-ej-porque{ margin:11px 0 0; font-size:13.5px; line-height:1.6; color:var(--tinta2); border-left:3px solid var(--verde); padding-left:12px; }
+.cog-ej-porque b{ color:var(--tinta); }
+
+/* animaciones SVG (respetan reduce-motion) */
+@keyframes cogPulse{ 0%,100%{ opacity:.55 } 50%{ opacity:1 } }
+@keyframes cogDraw{ from{ stroke-dashoffset:260 } to{ stroke-dashoffset:0 } }
+@keyframes cogPop{ from{ opacity:0; transform:scale(.6) } to{ opacity:1; transform:scale(1) } }
+.cog-pulse{ animation:cogPulse 2.6s ease-in-out infinite; }
+.cog-draw{ stroke-dasharray:260; animation:cogDraw 1.4s ease forwards; }
+.cog-pop{ transform-box:fill-box; transform-origin:center; animation:cogPop .5s ease forwards; }
+@media (prefers-reduced-motion:reduce){
+  .cog-pulse,.cog-draw,.cog-pop{ animation:none; stroke-dashoffset:0; opacity:1; }
+}

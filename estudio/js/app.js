@@ -24,6 +24,8 @@
     { id: "py-entorno", lang: "py", titulo: { es: "Entorno y flujo de trabajo", en: "Environment & workflow" } },
     { id: "py-fundamentos", lang: "py", titulo: { es: "Fundamentos de Python", en: "Python fundamentals" } },
     { id: "py-herramientas", lang: "py", titulo: { es: "Herramientas de Python", en: "Python tools" } },
+    // Ciencias Cognitivas, Neurociencias y Filosofía
+    { id: "cog-conceptos", lang: "cog", titulo: { es: "Conceptos y comparativas", en: "Concepts and comparisons" } },
   ];
 
   /* categorías del menú (solo "C" tiene contenido; el resto, pronto) */
@@ -38,6 +40,9 @@
     { titulo: { es: "Cómputo en la nube", en: "Cloud computing" }, langs: [
       { id: "gcp", label: "Google", soon: [{ es: "Cloud Engineer", en: "Cloud Engineer" }] },
       { id: "aws", label: "AWS", soon: [{ es: "Cloud Practitioner", en: "Cloud Practitioner" }, { es: "AI Practitioner", en: "AI Practitioner" }] },
+    ]},
+    { titulo: { es: "Ciencias Cognitivas", en: "Cognitive Science" }, langs: [
+      { id: "cog", label: "Mente", real: true },
     ]},
   ];
 
@@ -205,8 +210,8 @@
       .map((g) => ({ g, items: ordenados().filter((m) => m.grupo === g.id) }))
       .filter((x) => x.items.length);
   }
-  function popTemasC(pop) {
-    gruposDe().forEach(({ g, items }) => {
+  function popTemasC(pop, lenguaje) {
+    gruposDe(lenguaje).forEach(({ g, items }) => {
       const grp = h("div", { class: "pg" }, h("h4", {}, T(g.titulo)));
       const ul = h("div", { class: "pg-list" });
       items.forEach((m) => {
@@ -246,7 +251,7 @@
           activeId = l.id;
           botones.forEach((b) => b.setAttribute("aria-expanded", String(b === btn)));
           E.vaciar(panel);
-          if (l.real) popTemasC(panel); else popSoon(panel, l.soon);
+          if (l.real) popTemasC(panel, l.id); else popSoon(panel, l.soon);
           panel.hidden = false; hint.hidden = true;
           try { panel.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
         });
@@ -268,9 +273,10 @@
     uiux: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 8h18"/><path d="m13 13 3.5 5.5 1.3-2.4 2.6-.5L13 13z"/>',
     gcp: '<path d="M12 4 5.5 7.8v4.4L12 16l6.5-3.8V7.8L12 4z"/><path d="M12 10.2 5.7 7.9M12 10.2l6.3-2.3M12 10.2V16"/>',
     aws: '<path d="M7.5 15.5a3.5 3.5 0 0 1-.3-7 5 5 0 0 1 9.6-.6 3.4 3.4 0 0 1 .2 6.8"/><path d="M6 18.5c3.5 2 8.5 2 12 0"/>',
-    ai: '<path d="M12 4a3.5 3.5 0 0 0-3.5 3.5v9a3 3 0 0 0 6 .3V7.5A3.5 3.5 0 0 0 12 4z" opacity=".45"/><path d="m12 10.5 1.8 1.8L12 14l-1.8-1.7L12 10.5z"/><circle cx="12" cy="7.6" r="1"/>'
+    ai: '<path d="M12 4a3.5 3.5 0 0 0-3.5 3.5v9a3 3 0 0 0 6 .3V7.5A3.5 3.5 0 0 0 12 4z" opacity=".45"/><path d="m12 10.5 1.8 1.8L12 14l-1.8-1.7L12 10.5z"/><circle cx="12" cy="7.6" r="1"/>',
+    cog: '<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1.5 5.4A3 3 0 0 0 6 18a3 3 0 0 0 3 2V4z" opacity=".5"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1.5 5.4A3 3 0 0 1 18 18a3 3 0 0 1-3 2V4z"/><path d="M12 4v16"/>'
   };
-  const AZ="#5B8DEF", MO="#B79CC9", CI="#9DB4CF", AM="#E2A336";
+  const AZ="#5B8DEF", MO="#B79CC9", CI="#9DB4CF", AM="#E2A336", CO="#7C83E8";
   function cTopics(lenguaje) {
     return gruposDe(lenguaje).reduce(function (acc, x) {
       x.items.forEach(function (m) { acc.push({ id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto }); });
@@ -279,8 +285,9 @@
   }
   function CURSOS(data) {
     data = data || {};
-    const dC = data.c || {}, dPy = data.py || {};
+    const dC = data.c || {}, dPy = data.py || {}, dCog = data.cog || {};
     const pyReal = !!(dPy.topics && dPy.topics.length);
+    const cogReal = !!(dCog.topics && dCog.topics.length);
     return [
       { id:"c", icon:"c", area:AZ, real:true, first:dC.first, topics:dC.topics,
         nombre:{es:"Fundamentos de C", en:"C fundamentals"}, sub:{es:"Programación", en:"Programming"},
@@ -293,6 +300,13 @@
           : {es:"Pronto: Python desde cero, con la misma magia de ver todo por dentro.", en:"Soon: Python from scratch, with the same magic of seeing it all inside."},
         resumen:{es:"Fundamentos de Python con celdas de código que corres y verificas al instante: tipos, variables, flujo, funciones y estructuras — practicas mientras lees, como en un Jupyter Notebook.", en:"Python fundamentals with code cells you run and check instantly: types, variables, flow, functions and structures — you practice as you read, like a Jupyter Notebook."},
         aprende:{es:["Tipos, variables y operadores, ejecutando código real","Celdas tipo notebook: escribe, corre y verifica","Un quiz en cada tema para fijar lo aprendido"], en:["Types, variables and operators, running real code","Notebook-style cells: write, run and check","A quiz in every topic to lock in what you learn"]} },
+      { id:"cog", icon:"cog", area:CO, real:cogReal, first:dCog.first, topics:dCog.topics,
+        nombre:{es:"Ciencias Cognitivas, Neurociencias y Filosofía", en:"Cognitive Science, Neuroscience & Philosophy"}, sub:{es:"Mente y conocimiento", en:"Mind and knowledge"},
+        frase: cogReal
+          ? {es:"La teoría de la mente, el ser y el saber — explicada con comparativas visuales.", en:"The theory of mind, being and knowing — explained with visual comparisons."}
+          : {es:"Pronto: ciencias cognitivas, neurociencias y filosofía, de la mente al conocimiento.", en:"Soon: cognitive science, neuroscience and philosophy, from mind to knowledge."},
+        resumen:{es:"Conceptos, teoría y comparativas de las ciencias de la mente: cognición, evolución, el ser y el saber, con diagramas, cuadros comparativos y ejercicios para pensar con precisión.", en:"Concepts, theory and comparisons from the sciences of the mind: cognition, evolution, being and knowing, with diagrams, comparison tables and exercises to think with precision."},
+        aprende:{es:["Distinguir términos que parecen gemelos: cognición/cognitivo/cognoscitivo","Filogenia vs ontogenia, ontología vs epistemología, con esquemas visuales","Operaciones de la mente y su eco en la IA, los datos y el diseño"], en:["Tell apart terms that look like twins: cognition/cognitive/cognoscitive","Phylogeny vs ontogeny, ontology vs epistemology, with visual schemas","Mental operations and their echo in AI, data and design"]} },
       { id:"pydata", icon:"pydata", area:MO, nombre:{es:"Python para Ciencia de Datos", en:"Python for Data Science"}, sub:{es:"Programación · Datos", en:"Programming · Data"},
         frase:{es:"Pronto: Python para ciencia de datos, de pandas a los primeros modelos.", en:"Soon: Python for data science, from pandas to your first models."},
         resumen:{es:"El puente entre programar y analizar: pandas, visualización y los primeros modelos de machine learning, con ejemplos reales.", en:"The bridge between coding and analysis: pandas, visualization and your first machine-learning models, with real examples."},
@@ -331,11 +345,13 @@
     principal.append(mountEl);
     const topsC = cTopics("c");
     const topsPy = cTopics("py");
+    const topsCog = cTopics("cog");
     const firstC = (topsC.find((t) => !t.pronto) || {}).id || "";
     const firstPy = (topsPy.find((t) => !t.pronto) || {}).id || "";
+    const firstCog = (topsCog.find((t) => !t.pronto) || {}).id || "";
     window.EivindLZ.mount(mountEl, {
       lang: lang, icons: ICON_CUR, cId: "c", cFirst: firstC,
-      cursos: CURSOS({ c: { topics: topsC, first: firstC }, py: { topics: topsPy, first: firstPy } }),
+      cursos: CURSOS({ c: { topics: topsC, first: firstC }, py: { topics: topsPy, first: firstPy }, cog: { topics: topsCog, first: firstCog } }),
       nav: function (hash) { location.hash = hash; }
     });
   }
