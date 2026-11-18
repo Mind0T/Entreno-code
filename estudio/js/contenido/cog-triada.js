@@ -127,8 +127,8 @@
 
   E.registrar({
     id: "cog-triada",
-    grupo: "cog-conceptos",
-    lenguaje: "cog",
+    grupo: "fund-mente",
+    lenguaje: "fund",
     orden: 1,
     titulo: "La Tríada de la Mente",
     sub: "Cognición · Cognitivo · Cognoscitivo",

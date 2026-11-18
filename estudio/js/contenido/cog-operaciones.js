@@ -155,8 +155,8 @@
 
   E.registrar({
     id: "cog-operaciones",
-    grupo: "cog-conceptos",
-    lenguaje: "cog",
+    grupo: "fund-diseno",
+    lenguaje: "fund",
     orden: 4,
     titulo: "Operaciones Mentales y Diseño",
     sub: "Síntesis · Abstracción · Affordance · Écfrasis",

@@ -128,8 +128,8 @@
 
   E.registrar({
     id: "cog-filosofia",
-    grupo: "cog-conceptos",
-    lenguaje: "cog",
+    grupo: "fund-mente",
+    lenguaje: "fund",
     orden: 3,
     titulo: "Filosofía del Ser y el Saber",
     sub: "Ontología · Ontológico · Epistemología",

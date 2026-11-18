@@ -161,6 +161,7 @@
       if(!c.topics||!c.topics.length) return "";
       return '<div class="eiv-sec"><h3>'+tx.topics+'</h3><div class="eiv-topics">'+c.topics.map(function(t){
         if(t.pronto) return '<span class="pronto"><span class="tdot"></span>'+t.titulo+'<span class="etq">'+tx.soon+'</span></span>';
+        if(t.enlace) return '<a href="'+t.enlace+'" target="_blank" rel="noopener" class="enlace"><span class="tdot"></span>'+t.titulo+'<svg class="tlink" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>';
         return '<a href="#/'+t.id+'" data-nav="#/'+t.id+'"'+(t.done?' class="done"':'')+'><span class="tdot"></span>'+t.titulo+'</a>';
       }).join("")+'</div></div>';
     }

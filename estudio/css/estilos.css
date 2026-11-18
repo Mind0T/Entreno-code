@@ -906,3 +906,12 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 @media (prefers-reduced-motion:reduce){
   .cog-pulse,.cog-draw,.cog-pop{ animation:none; stroke-dashoffset:0; opacity:1; }
 }
+
+/* ---- Fundamentos: botón de lanzamiento y temas-enlace ---- */
+.cog-launch-wrap{ max-width:80ch; margin:20px auto; text-align:center; }
+.cog-launch{ display:inline-flex; align-items:center; gap:10px; padding:13px 22px; border-radius:12px; background:#7C83E8; color:#fff; font:700 15px var(--f-display); text-decoration:none; box-shadow:var(--sombra); transition:transform .15s, filter .15s; }
+.cog-launch:hover{ transform:translateY(-1px); filter:brightness(1.08); }
+.cog-launch svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+/* icono de enlace externo en la barra de temas y el detalle del dial */
+.tb-topic.enlace .tb-ext, .eiv-topics a.enlace .tlink{ width:14px; height:14px; margin-left:6px; opacity:.7; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
+.tb-topic.enlace .tb-ext{ display:inline-block; }

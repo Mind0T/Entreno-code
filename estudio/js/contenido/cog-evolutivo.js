@@ -115,8 +115,8 @@
 
   E.registrar({
     id: "cog-evolutivo",
-    grupo: "cog-conceptos",
-    lenguaje: "cog",
+    grupo: "fund-mente",
+    lenguaje: "fund",
     orden: 2,
     titulo: "El Eje Biológico-Evolutivo",
     sub: "Filogenia · Filogenético · Ontogenia",
