@@ -10,7 +10,8 @@
 .eiv-name{font-size:clamp(30px,5vw,56px); font-weight:900; color:var(--text-primary); margin:0; letter-spacing:-.02em; line-height:1.04; transition:color .4s}
 .eiv-sub,.eiv-role{font:700 clamp(11px,1.4vw,14px) var(--font-display); letter-spacing:.2em; text-transform:uppercase; color:var(--acc,var(--text-muted)); margin:5px 0 0; transition:color .5s}
 /* nombre del curso seleccionado — entre el subtítulo y la esfera de identidad */
-.eiv-current{font:800 clamp(15px,2vw,22px) var(--font-display); color:var(--text-primary); letter-spacing:-.01em; line-height:1.15; margin:8px 0 0; min-height:1.2em; transition:color .4s}
+/* nombre del curso seleccionado — entre la esfera de identidad y el menú de media luna */
+.eiv-current{font:800 clamp(15px,2vw,22px) var(--font-display); color:var(--text-primary); letter-spacing:-.01em; line-height:1.15; margin:clamp(2px,1.6vh,14px) 0 0; min-height:1.2em; transition:color .4s}
 .eiv-core{position:relative; width:clamp(300px,42vh,460px); height:clamp(300px,42vh,460px); display:grid; place-items:center; cursor:pointer; touch-action:manipulation; margin-top:clamp(2px,2vh,16px)}
 /* el lienzo rebasa el core para que el aura se desvanezca libre (sin recorte cuadrado) */
 .eiv-core canvas{position:absolute; top:-30%; left:-30%; width:160%; height:160%; pointer-events:none}
