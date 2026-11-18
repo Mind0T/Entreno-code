@@ -86,8 +86,8 @@
       '<section class="eiv-stage">'+
         '<h1 class="eiv-name">'+tx.titulo+'</h1>'+
         '<p class="eiv-sub eiv-role">'+tx.subtitulo+'</p>'+
-        '<p class="eiv-current" id="eivCurrent" aria-live="polite"></p>'+
         '<div class="eiv-core" id="eivCore" role="button" tabindex="0" aria-label="'+tx.view+'"><canvas id="eivCanvas"></canvas><span class="eiv-hint">'+tx.hint+'</span></div>'+
+        '<p class="eiv-current" id="eivCurrent" aria-live="polite"></p>'+
       '</section>'+
       '<div class="eiv-dial" id="eivDial" aria-label="'+(lang==="en"?"Courses":"Cursos")+'">'+
         '<div class="eiv-dial-stage" id="eivDialStage">'+
