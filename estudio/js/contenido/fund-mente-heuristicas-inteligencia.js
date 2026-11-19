@@ -101,7 +101,17 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Heurística", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Heurística", lang: "es" },
+    { t: "Daniel Kahneman", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Daniel_Kahneman", lang: "es" },
+    { t: "Embodied Cognition", fuente: "Stanford Encyclopedia of Philosophy", url: "https://plato.stanford.edu/entries/embodied-cognition/", lang: "en" },
+    { t: "Functionalism", fuente: "Stanford Encyclopedia of Philosophy", url: "https://plato.stanford.edu/entries/functionalism/", lang: "en" },
+    { t: "Ant colony optimization algorithms", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Ant_colony_optimization_algorithms", lang: "en" },
+    { t: "Simulated annealing", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Simulated_annealing", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "Una heurística es…", op: ["Un algoritmo que garantiza la solución óptima", "Un atajo que da una solución suficientemente buena en tiempo razonable", "Un tipo de red neuronal", "Una ley física"], ok: 1, porque: "No garantiza el óptimo, pero permite avanzar: una regla práctica para soluciones “suficientemente buenas” cuando la perfección es inviable." },

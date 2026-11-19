@@ -98,7 +98,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Ada Lovelace", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Ada_Lovelace", lang: "es" },
+    { t: "Grace Hopper", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Grace_Hopper", lang: "es" },
+    { t: "ImageNet", fuente: "Sitio oficial (Stanford/Princeton)", url: "https://www.image-net.org/", lang: "en" },
+    { t: "Model Cards for Model Reporting (Mitchell et al., 2019)", fuente: "arXiv 1810.03993", url: "https://arxiv.org/abs/1810.03993", lang: "en" },
+    { t: "On the Dangers of Stochastic Parrots (Bender, Gebru et al., 2021)", fuente: "ACM FAccT", url: "https://dl.acm.org/doi/10.1145/3442188.3445922", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "¿Quién escribió el primer algoritmo de la historia?", op: ["Grace Hopper", "Ada Lovelace", "Margaret Hamilton", "Fei-Fei Li"], ok: 1, porque: "<b>Ada Lovelace</b> escribió el primer algoritmo para la Máquina Analítica de Babbage y previó usos más allá del cálculo numérico." },

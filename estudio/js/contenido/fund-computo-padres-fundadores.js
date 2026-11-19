@@ -108,7 +108,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Historia de la inteligencia artificial", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Historia_de_la_inteligencia_artificial", lang: "es" },
+    { t: "¿Quién inventó la inteligencia artificial?", fuente: "National Geographic en español", url: "https://www.nationalgeographicla.com/ciencia/2023/03/quien-invento-la-inteligencia-artificial", lang: "es" },
+    { t: "The Turing Test", fuente: "Stanford Encyclopedia of Philosophy", url: "https://plato.stanford.edu/entries/turing-test/", lang: "en" },
+    { t: "Dartmouth workshop (1956)", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Dartmouth_workshop", lang: "en" },
+    { t: "ELIZA", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/ELIZA", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "¿Qué ocurrió en Dartmouth en 1956?", op: ["Se construyó la primera computadora", "Se acuñó el término “Inteligencia Artificial” y se fijó su agenda", "Se inventó el Perceptrón", "Nació internet"], ok: 1, porque: "El Dartmouth Summer Research Project (1956) acuñó oficialmente el término <b>IA</b> y estableció la agenda de investigación de la disciplina." },

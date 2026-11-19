@@ -116,7 +116,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Conexionismo", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Conexionismo", lang: "es" },
+    { t: "Habitación china", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Habitación_china", lang: "es" },
+    { t: "The Chinese Room Argument", fuente: "Stanford Encyclopedia of Philosophy", url: "https://plato.stanford.edu/entries/chinese-room/", lang: "en" },
+    { t: "Symbol grounding problem", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Symbol_grounding_problem", lang: "en" },
+    { t: "Neuro-symbolic AI", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Neuro-symbolic_AI", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "La IA simbólica (GOFAI) basa la inteligencia en…", op: ["Aprender de datos en bruto", "Manipular símbolos con reglas lógicas explícitas", "Ajustar pesos numéricos", "Imitar emociones"], ok: 1, porque: "GOFAI es <i>top-down</i>: el humano programa reglas <code>SI… ENTONCES…</code> sobre símbolos. Transparente pero rígida." },

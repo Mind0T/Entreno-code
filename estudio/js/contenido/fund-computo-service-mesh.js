@@ -101,7 +101,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "¿Qué es una malla de servicios (service mesh)?", fuente: "Red Hat (español)", url: "https://www.redhat.com/es/topics/microservices/what-is-a-service-mesh", lang: "es" },
+    { t: "¿Qué es Istio?", fuente: "Red Hat (español)", url: "https://www.redhat.com/es/topics/microservices/what-is-istio", lang: "es" },
+    { t: "Ambient Mesh — Overview", fuente: "Istio (documentación oficial)", url: "https://istio.io/latest/docs/ambient/overview/", lang: "en" },
+    { t: "What is Istio?", fuente: "Istio (documentación oficial)", url: "https://istio.io/latest/docs/overview/what-is-istio/", lang: "en" },
+    { t: "Circuit breaker design pattern", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Circuit_breaker_design_pattern", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "¿Qué problema resuelve un Service Mesh?", op: ["Entrenar modelos de IA", "Sacar la lógica de red, seguridad y observabilidad fuera del código de la app", "Diseñar bases de datos", "Comprimir imágenes"], ok: 1, porque: "Al escalar a microservicios, el código de red se duplica; la malla lo extrae a una capa de infraestructura (proxies sidecar)." },

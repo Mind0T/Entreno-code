@@ -134,7 +134,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, mide lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Alucinaciones de ChatGPT: qué son y por qué ocurren", fuente: "Digital Trends en Español", url: "https://es.digitaltrends.com/computadoras/alucinaciones-chatgpt-que-son/", lang: "es" },
+    { t: "¿Qué son las alucinaciones de la IA y cómo evitarlas?", fuente: "Arsys", url: "https://www.arsys.es/blog/que-son-las-alucinaciones-de-la-ia-y-como-evitarlas", lang: "es" },
+    { t: "An interesting take on LLM hallucinations by Andrej Karpathy", fuente: "The Decoder", url: "https://the-decoder.com/here-is-an-interesting-take-on-llm-hallucinations-by-andrej-karpathy/", lang: "en" },
+    { t: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)", fuente: "arXiv 2005.11401", url: "https://arxiv.org/abs/2005.11401", lang: "en" },
+    { t: "Hallucination (artificial intelligence)", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "Según Karpathy, alucinar en un LLM es…", op: ["Un bug que se corrige reentrenando", "La función principal del modelo (soñar), que el prompt dirige", "Un fallo del hardware", "Un problema solo de los modelos pequeños"], ok: 1, porque: "Para Karpathy los LLMs son <b>máquinas de sueños</b>: generar es soñar, y el <i>prompt</i> dirige el sueño. Alucinar no es la excepción, es el modo de operar." },

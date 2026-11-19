@@ -100,7 +100,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Modelo de responsabilidad compartida", fuente: "AWS (español)", url: "https://aws.amazon.com/es/compliance/shared-responsibility-model/", lang: "es" },
+    { t: "Prácticas recomendadas de seguridad en IAM", fuente: "AWS Docs (español)", url: "https://docs.aws.amazon.com/es_es/IAM/latest/UserGuide/best-practices.html", lang: "es" },
+    { t: "Kiro — The AI IDE for spec-driven development", fuente: "kiro.dev", url: "https://kiro.dev/", lang: "en" },
+    { t: "Hands on with Kiro, the AWS agentic AI IDE driven by specifications", fuente: "DevClass", url: "https://devclass.com/2025/07/15/hands-on-with-kiro-the-aws-preview-of-an-agentic-ai-ide-driven-by-specifications/", lang: "en" },
+    { t: "Introducing the Model Context Protocol (MCP)", fuente: "Anthropic", url: "https://www.anthropic.com/news/model-context-protocol", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "La diferencia entre una Skill y un Hook es que…", op: ["Son lo mismo", "La Skill se invoca bajo demanda; el Hook se dispara automáticamente por un evento", "El Hook es más lento", "La Skill solo funciona en la nube"], ok: 1, porque: "Las <b>Skills</b> se activan por invocación explícita; los <b>Hooks</b> se ejecutan solos ante un evento (ej. guardar un archivo)." },

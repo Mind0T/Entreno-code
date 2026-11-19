@@ -116,4 +116,27 @@
     cont.append(h("blockquote", { class: "cog-epi" },
       h("p", { html: texto }), autor ? h("cite", {}, "— " + autor) : null));
   };
+
+  /* ---- referencias (fuentes verificadas con enlace) ----
+     items = [{ t:"título", fuente:"Sitio/Autor", url:"https://…", lang:"es"|"en" }] */
+  E.cog.refs = function (cont, items, titulo) {
+    var box = h("section", { class: "cog-refs" });
+    box.append(h("h3", { class: "cog-refs-tit" },
+      h("span", { class: "cog-refs-ic", "aria-hidden": "true",
+        html: '<svg viewBox="0 0 24 24"><path d="M4 5.5h11M4 10h11M4 14.5h7"/><path d="M16.5 13.5l3.5 3.5-3.5 3.5"/></svg>' }),
+      titulo || "Referencias"));
+    var ol = h("ol", { class: "cog-refs-list" });
+    (items || []).forEach(function (r) {
+      ol.append(h("li", {},
+        h("a", { class: "cog-ref", href: r.url, target: "_blank", rel: "noopener noreferrer" },
+          h("span", { class: "cog-ref-txt" },
+            h("span", { class: "cog-ref-t", html: r.t }),
+            r.fuente ? h("span", { class: "cog-ref-src" }, r.fuente) : null),
+          h("span", { class: "cog-ref-lang" + (r.lang === "es" ? " es" : "") }, r.lang === "es" ? "ES" : "EN"),
+          h("span", { class: "cog-ref-ext", "aria-hidden": "true",
+            html: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>' }))));
+    });
+    box.append(ol);
+    cont.append(box);
+  };
 })();

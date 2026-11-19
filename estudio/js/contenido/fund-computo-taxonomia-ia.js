@@ -121,7 +121,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Aprendizaje automático", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Aprendizaje_automático", lang: "es" },
+    { t: "Algoritmo genético", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Algoritmo_genético", lang: "es" },
+    { t: "Attention Is All You Need (Vaswani et al., 2017)", fuente: "arXiv 1706.03762", url: "https://arxiv.org/abs/1706.03762", lang: "en" },
+    { t: "Generative Adversarial Nets (Goodfellow et al., 2014)", fuente: "arXiv 1406.2661", url: "https://arxiv.org/abs/1406.2661", lang: "en" },
+    { t: "AI winter", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/AI_winter", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "¿Por qué “IA ⊃ ML ⊃ DL” se queda corto como taxonomía?", op: ["Porque el DL no existe", "Porque hay ramas (evolutiva, enjambre, difusa) que no son conexionistas", "Porque el ML es más grande que la IA", "Porque todo es deep learning"], ok: 1, porque: "La IA incluye paradigmas bioinspirados (evolutivos, de enjambre, inmunológicos) y la lógica difusa, que no derivan del conexionismo." },

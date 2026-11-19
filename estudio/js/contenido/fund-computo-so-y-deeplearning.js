@@ -98,7 +98,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Unix", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Unix", lang: "es" },
+    { t: "Aprendizaje profundo", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Aprendizaje_profundo", lang: "es" },
+    { t: "Linux", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Linux", lang: "en" },
+    { t: "POSIX", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/POSIX", lang: "en" },
+    { t: "Learning representations by back-propagating errors (Rumelhart, Hinton & Williams, 1986)", fuente: "Nature", url: "https://www.nature.com/articles/323533a0", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "¿Qué relación hay entre Unix y Linux?", op: ["Linux es una versión de Unix con su mismo código", "Linux copió el paradigma de Unix pero se escribió desde cero", "Son el mismo sistema con otro nombre", "Unix se basó en Linux"], ok: 1, porque: "Torvalds escribió Linux en 1991 <b>desde cero</b>, sin reutilizar código de Unix; heredó sus ideas (comandos, jerarquía de archivos), no su fuente." },

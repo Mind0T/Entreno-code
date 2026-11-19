@@ -847,6 +847,23 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .cog-epi{ max-width:80ch; margin:22px auto; padding:4px 0 4px 18px; border-left:3px solid #7C83E8; }
 .cog-epi p{ margin:0; font-size:17px; font-style:italic; color:var(--tinta); line-height:1.5; }
 .cog-epi cite{ display:block; margin-top:6px; font-size:13px; font-style:normal; color:var(--tinta2); }
+/* ---- Referencias ---- */
+.cog-refs{ max-width:80ch; margin:30px auto 8px; padding-top:20px; border-top:1px solid var(--border-default); }
+.cog-refs-tit{ display:flex; align-items:center; gap:9px; margin:0 0 14px; font:800 12px var(--f-display); letter-spacing:.09em; text-transform:uppercase; color:var(--tinta2); }
+.cog-refs-ic{ display:inline-flex; width:17px; height:17px; }
+.cog-refs-ic svg{ width:17px; height:17px; fill:none; stroke:#7C83E8; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.cog-refs-list{ list-style:decimal; margin:0; padding-left:26px; display:flex; flex-direction:column; gap:9px; }
+.cog-refs-list li{ color:var(--tinta2); }
+.cog-ref{ display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border-default); border-radius:12px; text-decoration:none; color:var(--tinta); transition:border-color .18s ease, background .18s ease, transform .18s ease; }
+.cog-ref:hover{ border-color:#7C83E8; background:var(--bg-surface-2,rgba(124,131,232,.06)); transform:translateX(2px); }
+.cog-ref-txt{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 auto; }
+.cog-ref-t{ font-size:14px; font-weight:600; line-height:1.4; }
+.cog-ref-src{ font-size:12px; color:var(--tinta2); }
+.cog-ref-lang{ flex:0 0 auto; font:700 10px var(--f-display); letter-spacing:.06em; color:var(--tinta2); border:1px solid var(--border-strong); border-radius:99px; padding:2px 7px; }
+.cog-ref-lang.es{ color:var(--verde); border-color:var(--verde); }
+.cog-ref-ext{ flex:0 0 auto; display:inline-flex; width:15px; height:15px; opacity:.6; }
+.cog-ref-ext svg{ width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+@media (prefers-reduced-motion:reduce){ .cog-ref{ transition:none; } }
 
 /* tarjetas de concepto */
 .cog-grid{ max-width:80ch; margin:18px auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }

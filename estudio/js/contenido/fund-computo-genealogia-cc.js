@@ -85,7 +85,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Historia de la computación", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Historia_de_la_computación", lang: "es" },
+    { t: "Teorema CAP", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Teorema_CAP", lang: "es" },
+    { t: "Turing Award (ACM A.M. Turing Award)", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Turing_Award", lang: "en" },
+    { t: "Differential privacy", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Differential_privacy", lang: "en" },
+    { t: "History of computing", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/History_of_computing", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "El álgebra de Boole es la base de…", op: ["Los lenguajes funcionales", "Los circuitos digitales", "La privacidad diferencial", "Los microservicios"], ok: 1, porque: "Shannon aplicó el álgebra de Boole a los circuitos: la lógica binaria es el cimiento del hardware digital." },

@@ -128,7 +128,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Web semántica", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Web_semántica", lang: "es" },
+    { t: "Internet de las cosas", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Internet_de_las_cosas", lang: "es" },
+    { t: "CLARION (cognitive architecture)", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/CLARION_(cognitive_architecture)", lang: "en" },
+    { t: "Ubiquitous computing (Mark Weiser)", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Ubiquitous_computing", lang: "en" },
+    { t: "OWL — Web Ontology Language", fuente: "W3C", url: "https://www.w3.org/OWL/", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "La arquitectura CLARION modela la mente con…", op: ["Una sola red neuronal", "Dos niveles: implícito/conexionista y explícito/simbólico", "Solo reglas lógicas", "Puro aprendizaje por refuerzo"], ok: 1, porque: "CLARION (Ron Sun) es <b>híbrida</b>: combina una capa implícita (redes) y una explícita (reglas/ontologías), como Sistema 1 y Sistema 2." },

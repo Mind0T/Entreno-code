@@ -78,7 +78,16 @@
       ]
     });
     cog.nota(cont, 'Cuando termines, pon a prueba lo aprendido en la pestaña <b>Quiz</b>.', VE);
+    cog.refs(cont, REFS);
   }
+
+  var REFS = [
+    { t: "Daniel Kahneman", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Daniel_Kahneman", lang: "es" },
+    { t: "Geoffrey Hinton", fuente: "Wikipedia en español", url: "https://es.wikipedia.org/wiki/Geoffrey_Hinton", lang: "es" },
+    { t: "The free-energy principle: a unified brain theory? (Friston, 2010)", fuente: "Nature Reviews Neuroscience", url: "https://www.nature.com/articles/nrn2787", lang: "en" },
+    { t: "Thinking, Fast and Slow", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow", lang: "en" },
+    { t: "AlphaFold", fuente: "Wikipedia", url: "https://en.wikipedia.org/wiki/AlphaFold", lang: "en" }
+  ];
 
   var QUIZ = [
     { p: "¿Por qué se dice que la mente es el “plano” de la IA?", op: ["Porque la IA copia el cerebro célula por célula", "Porque las grandes ideas de la IA (memoria, visión, razonamiento) nacieron estudiando la mente", "Porque el cerebro es más rápido", "Porque la IA no usa matemáticas"], ok: 1, porque: "La neurociencia y la ciencia cognitiva aportaron los conceptos que la IA volvió arquitectura: redes, atención, memoria, aprendizaje." },
