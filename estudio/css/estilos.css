@@ -865,6 +865,32 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .cog-ref-ext svg{ width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 @media (prefers-reduced-motion:reduce){ .cog-ref{ transition:none; } }
 
+/* ---- Retrato (foto local con respaldo de monograma) ---- */
+.cog-ret{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:84px; height:84px; flex:0 0 auto; border-radius:50%; overflow:hidden; border:2px solid var(--c,#7C83E8); background:var(--bg-surface-2,rgba(124,131,232,.1)); }
+.cog-ret-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .3s ease; }
+.cog-ret.con-foto .cog-ret-img{ opacity:1; }
+.cog-ret-mono{ font:800 26px var(--f-display); letter-spacing:.02em; color:var(--c,#7C83E8); -webkit-user-select:none; user-select:none; }
+.cog-ret.con-foto .cog-ret-mono{ opacity:0; }
+@media (prefers-reduced-motion:reduce){ .cog-ret-img{ transition:none; } }
+
+/* ---- Ficha de persona (retrato + bio) ---- */
+.cog-bio{ max-width:80ch; margin:22px auto; padding:20px 22px; border:1px solid var(--border-default); border-left:4px solid var(--c,#7C83E8); border-radius:14px; background:var(--bg-surface-1); }
+.cog-bio-head{ display:flex; align-items:center; gap:16px; margin-bottom:14px; }
+.cog-bio-id{ min-width:0; }
+.cog-bio-tag{ display:inline-block; font:700 10px var(--f-display); letter-spacing:.08em; text-transform:uppercase; color:var(--c,#7C83E8); margin-bottom:3px; }
+.cog-bio-nom{ margin:0; font:800 20px var(--f-display); color:var(--tinta); line-height:1.2; }
+.cog-bio-meta{ display:block; margin-top:3px; font-size:13px; color:var(--tinta2); }
+.cog-bio-cuerpo p{ margin:0 0 11px; font-size:15px; line-height:1.68; color:var(--tinta); }
+.cog-bio-cuerpo p:last-child{ margin-bottom:0; }
+.cog-bio-cuerpo b{ color:var(--tinta); }
+@media (max-width:540px){
+  .cog-bio{ padding:16px; }
+  .cog-bio-head{ gap:12px; }
+  .cog-ret{ width:66px; height:66px; }
+  .cog-ret-mono{ font-size:21px; }
+  .cog-bio-nom{ font-size:18px; }
+}
+
 /* tarjetas de concepto */
 .cog-grid{ max-width:80ch; margin:18px auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
 .cog-card{ border:1px solid var(--linea); border-top:3px solid var(--c,#7C83E8); background:var(--papel); border-radius:12px; padding:16px 18px; box-shadow:var(--sombra); }

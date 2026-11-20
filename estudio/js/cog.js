@@ -139,4 +139,51 @@
     box.append(ol);
     cont.append(box);
   };
+
+  /* ---- retrato (foto local con respaldo de monograma) ----
+     Mientras no exista el archivo, se muestra un avatar con iniciales.
+     Cuando el archivo carga, se revela la foto.
+     opts = { nombre, slug, color, src? } */
+  E.cog.iniciales = function (nombre) {
+    var p = String(nombre || "").trim().split(/\s+/).filter(Boolean);
+    var ini = (p[0] ? p[0].charAt(0) : "") + (p[1] ? p[1].charAt(0) : (p[0] ? p[0].charAt(1) || "" : ""));
+    return (ini || "·").toUpperCase();
+  };
+  E.cog.retrato = function (opts) {
+    opts = opts || {};
+    var fig = h("span", { class: "cog-ret", style: opts.color ? { "--c": opts.color } : null });
+    var mono = h("span", { class: "cog-ret-mono", "aria-hidden": "true" }, E.cog.iniciales(opts.nombre));
+    // Candidatos: la ruta explícita, o el slug probado en varias extensiones.
+    var cand = opts.src ? [opts.src]
+      : (opts.slug ? ["jpg", "png", "webp", "jpeg"].map(function (e) { return "assets/retratos/" + opts.slug + "." + e; }) : []);
+    if (cand.length) {
+      var i = 0;
+      var img = h("img", {
+        class: "cog-ret-img", src: cand[0], alt: opts.nombre || "", loading: "lazy", decoding: "async",
+        onload: function () { fig.classList.add("con-foto"); },
+        onerror: function () { i++; if (i < cand.length) img.src = cand[i]; else fig.classList.remove("con-foto"); }
+      });
+      fig.append(img);
+    }
+    fig.append(mono);
+    return fig;
+  };
+
+  /* ---- ficha de persona (retrato + identidad + bio de varios párrafos) ----
+     opts = { slug, nombre, meta, color, etiqueta, parrafos:[html,...] } */
+  E.cog.persona = function (cont, opts) {
+    opts = opts || {};
+    var art = h("article", { class: "cog-bio", style: opts.color ? { "--c": opts.color } : null });
+    var head = h("div", { class: "cog-bio-head" },
+      E.cog.retrato({ nombre: opts.nombre, slug: opts.slug, color: opts.color }),
+      h("div", { class: "cog-bio-id" },
+        opts.etiqueta ? h("span", { class: "cog-bio-tag" }, opts.etiqueta) : null,
+        h("h4", { class: "cog-bio-nom" }, opts.nombre || ""),
+        opts.meta ? h("span", { class: "cog-bio-meta", html: opts.meta }) : null));
+    art.append(head);
+    var cuerpo = h("div", { class: "cog-bio-cuerpo" });
+    (opts.parrafos || []).forEach(function (p) { cuerpo.append(h("p", { html: p })); });
+    art.append(cuerpo);
+    cont.append(art);
+  };
 })();
