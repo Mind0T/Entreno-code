@@ -9,5 +9,5 @@ windows CMD
 curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
 
 gh
-1230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0123
-desde el g hasta el x
+1230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0123
+desde el g hasta el p
