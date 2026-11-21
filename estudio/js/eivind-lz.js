@@ -214,10 +214,10 @@
       dragStep=(dialStage.clientWidth||340)*0.16;
       lastSelF=selF; lastT=performance.now();
       if(dialRAF){cancelAnimationFrame(dialRAF);dialRAF=0;}
-      try{dialStage.setPointerCapture(e.pointerId);}catch(_){}
     });
     dialStage.addEventListener("pointermove",function(e){
-      if(dragX==null)return; var dx=e.clientX-dragX; if(Math.abs(dx)>4)dragMoved=true;
+      if(dragX==null)return; var dx=e.clientX-dragX;
+      if(Math.abs(dx)>4){ if(!dragMoved){ try{dialStage.setPointerCapture(e.pointerId);}catch(_){} } dragMoved=true; }
       selF=dragSelF-dx/dragStep;
       var now=performance.now(), dt=now-lastT;
       if(dt>0){ var inst=(selF-lastSelF)/(dt/16); vel=vel*0.6+inst*0.4; lastSelF=selF; lastT=now; }
