@@ -971,3 +971,10 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 /* icono de enlace externo en la barra de temas y el detalle del dial */
 .tb-topic.enlace .tb-ext, .eiv-topics a.enlace .tlink{ width:14px; height:14px; margin-left:6px; opacity:.7; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
 .tb-topic.enlace .tb-ext{ display:inline-block; }
+
+/* Python: caja en blanco para comparar */
+.pc-nueva{ display:inline-flex; align-items:center; gap:5px; font:600 11px var(--f-display); color:var(--tinta2); background:transparent; border:1px solid var(--linea2); border-radius:7px; padding:4px 8px; cursor:pointer; transition:color .15s,border-color .15s }
+.pc-nueva svg{ width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round }
+.pc-nueva:hover{ color:var(--verde); border-color:var(--verde) }
+.pycell.pc-mia{ border-left:3px solid var(--verde) }
+.pycell.pc-mia .pc-lang{ color:var(--verde) }

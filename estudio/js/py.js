@@ -53,11 +53,13 @@
     var runBtn = h("button", { class: "pc-run", type: "button" },
       h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", html: '<path d="M7 5v14l11-7z"/>' }), "Ejecutar");
     var resetBtn = h("button", { class: "pc-reset", type: "button", title: "Restablecer", "aria-label": "Restablecer código", html: '<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4"/></svg>' });
+    var nuevaBtn = h("button", { class: "pc-nueva", type: "button", title: "Agrega una caja en blanco para escribir tu versión y comparar", "aria-label": "Agregar caja en blanco" },
+      h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", html: '<path d="M12 5v14M5 12h14"/>' }), "Caja en blanco");
     var status = h("span", { class: "pc-status", "aria-live": "polite" });
     var out = h("pre", { class: "pc-out", hidden: true, tabindex: "0" });
-    var cell = h("div", { class: "pycell" },
-      h("div", { class: "pc-head" }, h("span", { class: "pc-dot" }), h("span", { class: "pc-lang" }, "Python"),
-        h("div", { class: "pc-tools" }, resetBtn)),
+    var cell = h("div", { class: "pycell" + (opts.etiqueta ? " pc-mia" : "") },
+      h("div", { class: "pc-head" }, h("span", { class: "pc-dot" }), h("span", { class: "pc-lang" }, opts.etiqueta || "Python"),
+        h("div", { class: "pc-tools" }, nuevaBtn, resetBtn)),
       h("div", { class: "pc-codewrap" }, ta),
       h("div", { class: "pc-bar" }, runBtn, status),
       out);
@@ -109,6 +111,17 @@
       });
     }
     runBtn.addEventListener("click", correr);
+    // "Caja en blanco": inserta una celda vacía justo debajo para escribir tu versión y comparar.
+    nuevaBtn.addEventListener("click", function () {
+      if (cell.nextSibling && cell.nextSibling.classList && cell.nextSibling.classList.contains("pc-mia")) {
+        var ya = cell.nextSibling.querySelector(".pc-code"); if (ya) ya.focus(); return;
+      }
+      var tmp = document.createElement("div");
+      E.ui.PyCell(tmp, { code: "", etiqueta: "Tu versión" });
+      var nueva = tmp.firstElementChild;
+      cell.insertAdjacentElement("afterend", nueva);
+      var t = nueva.querySelector(".pc-code"); if (t) t.focus();
+    });
     return cell;
   };
 })();

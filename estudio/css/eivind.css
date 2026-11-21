@@ -152,3 +152,15 @@
 .lz-top:hover{color:var(--text-primary); border-color:var(--silver)}
 .lz-top.show{opacity:1; pointer-events:auto; transform:none}
 @media (prefers-reduced-motion: reduce){ .lz-top{transition:opacity .2s} }
+
+/* Fundamentos: icono + animación alternada de las esferas */
+.eiv-esf-ico{ display:inline-flex; width:20px; height:20px; margin-right:9px; color:var(--c,#7C83E8); flex:0 0 auto }
+.eiv-esf-ico svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round }
+.eiv-esfera summary{ display:flex; align-items:center }
+@keyframes eivEsfIn{ from{ opacity:0; transform:translateX(var(--d,-14px)) } to{ opacity:1; transform:none } }
+.eiv-esfera{ animation:eivEsfIn .45s cubic-bezier(.2,.7,.3,1) both; --d:-14px }
+.eiv-esfera:nth-of-type(even){ --d:14px }
+.eiv-esfera:nth-of-type(2){ animation-delay:.09s }
+.eiv-esfera:nth-of-type(3){ animation-delay:.18s }
+.eiv-esfera:nth-of-type(4){ animation-delay:.27s }
+@media (prefers-reduced-motion:reduce){ .eiv-esfera{ animation:none } }

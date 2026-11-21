@@ -166,8 +166,9 @@
       // Curso con esferas: cada esfera es una sección plegable (details/summary).
       if(c.grupos&&c.grupos.length){
         return '<div class="eiv-sec"><h3>'+tx.topics+'</h3>'+c.grupos.map(function(g,i){
-          return '<details class="eiv-esfera"'+(i===0?' open':'')+'>'+
-            '<summary><span class="eiv-esf-tit">'+g.titulo+'</span>'+
+          return '<details class="eiv-esfera">'+
+            '<summary>'+(g.icono?'<span class="eiv-esf-ico" aria-hidden="true"><svg viewBox="0 0 24 24">'+g.icono+'</svg></span>':'')+
+              '<span class="eiv-esf-tit">'+g.titulo+'</span>'+
               '<span class="eiv-esf-n">'+g.topics.length+'</span>'+
               '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
             '<div class="eiv-topics">'+g.topics.map(topicLink).join("")+'</div></details>';

@@ -287,9 +287,16 @@
     }, []);
   }
   // Igual que cTopics pero conservando las esferas (grupos) para mostrarlas plegables.
+  const ESF_ICO = {
+    "fund-mente": '<path d="M9.5 3.6a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0-1.4 4.5A2.5 2.5 0 0 0 6 15.4a2.5 2.5 0 0 0 3.5 2.2V3.6z"/><path d="M14.5 3.6a2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1 1.4 4.5A2.5 2.5 0 0 1 18 15.4a2.5 2.5 0 0 1-3.5 2.2V3.6z"/><path d="M12 3.6v14.2"/>',
+    "fund-computo": '<rect x="7" y="7" width="10" height="10" rx="1.6"/><rect x="10" y="10" width="4" height="4" rx=".6"/><path d="M10 3.4v2.2M14 3.4v2.2M10 18.4v2.2M14 18.4v2.2M3.4 10h2.2M3.4 14h2.2M18.4 10h2.2M18.4 14h2.2"/>',
+    "fund-diseno": '<circle cx="13.5" cy="7" r="1.2"/><circle cx="17" cy="11" r="1.2"/><circle cx="8" cy="7.6" r="1.2"/><circle cx="6.6" cy="12.6" r="1.2"/><path d="M12 21a4 4 0 0 1-4-4c0-1.1.9-2 2-2a1.5 1.5 0 0 0 0-3 7 7 0 1 1 7 7 2 2 0 0 1-2 2z"/>'
+  };
   function cTopicsGrouped(lenguaje) {
     return gruposDe(lenguaje).map(function (x) {
       return {
+        id: x.g.id,
+        icono: ESF_ICO[x.g.id] || "",
         titulo: T(x.g.titulo),
         topics: x.items.map(function (m) { return { id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto, enlace: m.enlace || null }; })
       };
