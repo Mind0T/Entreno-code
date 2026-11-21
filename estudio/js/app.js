@@ -295,30 +295,38 @@
   // Ícono de la cortina "Personajes" (grupo de personas).
   const PERS_ICO = '<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="16.5" cy="8.5" r="2.4"/><path d="M15 13.6a4.6 4.6 0 0 1 5.7 5.4"/>';
   // Subgrupos plegables dentro de una esfera: agrupan temas afines en una "cortina".
+  // 'orden' decide su posición entre los temas sueltos (va justo tras Historia).
   const SUBGRUPOS = [
-    { id: "personajes", esfera: "fund-computo", icono: PERS_ICO,
+    { id: "personajes", esfera: "fund-computo", icono: PERS_ICO, orden: 5.5,
       titulo: { es: "Personajes", en: "People" },
-      test: function (m) { return /^fund-computo-personajes-/.test(m.id); } }
+      test: function (m) {
+        return /^fund-computo-personajes-/.test(m.id)
+          || m.id === "fund-computo-padres-fundadores"
+          || m.id === "fund-computo-mujeres-ia";
+      } }
   ];
   function cTopicsGrouped(lenguaje) {
     return gruposDe(lenguaje).map(function (x) {
       const defs = SUBGRUPOS.filter(function (s) { return s.esfera === x.g.id; });
       const buckets = {};
-      const flat = [];
+      const entradas = [];
       x.items.forEach(function (m) {
-        const topic = { id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto, enlace: m.enlace || null };
+        const ord = (m.orden != null ? m.orden : 999);
+        const topic = { tipo: "tema", id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto, enlace: m.enlace || null, orden: ord };
         const sd = defs.find(function (s) { return s.test(m); });
         if (sd) { (buckets[sd.id] = buckets[sd.id] || []).push(topic); }
-        else flat.push(topic);
+        else entradas.push(topic);
       });
-      const subgrupos = defs.filter(function (s) { return buckets[s.id] && buckets[s.id].length; })
-        .map(function (s) { return { id: s.id, titulo: T(s.titulo), icono: s.icono || "", topics: buckets[s.id] }; });
+      defs.forEach(function (s) {
+        if (buckets[s.id] && buckets[s.id].length)
+          entradas.push({ tipo: "cortina", id: s.id, titulo: T(s.titulo), icono: s.icono || "", orden: (s.orden != null ? s.orden : 999), topics: buckets[s.id] });
+      });
+      entradas.sort(function (a, b) { return a.orden - b.orden; });
       return {
         id: x.g.id,
         icono: ESF_ICO[x.g.id] || "",
         titulo: T(x.g.titulo),
-        topics: flat,
-        subgrupos: subgrupos
+        entradas: entradas
       };
     });
   }

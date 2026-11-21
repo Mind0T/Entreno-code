@@ -209,7 +209,9 @@
     var parr = opts.parrafos || [];
     var labels = _labelsFor(parr.length, opts.bloques);
     var art = h("article", { class: "cog-bio cog-bio-tl", style: opts.color ? { "--c": opts.color } : null });
-    art.append(h("span", { class: "cog-tl-node", "aria-hidden": "true" }));
+    // número de la ficha dentro de la página (01, 02, …), como la línea del tiempo
+    var num = cont.querySelectorAll(".cog-bio-tl").length + 1;
+    art.append(h("span", { class: "cog-tl-node", "aria-hidden": "true" }, (num < 10 ? "0" : "") + num));
     var head = h("div", { class: "cog-bio-head" },
       h("div", { class: "cog-tl-foto" }, E.cog.retrato({ nombre: opts.nombre, slug: opts.slug, color: opts.color })),
       h("div", { class: "cog-bio-id" },

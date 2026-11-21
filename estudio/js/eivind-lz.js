@@ -166,22 +166,25 @@
       // Curso con esferas: cada esfera es una sección plegable (details/summary).
       if(c.grupos&&c.grupos.length){
         return '<div class="eiv-sec"><h3>'+tx.topics+'</h3>'+c.grupos.map(function(g,i){
-          var subs=(g.subgrupos||[]);
-          var n=g.topics.length+subs.reduce(function(a,s){return a+s.topics.length;},0);
-          var cortinas=subs.map(function(s){
-            return '<details class="eiv-cortina">'+
-              '<summary>'+(s.icono?'<span class="eiv-cortina-ico" aria-hidden="true"><svg viewBox="0 0 24 24">'+s.icono+'</svg></span>':'')+
-                '<span class="eiv-cortina-tit">'+s.titulo+'</span>'+
-                '<span class="eiv-esf-n">'+s.topics.length+'</span>'+
-                '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
-              '<div class="eiv-topics eiv-topics-cortina">'+s.topics.map(topicLink).join("")+'</div></details>';
+          var entradas=g.entradas||[];
+          var n=entradas.reduce(function(a,e){ return a+(e.tipo==="cortina"? e.topics.length : 1); },0);
+          var inner=entradas.map(function(e){
+            if(e.tipo==="cortina"){
+              return '<details class="eiv-cortina">'+
+                '<summary>'+(e.icono?'<span class="eiv-cortina-ico" aria-hidden="true"><svg viewBox="0 0 24 24">'+e.icono+'</svg></span>':'')+
+                  '<span class="eiv-cortina-tit">'+e.titulo+'</span>'+
+                  '<span class="eiv-esf-n">'+e.topics.length+'</span>'+
+                  '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
+                '<div class="eiv-topics eiv-topics-cortina">'+e.topics.map(topicLink).join("")+'</div></details>';
+            }
+            return topicLink(e);
           }).join("");
           return '<details class="eiv-esfera">'+
             '<summary>'+(g.icono?'<span class="eiv-esf-ico" aria-hidden="true"><svg viewBox="0 0 24 24">'+g.icono+'</svg></span>':'')+
               '<span class="eiv-esf-tit">'+g.titulo+'</span>'+
               '<span class="eiv-esf-n">'+n+'</span>'+
               '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
-            '<div class="eiv-topics">'+g.topics.map(topicLink).join("")+cortinas+'</div></details>';
+            '<div class="eiv-topics">'+inner+'</div></details>';
         }).join("")+'</div>';
       }
       if(!c.topics||!c.topics.length) return "";
