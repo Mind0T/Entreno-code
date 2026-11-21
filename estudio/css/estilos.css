@@ -798,6 +798,20 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .eiv-esfera>.eiv-topics{padding:12px 13px}
 @media (prefers-reduced-motion:reduce){.eiv-esfera>summary .eiv-esf-chev{transition:none}}
 .eiv-soonbox{border:1px dashed var(--c,var(--silver)); border-radius:var(--radio); padding:16px 18px; color:var(--text-secondary); font-size:14px; line-height:1.6}
+/* Cortina (subgrupo plegable) dentro de una esfera — p. ej. "Personajes" */
+.eiv-cortina{border:1px solid var(--border-default); border-radius:var(--radio); overflow:hidden; background:var(--bg-surface-2); --c:#9DB4CF}
+.eiv-cortina>summary{display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer; list-style:none; font:800 12.5px var(--f-display); color:var(--text-primary); transition:var(--transition-base)}
+.eiv-cortina>summary::-webkit-details-marker{display:none}
+.eiv-cortina>summary:hover{background:var(--bg-surface-1)}
+.eiv-cortina-ico{display:inline-flex; width:19px; height:19px; color:var(--c); flex:0 0 auto}
+.eiv-cortina-ico svg{width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.eiv-cortina-tit{flex:1 1 auto; letter-spacing:.01em}
+.eiv-cortina>summary .eiv-esf-n{flex:0 0 auto; font:700 11px var(--f-display); color:var(--text-muted); border:1px solid var(--border-strong); border-radius:99px; padding:2px 9px}
+.eiv-cortina>summary .eiv-esf-chev{flex:0 0 auto; width:18px; height:18px; fill:none; stroke:var(--text-muted); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; transition:transform .25s ease}
+.eiv-cortina[open]>summary .eiv-esf-chev{transform:rotate(180deg)}
+.eiv-cortina[open]>summary{border-bottom:1px solid var(--border-default)}
+.eiv-topics-cortina{padding:10px 11px}
+@media (prefers-reduced-motion:reduce){.eiv-cortina>summary .eiv-esf-chev{transition:none}}
 
 /* ============================================================
    Celdas de Python ejecutables (tipo notebook / "try it")
@@ -884,11 +898,74 @@ canvas#sky { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0;
 .cog-bio-cuerpo p:last-child{ margin-bottom:0; }
 .cog-bio-cuerpo b{ color:var(--tinta); }
 @media (max-width:540px){
-  .cog-bio{ padding:16px; }
+  .cog-bio:not(.cog-bio-tl){ padding:16px; }
   .cog-bio-head{ gap:12px; }
-  .cog-ret{ width:66px; height:66px; }
-  .cog-ret-mono{ font-size:21px; }
+  .cog-bio:not(.cog-bio-tl) .cog-ret{ width:66px; height:66px; }
+  .cog-bio:not(.cog-bio-tl) .cog-ret-mono{ font-size:21px; }
   .cog-bio-nom{ font-size:18px; }
+}
+
+/* ============================================================
+   Ficha de persona como ENTRADA DE LÍNEA DE TIEMPO
+   (se revela al bajar, la foto se agranda, la bio se divide en
+    bloques con preguntas adaptadas a la persona).
+   ============================================================ */
+.cog-bio-tl{
+  position:relative; max-width:80ch; margin:0 auto; padding:4px 0 30px 42px;
+  border:0; background:none; border-radius:0;
+  opacity:0; transform:translateY(20px);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1);
+}
+.cog-bio-tl.visible{ opacity:1; transform:none; }
+/* riel vertical continuo entre fichas */
+.cog-bio-tl::before{
+  content:""; position:absolute; left:13px; top:10px; bottom:-10px; width:2px;
+  background:linear-gradient(var(--c,#7C83E8), color-mix(in oklab, var(--c,#7C83E8) 16%, transparent));
+}
+.cog-bio-tl:last-of-type::before{ bottom:auto; height:64px; }
+/* nodo sobre el riel */
+.cog-tl-node{
+  position:absolute; left:5px; top:12px; width:18px; height:18px; border-radius:50%;
+  border:3px solid var(--c,#7C83E8); background:var(--bg-base);
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--c,#7C83E8) 12%, transparent);
+  transform:scale(.4); opacity:0;
+  transition:transform .5s cubic-bezier(.2,.8,.3,1.3) .08s, opacity .4s .08s;
+}
+.cog-bio-tl.visible .cog-tl-node{ transform:none; opacity:1; }
+/* cabecera: retrato grande + identidad */
+.cog-bio-tl .cog-bio-head{ display:flex; align-items:center; gap:18px; margin-bottom:16px; }
+.cog-tl-foto{ flex:0 0 auto; }
+.cog-bio-tl .cog-ret{
+  width:120px; height:120px; border-width:3px; transform:scale(.8); transform-origin:center;
+  transition:transform .7s cubic-bezier(.2,.7,.3,1); box-shadow:0 12px 32px rgba(0,0,0,.28);
+}
+.cog-bio-tl.visible .cog-ret{ transform:scale(1); }
+.cog-bio-tl .cog-ret-mono{ font-size:36px; }
+/* bloques divididos, con escalonado al revelar */
+.cog-tl-bloque{
+  margin:0 0 15px; opacity:0; transform:translateY(10px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.cog-tl-bloque:last-child{ margin-bottom:0; }
+.cog-bio-tl.visible .cog-tl-bloque{ opacity:1; transform:none; }
+.cog-bio-tl.visible .cog-tl-bloque:nth-child(2){ transition-delay:.08s; }
+.cog-bio-tl.visible .cog-tl-bloque:nth-child(3){ transition-delay:.16s; }
+.cog-bio-tl.visible .cog-tl-bloque:nth-child(4){ transition-delay:.24s; }
+.cog-bio-tl.visible .cog-tl-bloque:nth-child(5){ transition-delay:.32s; }
+.cog-tl-label{
+  margin:0 0 4px; font:800 10.5px var(--f-display); letter-spacing:.1em;
+  text-transform:uppercase; color:var(--c,#7C83E8);
+}
+.cog-tl-bloque p:not(.cog-tl-label){ margin:0; font-size:15px; line-height:1.68; color:var(--tinta); }
+@media (max-width:560px){
+  .cog-bio-tl{ padding-left:32px; }
+  .cog-bio-tl .cog-bio-head{ flex-direction:column; align-items:flex-start; gap:12px; }
+  .cog-bio-tl .cog-ret{ width:100px; height:100px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .cog-bio-tl, .cog-tl-bloque, .cog-bio-tl .cog-ret, .cog-tl-node{
+    opacity:1 !important; transform:none !important; transition:none !important;
+  }
 }
 
 /* tarjetas de concepto */

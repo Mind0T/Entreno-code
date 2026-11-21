@@ -169,21 +169,64 @@
     return fig;
   };
 
-  /* ---- ficha de persona (retrato + identidad + bio de varios párrafos) ----
-     opts = { slug, nombre, meta, color, etiqueta, parrafos:[html,...] } */
+  /* ---- revelado al hacer scroll (como una línea de tiempo) ---- */
+  var _reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var _io = null;
+  function _revelar(el) {
+    if (_reduce || !("IntersectionObserver" in window)) { el.classList.add("visible"); return; }
+    if (!_io) {
+      _io = new IntersectionObserver(function (ents) {
+        ents.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("visible"); _io.unobserve(e.target); } });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+    }
+    _io.observe(el);
+  }
+
+  /* Etiquetas por bloque, adaptadas a una persona (igual que la línea del
+     tiempo divide cada hito: "¿Qué ocurrió?", "Innovación"…). */
+  var _persLabels = {
+    1: ["Perfil"],
+    2: ["¿Quién fue?", "¿Por qué importa?"],
+    3: ["¿Quién fue?", "Su aporte", "¿Por qué importa?"],
+    4: ["¿Quién fue?", "Su aporte", "Qué cambió", "Su legado"],
+    5: ["¿Quién fue?", "Su aporte", "Qué cambió", "Por qué importó", "Su legado"]
+  };
+  function _labelsFor(n, override) {
+    if (override && override.length) return override;
+    if (_persLabels[n]) return _persLabels[n];
+    var a = ["¿Quién fue?"];
+    for (var i = 1; i < n - 1; i++) a.push("Su aporte");
+    if (n > 1) a.push("¿Por qué importa?");
+    return a;
+  }
+
+  /* ---- ficha de persona como entrada de línea de tiempo ----
+     Retrato grande que se agranda al revelarse, identidad y la bio
+     dividida en bloques con preguntas adaptadas a la persona.
+     opts = { slug, nombre, meta, color, etiqueta, parrafos:[html,...], bloques?:[etq,...] } */
   E.cog.persona = function (cont, opts) {
     opts = opts || {};
-    var art = h("article", { class: "cog-bio", style: opts.color ? { "--c": opts.color } : null });
+    var parr = opts.parrafos || [];
+    var labels = _labelsFor(parr.length, opts.bloques);
+    var art = h("article", { class: "cog-bio cog-bio-tl", style: opts.color ? { "--c": opts.color } : null });
+    art.append(h("span", { class: "cog-tl-node", "aria-hidden": "true" }));
     var head = h("div", { class: "cog-bio-head" },
-      E.cog.retrato({ nombre: opts.nombre, slug: opts.slug, color: opts.color }),
+      h("div", { class: "cog-tl-foto" }, E.cog.retrato({ nombre: opts.nombre, slug: opts.slug, color: opts.color })),
       h("div", { class: "cog-bio-id" },
         opts.etiqueta ? h("span", { class: "cog-bio-tag" }, opts.etiqueta) : null,
         h("h4", { class: "cog-bio-nom" }, opts.nombre || ""),
         opts.meta ? h("span", { class: "cog-bio-meta", html: opts.meta }) : null));
     art.append(head);
     var cuerpo = h("div", { class: "cog-bio-cuerpo" });
-    (opts.parrafos || []).forEach(function (p) { cuerpo.append(h("p", { html: p })); });
+    parr.forEach(function (p, i) {
+      var lab = labels && labels[i];
+      cuerpo.append(h("div", { class: "cog-tl-bloque" },
+        lab ? h("p", { class: "cog-tl-label" }, lab) : null,
+        h("p", { html: p })));
+    });
     art.append(cuerpo);
     cont.append(art);
+    _revelar(art);
+    return art;
   };
 })();

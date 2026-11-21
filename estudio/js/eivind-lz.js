@@ -166,12 +166,22 @@
       // Curso con esferas: cada esfera es una sección plegable (details/summary).
       if(c.grupos&&c.grupos.length){
         return '<div class="eiv-sec"><h3>'+tx.topics+'</h3>'+c.grupos.map(function(g,i){
+          var subs=(g.subgrupos||[]);
+          var n=g.topics.length+subs.reduce(function(a,s){return a+s.topics.length;},0);
+          var cortinas=subs.map(function(s){
+            return '<details class="eiv-cortina">'+
+              '<summary>'+(s.icono?'<span class="eiv-cortina-ico" aria-hidden="true"><svg viewBox="0 0 24 24">'+s.icono+'</svg></span>':'')+
+                '<span class="eiv-cortina-tit">'+s.titulo+'</span>'+
+                '<span class="eiv-esf-n">'+s.topics.length+'</span>'+
+                '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
+              '<div class="eiv-topics eiv-topics-cortina">'+s.topics.map(topicLink).join("")+'</div></details>';
+          }).join("");
           return '<details class="eiv-esfera">'+
             '<summary>'+(g.icono?'<span class="eiv-esf-ico" aria-hidden="true"><svg viewBox="0 0 24 24">'+g.icono+'</svg></span>':'')+
               '<span class="eiv-esf-tit">'+g.titulo+'</span>'+
-              '<span class="eiv-esf-n">'+g.topics.length+'</span>'+
+              '<span class="eiv-esf-n">'+n+'</span>'+
               '<svg class="eiv-esf-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>'+
-            '<div class="eiv-topics">'+g.topics.map(topicLink).join("")+'</div></details>';
+            '<div class="eiv-topics">'+g.topics.map(topicLink).join("")+cortinas+'</div></details>';
         }).join("")+'</div>';
       }
       if(!c.topics||!c.topics.length) return "";
@@ -200,7 +210,10 @@
         '</div><div class="eiv-body"><div class="eiv-col-media">'+media+'</div><div class="eiv-col-text">'+text+'</div></div>';
       sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden";
       sheet.querySelector("#eivClose").addEventListener("click",closeDetail);
-      sheet.querySelectorAll("[data-nav]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();closeDetail();nav(a.dataset.nav);});});
+      sheet.querySelectorAll("[data-nav]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();
+        // deja el índice de ESTE curso en el historial: "atrás" vuelve aquí, no a la portada de LZ
+        try{ history.replaceState(null,"","#/inicio/"+c.id); }catch(_){}
+        closeDetail();nav(a.dataset.nav);});});
       wireGrab(panel, sheet.querySelector("#eivGrab"));
     }
     function closeDetail(){sheet.classList.remove("open");sheet.setAttribute("aria-hidden","true");document.body.style.overflow="";setTimeout(function(){var p=sheet.querySelector("#eivPanelInner");if(p)p.innerHTML="";var pp=sheet.querySelector(".eiv-panel");if(pp){pp.style.transform="";pp.style.transition="";}},300);}
@@ -248,7 +261,13 @@
     core.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openCurrent();}});
 
     // arranque (el menú NO avanza solo: lo recorre el usuario)
-    function boot(){ selF=0; sel=0; lastBase=null; renderDial(); }
+    function idxDeCurso(cid){ for(var i=0;i<C.length;i++){ if(C[i].id===cid) return i; } return -1; }
+    function boot(){
+      var si=0; if(cfg.abrir){ var k=idxDeCurso(cfg.abrir); if(k>=0) si=k; }
+      selF=si; sel=si; lastBase=null; renderDial();
+      // si se pidió abrir un curso (p. ej. al volver de una lección), abre su índice
+      if(cfg.abrir){ var j=idxDeCurso(cfg.abrir); if(j>=0) setTimeout(function(){ openDetail(j); }, 40); }
+    }
     if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){setTimeout(boot,30);});else setTimeout(boot,60);
 
     var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){idn.resize();renderDial();},150);});

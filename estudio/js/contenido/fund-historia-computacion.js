@@ -7,7 +7,7 @@
 (function () {
   "use strict";
   var E = window.EST, h = E.h, cog = E.cog;
-  var ENLACE = "https://linea-tiempo-computacion-1am1.vercel.app/";
+  var ENLACE = "https://historia.irvingsoriano.com";
 
   function leccion(cont) {
     cog.prosa(cont,
@@ -17,7 +17,7 @@
       h("a", { class: "cog-launch", href: ENLACE, target: "_blank", rel: "noopener" },
         h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", html: '<path d="M7 17 17 7M9 7h8v8"/>' }),
         "Abrir la línea del tiempo")));
-    cog.nota(cont, 'La línea del tiempo se abre en una pestaña nueva. Más adelante se integrará con la estética del sitio (fondo, header y navegación).', 'var(--azul)');
+    cog.nota(cont, 'La línea del tiempo se abre en una pestaña nueva, ya con la estética del sitio: mismo fondo, header y navegación.', 'var(--azul)');
   }
 
   E.registrar({

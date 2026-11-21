@@ -292,13 +292,33 @@
     "fund-computo": '<rect x="7" y="7" width="10" height="10" rx="1.6"/><rect x="10" y="10" width="4" height="4" rx=".6"/><path d="M10 3.4v2.2M14 3.4v2.2M10 18.4v2.2M14 18.4v2.2M3.4 10h2.2M3.4 14h2.2M18.4 10h2.2M18.4 14h2.2"/>',
     "fund-diseno": '<circle cx="13.5" cy="7" r="1.2"/><circle cx="17" cy="11" r="1.2"/><circle cx="8" cy="7.6" r="1.2"/><circle cx="6.6" cy="12.6" r="1.2"/><path d="M12 21a4 4 0 0 1-4-4c0-1.1.9-2 2-2a1.5 1.5 0 0 0 0-3 7 7 0 1 1 7 7 2 2 0 0 1-2 2z"/>'
   };
+  // Ícono de la cortina "Personajes" (grupo de personas).
+  const PERS_ICO = '<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="16.5" cy="8.5" r="2.4"/><path d="M15 13.6a4.6 4.6 0 0 1 5.7 5.4"/>';
+  // Subgrupos plegables dentro de una esfera: agrupan temas afines en una "cortina".
+  const SUBGRUPOS = [
+    { id: "personajes", esfera: "fund-computo", icono: PERS_ICO,
+      titulo: { es: "Personajes", en: "People" },
+      test: function (m) { return /^fund-computo-personajes-/.test(m.id); } }
+  ];
   function cTopicsGrouped(lenguaje) {
     return gruposDe(lenguaje).map(function (x) {
+      const defs = SUBGRUPOS.filter(function (s) { return s.esfera === x.g.id; });
+      const buckets = {};
+      const flat = [];
+      x.items.forEach(function (m) {
+        const topic = { id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto, enlace: m.enlace || null };
+        const sd = defs.find(function (s) { return s.test(m); });
+        if (sd) { (buckets[sd.id] = buckets[sd.id] || []).push(topic); }
+        else flat.push(topic);
+      });
+      const subgrupos = defs.filter(function (s) { return buckets[s.id] && buckets[s.id].length; })
+        .map(function (s) { return { id: s.id, titulo: T(s.titulo), icono: s.icono || "", topics: buckets[s.id] }; });
       return {
         id: x.g.id,
         icono: ESF_ICO[x.g.id] || "",
         titulo: T(x.g.titulo),
-        topics: x.items.map(function (m) { return { id: m.id, titulo: m.titulo, done: completo(m), pronto: !!m.pronto, enlace: m.enlace || null }; })
+        topics: flat,
+        subgrupos: subgrupos
       };
     });
   }
@@ -354,7 +374,7 @@
   }
 
   /* ---------- landing ---------- */
-  function pintarInicio() {
+  function pintarInicio(abrirCurso) {
     document.title = "Learning Zone · Irving Soriano";
     if (!window.EivindLZ) { // respaldo: menú clásico si el motor no cargó
       const c = h("div", { class: "lz" }, heroCarousel(), categoryZone());
@@ -370,6 +390,7 @@
     const firstFund = (topsFund.find((t) => !t.pronto && !t.enlace) || topsFund.find((t) => !t.pronto) || {}).id || "";
     window.EivindLZ.mount(mountEl, {
       lang: lang, icons: ICON_CUR, cId: "c", cFirst: firstC,
+      abrir: abrirCurso || null,
       cursos: CURSOS({ c: { topics: topsC, first: firstC }, py: { topics: topsPy, first: firstPy }, fund: { topics: topsFund, first: firstFund, grupos: cTopicsGrouped("fund") } }),
       nav: function (hash) { location.hash = hash; }
     });
@@ -406,7 +427,7 @@
     menu.addEventListener("click", (e) => { if (e.target.closest("a")) { menu.setAttribute("hidden", ""); btn.setAttribute("aria-expanded", "false"); } });
     document.addEventListener("click", (e) => { if (!e.target.closest(".tb-switch")) { menu.setAttribute("hidden", ""); btn.setAttribute("aria-expanded", "false"); } });
     return h("div", { class: "topicbar" },
-      h("a", { class: "tb-back", href: "#/inicio" }, h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", html: '<path d="M19 12H5M11 6l-6 6 6 6"/>' }), D("back")),
+      h("a", { class: "tb-back", href: "#/inicio/" + (actual.lenguaje || "c") }, h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", html: '<path d="M19 12H5M11 6l-6 6 6 6"/>' }), D("back")),
       h("div", { class: "tb-switch" }, btn, menu));
   }
 
@@ -467,11 +488,21 @@
   }
 
   /* ---------- router ---------- */
+  // Cierra la hoja (índice de curso) si quedó abierta al cambiar de ruta.
+  function cerrarHoja() {
+    const sh = document.getElementById("eivSheet");
+    if (sh) {
+      sh.classList.remove("open"); sh.setAttribute("aria-hidden", "true");
+      const inner = sh.querySelector("#eivPanelInner"); if (inner) inner.innerHTML = "";
+    }
+    document.body.style.overflow = "";
+  }
   function ruta() {
     const partes = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+    cerrarHoja();
     E.vaciar(principal); window.scrollTo({ top: 0 });
     const id = partes[0] || "inicio";
-    if (id === "inicio") pintarInicio();
+    if (id === "inicio") pintarInicio(partes[1] || null);
     else {
       const m = E.moduloPorId(id);
       if (m && m.enlace) { window.open(m.enlace, "_blank", "noopener"); location.hash = "#/inicio"; return; }
