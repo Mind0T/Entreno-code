@@ -17,8 +17,6 @@
     '<text x="280" y="152" fill="currentColor" opacity=".55" font-size="9.5">la IA quiere pasar del 1 al 2</text>' +
     '</g></svg>';
 
-  function p(color, base, nombre, cuerpo) { return { color: color, etiqueta: base, titulo: nombre, cuerpo: cuerpo }; }
-
   function leccion(cont) {
     cog.prosa(cont,
       '<h2>La mente como plano de la IA</h2>' +
@@ -26,19 +24,78 @@
 
     cog.epigrafe(cont, "“Para construir una mente, primero hay que estudiar una.”", "Espíritu de la neurociencia computacional");
 
-    cog.prosa(cont, '<h3>1 · Los diez perfiles</h3>');
-    cog.grid(cont, [
-      p(VE, "DeepMind · UCL", "Demis Hassabis", 'Neurocientífico y prodigio del ajedrez; estudió <b>memoria e imaginación</b> antes de fundar DeepMind y crear <b>AlphaGo</b> y <b>AlphaFold</b>. <b>Nobel de Química 2024</b>.'),
-      p(MO, "Toronto · Google", "Geoffrey Hinton", 'El “padrino del deep learning”: impulsó la <b>retropropagación</b> y las <b>Máquinas de Boltzmann</b>. Era psicólogo experimental. <b>Turing</b> y <b>Nobel de Física 2024</b>.'),
-      p(VE, "Stanford · HAI", "Fei-Fei Li", 'Su doctorado en <b>neurociencia computacional</b> del sistema visual la llevó a crear <b>ImageNet</b>. Pionera de la <b>IA centrada en el humano</b> y la ética.'),
-      p(AZ, "UCL", "Karl Friston", 'El neurocientífico más citado de la historia; creó el <b>Principio de Energía Libre</b> y la <b>Inferencia Activa</b>: agentes que actúan para <b>minimizar su sorpresa</b>.'),
-      p(AZ, "MIT · CBMM", "Tomaso Poggio", 'Teoría del aprendizaje estadístico y modelos computacionales de la <b>visión</b> biológica y artificial.'),
-      p(MO, "MIT", "Josh Tenenbaum", 'Líder de la ciencia cognitiva computacional; <b>IA probabilística</b> y aprendizaje con <b>pocos datos</b> (como los niños): física y psicología “intuitivas”.'),
-      p(AM, "Harvard", "Steven Pinker", 'Teoría del <b>instinto del lenguaje</b>: la gramática como módulo computacional del cerebro. Influye en el NLP y en la crítica a la semántica de los LLMs.'),
-      p(MO, "Salk · UCSD", "Terry Sejnowski", 'Co-creó la <b>Máquina de Boltzmann</b> con Hinton; pionero del <b>ICA</b> y creador de <b>NETtalk</b>, una red que aprendió a leer en voz alta.'),
-      p(RO, "Princeton", "Daniel Kahneman", 'Los dos sistemas del pensamiento (<b>Sistema 1</b> rápido, <b>Sistema 2</b> lento) y los <b>sesgos cognitivos</b>. <b>Nobel de Economía</b>.'),
-      p(AZ, "UC Berkeley", "Michael I. Jordan", 'Puente entre estadística, psicología y computación; pionero de los <b>modelos gráficos probabilísticos</b> y el aprendizaje Bayesiano.')
-    ]);
+    cog.prosa(cont, '<h3>1 · Los diez perfiles</h3>' +
+      '<p>Diez personas encarnan ese puente entre la mente y la máquina. Recórrelas como una línea de tiempo de ideas: quién es cada una, qué aportó y por qué importa para la IA.</p>');
+
+    cog.persona(cont, { slug: "demis-hassabis", nombre: "Demis Hassabis", color: VE, etiqueta: "Memoria e imaginación → agentes", meta: "n. 1976 · Neurocientífico y cofundador de DeepMind (Reino Unido)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Niño prodigio del ajedrez y diseñador de videojuegos (<i>Theme Park</i>, <i>Black &amp; White</i>) antes de doctorarse en <b>neurociencia cognitiva</b> en la UCL, donde estudió el <b>hipocampo</b>, la memoria episódica y la imaginación. En 2010 cofundó <b>DeepMind</b> con una meta explícita: “resolver la inteligencia y usarla para resolver todo lo demás”.',
+      'Bajo su dirección, DeepMind creó <b>AlphaGo</b>, que en 2016 venció al campeón mundial de Go —un juego que se creía fuera del alcance de las máquinas—, y <b>AlphaFold</b>, que resolvió el problema de 50 años del <b>plegamiento de proteínas</b>. Su apuesta: combinar aprendizaje por refuerzo, búsqueda y memoria inspirada en el cerebro.',
+      'Hassabis encarna el puente mente→máquina: estudió cómo <b>recordamos e imaginamos</b> para construir agentes que <b>planean</b>. En 2024 recibió el <b>Premio Nobel de Química</b> por AlphaFold, señal de que la IA inspirada en la cognición ya transforma la ciencia.'
+    ] });
+
+    cog.persona(cont, { slug: "geoffrey-hinton", nombre: "Geoffrey Hinton", color: MO, etiqueta: "El padrino del deep learning", meta: "n. 1947 · Psicólogo e informático (Reino Unido / Canadá)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Formado en <b>psicología experimental</b> en Cambridge, dedicó su vida a una idea impopular durante décadas: que la inteligencia podía emerger de <b>redes de neuronas artificiales</b> que ajustan sus conexiones, y no de reglas lógicas escritas a mano.',
+      'Popularizó la <b>retropropagación</b> (1986) para entrenar redes profundas, co-creó las <b>Máquinas de Boltzmann</b> con Sejnowski e inventó técnicas como el <i>dropout</i>. En 2012, su equipo ganó <b>ImageNet</b> con <b>AlexNet</b> y detonó la revolución del deep learning.',
+      'Recibió el <b>Premio Turing</b> (2018) y el <b>Nobel de Física</b> (2024). En 2023 dejó Google para advertir sobre los <b>riesgos</b> de la IA que ayudó a crear. Es la prueba de que mirar al cerebro —aun de forma simplificada— podía superar a la IA simbólica.'
+    ] });
+
+    cog.persona(cont, { slug: "fei-fei-li", nombre: "Fei-Fei Li", color: VE, etiqueta: "Visión y datos", meta: "n. 1976 · Informática, codirectora de Stanford HAI (China / EE. UU.)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Investigadora cuyo doctorado unió la <b>neurociencia computacional del sistema visual</b> con la visión por computadora. Emigró de China a EE. UU. siendo adolescente; hoy codirige el Instituto de <b>IA Centrada en el Humano (HAI)</b> de Stanford.',
+      'Intuyó que a los algoritmos de visión no les faltaban modelos sino <b>datos</b>: creó <b>ImageNet</b> (2009), una base de ~14 millones de imágenes etiquetadas. El concurso que organizó alrededor de ImageNet fue el campo de pruebas donde el deep learning demostró su poder.',
+      'Sin ImageNet no habría habido AlexNet ni la revolución visual. Además lidera la agenda de <b>ética e IA centrada en el humano</b>, insistiendo en que la tecnología debe ampliar —no reemplazar— la dignidad de las personas.'
+    ] });
+
+    cog.persona(cont, { slug: "karl-friston", nombre: "Karl Friston", color: AZ, etiqueta: "Energía libre", meta: "n. 1959 · Neurocientífico, UCL (Reino Unido)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Uno de los <b>neurocientíficos más citados de la historia</b>. Antes de su teoría unificadora, revolucionó la <b>neuroimagen</b>: creó el <b>SPM</b> (Statistical Parametric Mapping), el estándar para analizar las resonancias del cerebro.',
+      'Formuló el <b>Principio de Energía Libre</b>: el cerebro es una máquina de predicción que busca minimizar su <b>sorpresa</b>. La <b>Inferencia Activa</b> añade que un agente puede reducir esa sorpresa <b>actuando</b> sobre el mundo para que coincida con lo que esperaba, no solo aprendiendo.',
+      'Su marco ofrece una teoría única de <b>percepción, acción y aprendizaje</b> sin necesidad de un “maestro” que etiquete los datos. Inspira a una generación de agentes <b>autónomos</b> que exploran y planean guiados por su propia incertidumbre.'
+    ] });
+
+    cog.persona(cont, { slug: "tomaso-poggio", nombre: "Tomaso Poggio", color: AZ, etiqueta: "Teoría del aprendizaje y visión", meta: "n. 1947 · Físico y neurocientífico computacional, MIT (Italia / EE. UU.)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Director del <b>Center for Brains, Minds and Machines</b> del MIT, dedicó su carrera a una pregunta doble: cómo <b>ve</b> el cerebro y cómo lograr que una máquina vea igual.',
+      'Desarrolló <b>teoría del aprendizaje estadístico</b> y modelos como <b>HMAX</b>: jerarquías inspiradas en la corteza visual que anticiparon ideas de las redes convolucionales. Formó a decenas de líderes del campo, incluidos mentores del entorno de DeepMind.',
+      'Poggio insistió en que no basta con que la IA <b>funcione</b>: hay que <b>entender por qué</b>, con teoría matemática. Es el puente entre la biología de la visión y el silicio que hoy reconoce rostros y objetos.'
+    ] });
+
+    cog.persona(cont, { slug: "josh-tenenbaum", nombre: "Josh Tenenbaum", color: MO, etiqueta: "Aprender como un niño", meta: "n. 1972 · Científico cognitivo computacional, MIT (EE. UU.)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Lidera en el MIT la <b>ciencia cognitiva computacional</b>: modelar matemáticamente cómo la mente humana —sobre todo la de los niños— aprende tanto a partir de tan poco.',
+      'Combina modelos <b>Bayesianos</b> con la <b>inducción de programas</b>: aprender la “receta” que genera los datos, no solo memorizarlos. Con ello emula la <b>física intuitiva</b> y la <b>psicología intuitiva</b> humanas, y aprende conceptos con un puñado de ejemplos.',
+      'Frente a redes que necesitan millones de datos, Tenenbaum representa la apuesta por la <b>eficiencia</b> y la <b>estructura</b>. Su trabajo marca el rumbo hacia una IA que razone y generalice como las personas, no solo que prediga.'
+    ] });
+
+    cog.persona(cont, { slug: "steven-pinker", nombre: "Steven Pinker", color: AM, etiqueta: "El instinto del lenguaje", meta: "n. 1954 · Psicólogo y lingüista, Harvard (Canadá / EE. UU.)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Psicólogo cognitivo y divulgador, estudia la <b>mente y el lenguaje</b> desde la psicología evolutiva. Es autor de obras como <i>El instinto del lenguaje</i> y <i>Los ángeles que llevamos dentro</i>.',
+      'Argumentó que la <b>gramática</b> es un <b>módulo computacional</b> innato del cerebro, un “instinto” moldeado por la evolución. Para él, hablar no es solo cultura: es un órgano mental con reglas propias.',
+      'Su visión del lenguaje como <b>cómputo</b> influye en el PLN y alimenta un debate vigente: ¿los <b>LLMs</b> realmente <b>entienden</b> el significado o solo manipulan estadística de palabras? Pinker es una voz crítica y matizada en esa discusión.'
+    ] });
+
+    cog.persona(cont, { slug: "terry-sejnowski", nombre: "Terry Sejnowski", color: MO, etiqueta: "Neurociencia computacional", meta: "n. 1947 · Neurocientífico computacional, Instituto Salk · UCSD (EE. UU.)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Físico convertido en <b>neurocientífico computacional</b>, dirige el laboratorio de neurobiología computacional del Instituto Salk y es una figura central de la comunidad del aprendizaje profundo (presidió la fundación de NeurIPS).',
+      'Co-creó con Hinton la <b>Máquina de Boltzmann</b>, fue pionero del <b>Análisis de Componentes Independientes (ICA)</b> —separar señales mezcladas, como aislar una voz entre el ruido— y construyó <b>NETtalk</b> (1987), una red que aprendió a <b>leer en voz alta</b>.',
+      'Sejnowski mantuvo viva la idea de que estudiar <b>neuronas reales</b> y redes artificiales se iluminan mutuamente. NETtalk fue una demostración temprana y vívida de que una red podía aprender una regla compleja a partir de ejemplos.'
+    ] });
+
+    cog.persona(cont, { slug: "daniel-kahneman", nombre: "Daniel Kahneman", color: RO, etiqueta: "Sistema 1 y Sistema 2", meta: "1934–2024 · Psicólogo, Nobel de Economía (Israel / EE. UU.)",
+      bloques: ["¿Quién fue?", "Su aporte", "Su legado"], parrafos: [
+      'Psicólogo israelí-estadounidense que, junto a <b>Amos Tversky</b>, revolucionó nuestra comprensión de cómo <b>decidimos</b>. Ganó el <b>Premio Nobel de Economía</b> en 2002 por llevar la psicología al corazón de la teoría económica.',
+      'Describió dos modos de pensar: el <b>Sistema 1</b> (rápido, automático, intuitivo) y el <b>Sistema 2</b> (lento, lógico, deliberado), y catalogó los <b>sesgos cognitivos</b> que nos desvían. Su libro <i>Pensar rápido, pensar despacio</i> lo volvió un clásico.',
+      'Esa dicotomía se convirtió en <b>hoja de ruta</b> para la IA: un LLM que predice el siguiente token es puro Sistema 1, y la frontera es dotarlo de Sistema 2 (razonar paso a paso, deliberar antes de responder). Falleció en 2024.'
+    ] });
+
+    cog.persona(cont, { slug: "michael-i-jordan", nombre: "Michael I. Jordan", color: AZ, etiqueta: "Estadística, mente y máquina", meta: "n. 1956 · Científico de la computación y estadístico, UC Berkeley (EE. UU.)",
+      bloques: ["¿Quién es?", "Su aporte", "Por qué importa"], parrafos: [
+      'Uno de los puentes más importantes entre la <b>estadística</b>, el <b>aprendizaje automático</b> y la ciencia cognitiva. Empezó estudiando el <b>control motor</b> y la psicología antes de volverse referente de la IA probabilística.',
+      'Pionero de los <b>modelos gráficos probabilísticos</b> y los métodos <b>Bayesianos</b> variacionales; co-creó <b>LDA</b> (asignación latente de Dirichlet) para descubrir temas en texto. Formó a buena parte de la élite actual del aprendizaje automático.',
+      'Jordan defiende una IA con <b>fundamentos matemáticos</b> sólidos y cautela frente a la exageración: entender la <b>incertidumbre</b> es tan importante como acertar. Su linaje académico moldea el campo entero.'
+    ] });
 
     cog.prosa(cont, '<h3>2 · Cuatro puentes mente → máquina</h3>' +
       '<p>Lo valioso no son los nombres sueltos, sino las ideas del cerebro que se volvieron arquitectura.</p>');
